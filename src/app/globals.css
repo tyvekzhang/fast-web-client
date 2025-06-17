@@ -1,5 +1,7 @@
-@import "../../node_modules/tailwindcss";
-@import "../../node_modules/tw-animate-css";
+@layer theme, base, antd, components, utilities;
+
+@import '../../node_modules/tailwindcss';
+@import '../../node_modules/tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -110,11 +112,11 @@
   --sidebar-ring: oklch(0.488 0.243 264.376);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

@@ -1,0 +1,5 @@
+# Ignore artifacts, detail: https://prettier.io/docs/
+node_modules/
+.next
+dist/
+pnpm-lock.yaml
