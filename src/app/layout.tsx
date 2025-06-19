@@ -1,12 +1,27 @@
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import React from 'react';
+import { AntdProvider } from '@/providers/antd-provider';
+// import { AuthProvider } from '@/providers/auth-provider';
+import type { Metadata } from 'next';
+import type React from 'react';
+import './globals.css';
 
-const RootLayout = ({ children }: React.PropsWithChildren) => (
-  <html lang="en">
-    <body>
-      <AntdRegistry>{children}</AntdRegistry>
-    </body>
-  </html>
-);
+export const metadata: Metadata = {
+  title: 'Fast Web Client',
+  description: 'One of the best scaffold in PyWeb',
+};
 
-export default RootLayout;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <AntdProvider>
+          {/*<AuthProvider>{children}</AuthProvider>*/}
+          {children}
+        </AntdProvider>
+      </body>
+    </html>
+  );
+}
