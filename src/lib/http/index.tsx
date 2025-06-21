@@ -16,10 +16,8 @@ import type {
 
 class HttpClient {
   private readonly instance: AxiosInstance;
-  private baseURL: string;
 
   constructor(baseURL = HTTP_CONFIG.BASE_URL) {
-    this.baseURL = baseURL;
     this.instance = axios.create({
       baseURL,
       timeout: HTTP_CONFIG.TIMEOUT,
@@ -195,7 +193,7 @@ class HttpClient {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.instance.post<ApiResponse<T>>(url, formData, {
+    return this.instance.post(url, formData, {
       ...config,
       headers: {
         ...config?.headers,
@@ -215,7 +213,7 @@ class HttpClient {
       formData.append(`files[${index}]`, file);
     });
 
-    return this.instance.post<ApiResponse<T>>(url, formData, {
+    return this.instance.post(url, formData, {
       ...config,
       headers: {
         ...config?.headers,
