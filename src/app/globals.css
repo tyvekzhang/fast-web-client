@@ -1,5 +1,3 @@
-@layer theme, base, antd, components, utilities;
-
 @import '../../node_modules/tailwindcss';
 @import '../../node_modules/tw-animate-css';
 

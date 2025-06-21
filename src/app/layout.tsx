@@ -5,7 +5,7 @@ import type React from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Fast Web Client',
+  title: 'Fast Web',
   description: 'One of the best scaffold in PyWeb',
 };
 
