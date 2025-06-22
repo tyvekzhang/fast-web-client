@@ -6,7 +6,7 @@ import './globals.css';
 import { I18nProvider } from '@/providers/i18n-provider';
 
 export const metadata: Metadata = {
-  title: 'Fast Web',
+  title: 'FastWeb',
   description: 'One of the best scaffold in PyWeb',
 };
 

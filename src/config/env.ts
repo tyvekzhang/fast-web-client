@@ -7,7 +7,7 @@ export const ENV = {
   IS_TEST: process.env.NODE_ENV === 'test',
 
   // Application Basic Information
-  APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || 'Fast Web',
+  APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || 'FastWeb',
   APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '0.1.0',
   APP_DESCRIPTION:
     process.env.NEXT_PUBLIC_APP_DESCRIPTION ||

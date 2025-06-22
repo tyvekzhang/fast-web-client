@@ -12,7 +12,7 @@ const Home = () => {
     probeService().then((res) => console.log(res));
   });
   return <div>
-    <Button type="primary">Button</Button>
+    <Button className="rounded-full h-12">Button</Button>
     <LanguageToggle />
     <Button type="primary"> {t("login")}</Button>
   </div>;

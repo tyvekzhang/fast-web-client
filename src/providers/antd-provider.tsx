@@ -3,6 +3,7 @@
 import { useLanguageStore } from '@/store/language-store';
 import { useThemeStore } from '@/store/theme-store';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { StyleProvider } from '@ant-design/cssinjs';
 import '@ant-design/v5-patch-for-react-19';
 import { App as AntdApp, ConfigProvider, theme } from 'antd';
 import enUS from 'antd/locale/en_US';
@@ -15,20 +16,22 @@ export function AntdProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AntdRegistry>
-      <ConfigProvider
-        locale={language === 'zh' ? zhCN : enUS}
-        theme={{
-          token: {
-            colorPrimary: '#1890ff',
-          },
-          algorithm:
-            currentTheme === 'dark'
-              ? theme.darkAlgorithm
-              : theme.defaultAlgorithm,
-        }}
-      >
-        <AntdApp>{children}</AntdApp>
-      </ConfigProvider>
+      <StyleProvider layer>
+        <ConfigProvider
+          locale={language === 'zh' ? zhCN : enUS}
+          theme={{
+            token: {
+              colorPrimary: '#1890ff',
+            },
+            algorithm:
+              currentTheme === 'dark'
+                ? theme.darkAlgorithm
+                : theme.defaultAlgorithm,
+          }}
+        >
+          <AntdApp>{children}</AntdApp>
+        </ConfigProvider>
+      </StyleProvider>
     </AntdRegistry>
   );
 }
