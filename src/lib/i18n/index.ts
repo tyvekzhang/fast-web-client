@@ -1,16 +1,21 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
+import { initReactI18next } from 'react-i18next';
 
 // 动态导入语言资源
-const loadResources = (language: string, namespace: string) => import(`./locales/${language}/${namespace}.json`);
+const loadResources = (language: string, namespace: string) =>
+  import(`./locales/${language}/${namespace}.json`);
 
 i18n
   // 检测用户语言
   .use(LanguageDetector)
   // 动态加载资源
-  .use(resourcesToBackend((language: string, namespace: string) => loadResources(language, namespace)))
+  .use(
+    resourcesToBackend((language: string, namespace: string) =>
+      loadResources(language, namespace),
+    ),
+  )
   // 传递给react-i18next
   .use(initReactI18next)
   // 初始化i18next
@@ -27,7 +32,15 @@ i18n
 
     // 命名空间
     defaultNS: 'common',
-    ns: ['common', 'auth', 'dashboard', 'users', 'profile', 'permissions', 'theme'],
+    ns: [
+      'common',
+      'auth',
+      'dashboard',
+      'users',
+      'profile',
+      'permissions',
+      'theme',
+    ],
 
     // 语言检测配置
     detection: {

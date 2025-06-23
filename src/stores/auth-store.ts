@@ -1,8 +1,8 @@
+import { APP_CONFIG } from '@/config';
 import { authService } from '@/service/auth-service';
 import type { AuthState, LoginCredentials, User } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { APP_CONFIG } from '@/config';
 
 interface AuthStore extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;

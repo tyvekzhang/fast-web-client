@@ -1,11 +1,15 @@
-"use client"
-import { Layout } from 'antd';
-import { useLayoutStore } from '@/stores/layout-store';
+'use client';
 import { HeaderLayout, SiderLayout } from '@/components/layout';
+import { useLayoutStore } from '@/stores/layout-store';
+import { Layout } from 'antd';
 
 const { Content } = Layout;
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { collapsed } = useLayoutStore();
 
   return (

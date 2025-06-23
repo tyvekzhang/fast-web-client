@@ -1,6 +1,6 @@
-"use client"
-import Image from 'next/image';
+'use client';
 import { useLayoutStore } from '@/stores/layout-store';
+import Image from 'next/image';
 
 export function Logo() {
   const { collapsed } = useLayoutStore();

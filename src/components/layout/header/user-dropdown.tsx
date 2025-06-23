@@ -1,6 +1,10 @@
-"use client"
-import { Dropdown, Avatar, MenuProps } from 'antd';
-import { UserOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
+'use client';
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Avatar, Dropdown, MenuProps } from 'antd';
 
 const items: MenuProps['items'] = [
   {
@@ -26,10 +30,10 @@ const items: MenuProps['items'] = [
 export function UserDropdown() {
   return (
     <Dropdown menu={{ items }} placement="bottomRight" arrow>
-  <div className="flex items-center gap-2 cursor-pointer">
-  <Avatar icon={<UserOutlined />} />
-  <span className="font-medium">John Doe</span>
-  </div>
-  </Dropdown>
-);
+      <div className="flex items-center gap-2 cursor-pointer">
+        <Avatar icon={<UserOutlined />} />
+        <span className="font-medium">John Doe</span>
+      </div>
+    </Dropdown>
+  );
 }

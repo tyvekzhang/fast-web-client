@@ -1,6 +1,6 @@
-"use client"
-import { Breadcrumb } from 'antd';
+'use client';
 import { HomeOutlined } from '@ant-design/icons';
+import { Breadcrumb } from 'antd';
 
 export function BreadCrumb() {
   return (

@@ -1,9 +1,9 @@
-"use client"
+'use client';
 import { Layout, LayoutProps } from 'antd';
+import { JSX } from 'react';
 import { BreadCrumb } from './bread-crumb';
 import { Support } from './support';
 import { UserDropdown } from './user-dropdown';
-import { JSX } from 'react';
 
 const { Header } = Layout;
 

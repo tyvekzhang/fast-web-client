@@ -8,11 +8,7 @@ import axios, {
   type AxiosResponse,
 } from 'axios';
 import qs from 'qs';
-import type {
-  ApiResponse,
-  HttpError,
-  StandardResponse,
-} from './types';
+import type { ApiResponse, HttpError, StandardResponse } from './types';
 
 class HttpClient {
   private readonly instance: AxiosInstance;

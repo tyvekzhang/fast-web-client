@@ -1,10 +1,10 @@
-"use client"
+'use client';
 
+import { useLayoutStore } from '@/stores/layout-store';
+import * as AntdIcons from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import * as AntdIcons from '@ant-design/icons';
 import Link from 'next/link';
-import { useLayoutStore } from '@/stores/layout-store';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -80,7 +80,7 @@ const getAntIcon = (iconName?: keyof typeof AntdIcons) => {
 };
 
 const transformMenuItems = (config: MenuConfigItem[]): MenuItem[] => {
-  return config.map(item => ({
+  return config.map((item) => ({
     key: item.key,
     icon: getAntIcon(item.icon),
     label: item.path ? <Link href={item.path}>{item.label}</Link> : item.label,

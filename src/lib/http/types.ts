@@ -14,7 +14,6 @@ export interface StandardResponse<T = any> {
 
 export type ApiResponse<T = any> = TokenResponse | StandardResponse<T>;
 
-
 export interface PaginationParams {
   page?: number;
   pageSize?: number;

@@ -1,61 +1,71 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Form, Input, Button, Checkbox, Divider, message, Space, Typography, Card } from "antd"
 import {
-  UserOutlined,
-  LockOutlined,
   EyeInvisibleOutlined,
   EyeTwoTone,
-  WechatOutlined,
-  GoogleOutlined,
   GithubOutlined,
-} from "@ant-design/icons"
+  GoogleOutlined,
+  LockOutlined,
+  UserOutlined,
+  WechatOutlined,
+} from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  message,
+  Space,
+  Typography,
+} from 'antd';
+import { useState } from 'react';
 
-const { Title, Text, Link } = Typography
+const { Title, Text, Link } = Typography;
 
 interface LoginFormData {
-  username: string
-  password: string
-  remember: boolean
+  username: string;
+  password: string;
+  remember: boolean;
 }
 
 // 卡片内装饰气泡 - 只保留这一个
 const CardDecorativeBubble = () => {
   return (
     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200/30 to-purple-200/30 rounded-full -mr-16 -mt-16" />
-  )
-}
+  );
+};
 
 export default function LoginPage() {
-  const [form] = Form.useForm()
-  const [loading, setLoading] = useState(false)
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
   // 验证用户名格式（邮箱或手机号）
   const validateUsername = (username: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const phoneRegex = /^1[3-9]\d{9}$/
-    return emailRegex.test(username) || phoneRegex.test(username)
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    return emailRegex.test(username) || phoneRegex.test(username);
+  };
 
   const onFinish = async (values: LoginFormData) => {
-    setLoading(true)
+    setLoading(true);
 
     try {
       // 模拟登录API调用
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      message.success("登录成功！")
-      console.log("登录数据:", values)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      message.success('登录成功！');
+      console.log('登录数据:', values);
     } catch (error) {
-      message.error("登录失败，请检查用户名和密码")
+      message.error('登录失败，请检查用户名和密码');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleThirdPartyLogin = (provider: string) => {
-    message.info(`正在跳转到${provider}登录...`)
-  }
+    message.info(`正在跳转到${provider}登录...`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
@@ -77,19 +87,28 @@ export default function LoginPage() {
             </div>
 
             {/* 登录表单 */}
-            <Form form={form} name="login" onFinish={onFinish} autoComplete="off" size="large" className="space-y-4">
+            <Form
+              form={form}
+              name="login"
+              onFinish={onFinish}
+              autoComplete="off"
+              size="large"
+              className="space-y-4"
+            >
               <div>
                 <Form.Item
                   name="username"
                   rules={[
-                    { required: true, message: "请输入用户名" },
+                    { required: true, message: '请输入用户名' },
                     {
                       validator: (_, value) => {
-                        if (!value) return Promise.resolve()
+                        if (!value) return Promise.resolve();
                         if (validateUsername(value)) {
-                          return Promise.resolve()
+                          return Promise.resolve();
                         }
-                        return Promise.reject(new Error("请输入有效的邮箱地址或手机号"))
+                        return Promise.reject(
+                          new Error('请输入有效的邮箱地址或手机号'),
+                        );
                       },
                     },
                   ]}
@@ -108,8 +127,8 @@ export default function LoginPage() {
                 <Form.Item
                   name="password"
                   rules={[
-                    { required: true, message: "请输入密码" },
-                    { min: 6, message: "密码至少6位字符" },
+                    { required: true, message: '请输入密码' },
+                    { min: 6, message: '密码至少6位字符' },
                   ]}
                 >
                   <div>
@@ -117,7 +136,9 @@ export default function LoginPage() {
                       prefix={<LockOutlined className="text-gray-400" />}
                       placeholder="密码"
                       className="rounded-lg h-12"
-                      iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                      iconRender={(visible) =>
+                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                      }
                     />
                   </div>
                 </Form.Item>
@@ -126,10 +147,17 @@ export default function LoginPage() {
               {/* 记住我和忘记密码 */}
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <Form.Item name="remember" valuePropName="checked" className="mb-0">
+                  <Form.Item
+                    name="remember"
+                    valuePropName="checked"
+                    className="mb-0"
+                  >
                     <Checkbox>记住我</Checkbox>
                   </Form.Item>
-                  <Link href="/forgot-password" className="text-blue-600 hover:text-blue-800">
+                  <Link
+                    href="/forgot-password"
+                    className="text-blue-600 hover:text-blue-800"
+                  >
                     忘记密码？
                   </Link>
                 </div>
@@ -146,7 +174,7 @@ export default function LoginPage() {
                       className="w-full h-12 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
                       size="large"
                     >
-                      {loading ? "登录中..." : "登录"}
+                      {loading ? '登录中...' : '登录'}
                     </Button>
                   </div>
                 </Form.Item>
@@ -168,7 +196,7 @@ export default function LoginPage() {
                     shape="circle"
                     size="large"
                     className="w-12 h-12 border-gray-800 text-gray-800 hover:bg-gray-50 hover:border-gray-900"
-                    onClick={() => handleThirdPartyLogin("GitHub")}
+                    onClick={() => handleThirdPartyLogin('GitHub')}
                   />
                 </div>
                 <div>
@@ -177,7 +205,7 @@ export default function LoginPage() {
                     shape="circle"
                     size="large"
                     className="w-12 h-12 border-green-500 text-green-500 hover:bg-green-50 hover:border-green-600"
-                    onClick={() => handleThirdPartyLogin("微信")}
+                    onClick={() => handleThirdPartyLogin('微信')}
                   />
                 </div>
                 <div>
@@ -186,7 +214,7 @@ export default function LoginPage() {
                     shape="circle"
                     size="large"
                     className="w-12 h-12 border-red-500 text-red-500 hover:bg-red-50 hover:border-red-600"
-                    onClick={() => handleThirdPartyLogin("Google")}
+                    onClick={() => handleThirdPartyLogin('Google')}
                   />
                 </div>
               </Space>
@@ -197,7 +225,10 @@ export default function LoginPage() {
               <div className="text-center mt-8">
                 <Text type="secondary">
                   新用户？
-                  <Link href="/register" className="ml-1 text-blue-600 hover:text-blue-800 font-medium">
+                  <Link
+                    href="/register"
+                    className="ml-1 text-blue-600 hover:text-blue-800 font-medium"
+                  >
                     立即注册
                   </Link>
                 </Text>
@@ -221,5 +252,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

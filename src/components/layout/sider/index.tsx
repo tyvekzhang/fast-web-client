@@ -1,6 +1,6 @@
-"use client"
-import { Layout } from 'antd';
+'use client';
 import { useLayoutStore } from '@/stores/layout-store';
+import { Layout } from 'antd';
 import { Logo } from './logo';
 import { NavigationMenu } from './navigation-menu';
 

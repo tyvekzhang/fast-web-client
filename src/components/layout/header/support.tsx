@@ -1,6 +1,6 @@
-"use client"
-import { Button } from 'antd';
+'use client';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 export function Support() {
   return (
