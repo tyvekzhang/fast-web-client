@@ -2,7 +2,7 @@ import type { LoginCredentials, User } from '@/types/auth';
 
 // 模拟API服务
 class AuthService {
-  private baseURL = '/api/auth';
+  private baseURL = '/api/login';
 
   // 模拟用户数据
   private mockUsers = [

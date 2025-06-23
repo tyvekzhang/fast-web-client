@@ -23,7 +23,7 @@ export const APP_CONFIG = {
 
   // 存储键名配置
   STORAGE_KEYS: {
-    AUTH: 'auth-storage',
+    AUTH: 'login-storage',
     THEME: 'theme-storage',
     USER_PREFERENCES: 'user-preferences',
     CACHE: 'app-cache',

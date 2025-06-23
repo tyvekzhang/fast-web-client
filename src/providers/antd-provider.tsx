@@ -1,7 +1,7 @@
 'use client';
 
-import { useLanguageStore } from '@/store/language-store';
-import { useThemeStore } from '@/store/theme-store';
+import { useLanguageStore } from '@/stores/language-store';
+import { useThemeStore } from '@/stores/theme-store';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { StyleProvider } from '@ant-design/cssinjs';
 import '@ant-design/v5-patch-for-react-19';

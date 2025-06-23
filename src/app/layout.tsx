@@ -1,5 +1,5 @@
 import { AntdProvider } from '@/providers/antd-provider';
-// import { AuthProvider } from '@/providers/auth-provider';
+// import { AuthProvider } from '@/providers/login-provider';
 import type { Metadata } from 'next';
 import type React from 'react';
 import './globals.css';

@@ -2,6 +2,7 @@ import { authService } from '@/service/auth-service';
 import type { AuthState, LoginCredentials, User } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { APP_CONFIG } from '@/config';
 
 interface AuthStore extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -42,8 +43,6 @@ export const useAuthStore = create<AuthStore>()(
           isAuthenticated: false,
           loading: false,
         });
-        // 清除本地存储
-        localStorage.removeItem('auth-storage');
       },
 
       updateUser: (user: User) => {
@@ -55,7 +54,7 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'auth-storage',
+      name: APP_CONFIG.STORAGE_KEYS.AUTH,
       partialize: (state) => ({
         user: state.user,
         token: state.token,

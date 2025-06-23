@@ -4,11 +4,11 @@ import { ENV, isDevelopment } from './env';
 export const API_ENDPOINTS = {
   // Authentication
   AUTH: {
-    LOGIN: '/auth/login',
-    LOGOUT: '/auth/logout',
-    REFRESH: '/auth/refresh',
-    ME: '/auth/me',
-    CHANGE_PASSWORD: '/auth/change-password',
+    LOGIN: '/login/login',
+    LOGOUT: '/login/logout',
+    REFRESH: '/login/refresh',
+    ME: '/login/me',
+    CHANGE_PASSWORD: '/login/change-password',
   },
 
   // User Management
