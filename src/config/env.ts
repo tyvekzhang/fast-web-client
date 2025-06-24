@@ -12,6 +12,7 @@ export const ENV = {
   APP_DESCRIPTION:
     process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
     'One of the best scaffold in PyWeb',
+  PREFIX_CLS: process.env.NEXT_PREFIX_CLS || "fw",
 
   // API Configuration
   API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',

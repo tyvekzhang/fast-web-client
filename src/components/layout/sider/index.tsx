@@ -11,7 +11,6 @@ export function SiderLayout() {
 
   return (
     <Sider
-      collapsible
       collapsed={collapsed}
       onCollapse={toggleCollapsed}
       width={200}

@@ -5,6 +5,7 @@ import * as AntdIcons from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import Link from 'next/link';
+import React from 'react';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -22,24 +23,20 @@ const menuConfig: MenuConfigItem[] = [
     key: 'dashboard',
     label: 'Dashboard',
     path: '/dashboard',
-    icon: 'DashboardOutlined',
   },
   {
     key: 'users',
     label: 'Users',
     path: '/users',
-    icon: 'UserOutlined',
   },
   {
     key: 'products',
     label: 'Products',
     path: '/products',
-    icon: 'ShoppingCartOutlined',
   },
   {
     key: 'documents',
     label: 'Documents',
-    icon: 'FileOutlined',
     children: [
       {
         key: 'templates',
@@ -56,7 +53,6 @@ const menuConfig: MenuConfigItem[] = [
   {
     key: 'team',
     label: 'Team',
-    icon: 'TeamOutlined',
     children: [
       {
         key: 'members',
@@ -95,11 +91,9 @@ export function NavigationMenu() {
   return (
     <Menu
       theme="dark"
-      defaultSelectedKeys={['dashboard']}
       mode="inline"
-      items={items}
-      className="border-none"
-      inlineCollapsed={collapsed}
+      // triggerSubMenuAction="click"
+      items={menuConfig}
     />
   );
 }

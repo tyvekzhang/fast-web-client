@@ -2,6 +2,7 @@
 import { HeaderLayout, SiderLayout } from '@/components/layout';
 import { useLayoutStore } from '@/stores/layout-store';
 import { Layout } from 'antd';
+import React from 'react';
 
 const { Content } = Layout;
 
