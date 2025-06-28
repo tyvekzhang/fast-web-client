@@ -1,6 +1,5 @@
 'use client';
 import { HeaderLayout, SiderLayout } from '@/components/layout';
-import { useLayoutStore } from '@/stores/layout-store';
 import { Layout } from 'antd';
 import React from 'react';
 
@@ -11,7 +10,6 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { collapsed } = useLayoutStore();
 
   return (
     <Layout className="min-h-screen">

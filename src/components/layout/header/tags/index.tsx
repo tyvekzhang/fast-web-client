@@ -88,7 +88,6 @@ const TagsLayout: React.FC = () => {
   );
 
   useEffect(() => {
-    debugger;
     if (!basicRoutes.length) return;
     const affixTags = initAffixTags(basicRoutes);
     if (!activeTag.length) return;

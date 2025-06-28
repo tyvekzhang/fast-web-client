@@ -5,8 +5,8 @@ export const convertToMenuItems = (menus: MenuRecord[]): MenuItem[] => {
   return menus.map((menu) => ({
     label: menu.name,
     key: menu.path,
-    icon: buildSvgIcon(menu.icon),
-    children: menu.children ? convertToMenuItems(menu.children) : [],
+    icon: buildSvgIcon(menu.icon, "sm"),
+    children: menu.children ? convertToMenuItems(menu.children) : null,
   }));
 };
 

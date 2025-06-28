@@ -17,7 +17,7 @@ export const basicRoutes: RouteObject[] = [
     },
   },
   {
-    path: '/users',
+    path: '/system/user',
     meta: {
       title: '用户管理',
       icon: 'Users',

@@ -12,11 +12,19 @@ const LayoutMenu = memo(() => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { menuList, menuItems, fetchMenus } = useMenuStore();
+  const { menuList, menuItems, setMenuList } = useMenuStore();
   const { dictData, fetchDictData } = useDictStore();
 
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([pathname]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setMenuList()
+    };
+    loadData();
+  }, []);
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -25,7 +33,7 @@ const LayoutMenu = memo(() => {
       }
     };
     loadData();
-  }, [fetchMenus, fetchDictData, dictData]);
+  }, [setMenuList, fetchDictData, dictData]);
 
   useEffect(() => {
     setSelectedKeys([pathname]);

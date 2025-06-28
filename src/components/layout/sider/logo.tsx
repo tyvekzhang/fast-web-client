@@ -9,7 +9,7 @@ export function Logo() {
   return (
     <Link
       href="/"
-      className="h-16 flex items-center justify-center text-gray-100 text-lg transition-all duration-75"
+      className="h-14 flex items-center justify-center text-gray-100 text-lg transition-all duration-75"
     >
       {collapsed ? (
         <Image

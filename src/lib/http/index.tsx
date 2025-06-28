@@ -66,14 +66,21 @@ class HttpClient {
         NProgress.done();
         const { data } = response;
 
-        if (this.isFileAttachment(response) || this.isTokenResponse(data)) {
+        if (this.isFileAttachment(response)) {
           return response;
+        } else if (this.isTokenResponse(data)) {
+          return data
         }
+
 
         const standardResponse = data as StandardResponse;
         const code = standardResponse.code;
+        const resData = standardResponse.data;
         if (code === API_RESPONSE_FORMAT.SUCCESS_CODE) {
-          return response;
+          if (resData) {
+            return resData
+          }
+          return standardResponse.msg;
         }
 
         switch (code) {
@@ -123,7 +130,7 @@ class HttpClient {
     // Get token from localStorage
     try {
       const authStorage = localStorage.getItem(
-        ENV.APP_NAME + APP_CONFIG.STORAGE_KEYS.AUTH,
+        APP_CONFIG.STORAGE_KEYS.AUTH,
       );
       if (authStorage) {
         const parsed = JSON.parse(authStorage);

@@ -1,34 +1,31 @@
 import { APP_CONFIG } from '@/config';
-import { authService } from '@/service/auth-service';
-import type { AuthState, LoginCredentials, User } from '@/types/auth';
+import { login } from '@/service/auth-service';
+import type { LoginRequest, Token } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface AuthStore extends AuthState {
-  login: (credentials: LoginCredentials) => Promise<void>;
+interface AuthStore {
+  token: Token | null;
+  loading: boolean;
+  login: (loginRequest: LoginRequest) => Promise<void>;
   logout: () => void;
-  updateUser: (user: User) => void;
   setLoading: (loading: boolean) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, get) => ({
-      user: null,
+    (set) => ({
       token: null,
-      isAuthenticated: false,
       loading: false,
 
-      login: async (credentials: LoginCredentials) => {
+      login: async (loginRequest: LoginRequest) => {
+        set({ loading: true });
         try {
-          set({ loading: true });
-          const response = await authService.login(credentials);
-
+          const response = await login(loginRequest);
+          debugger
           set({
-            user: response.user,
-            token: response.token,
-            isAuthenticated: true,
-            loading: false,
+            token: response,
+            loading: false
           });
         } catch (error) {
           set({ loading: false });
@@ -38,15 +35,8 @@ export const useAuthStore = create<AuthStore>()(
 
       logout: () => {
         set({
-          user: null,
           token: null,
-          isAuthenticated: false,
-          loading: false,
         });
-      },
-
-      updateUser: (user: User) => {
-        set({ user });
       },
 
       setLoading: (loading: boolean) => {
@@ -56,10 +46,9 @@ export const useAuthStore = create<AuthStore>()(
     {
       name: APP_CONFIG.STORAGE_KEYS.AUTH,
       partialize: (state) => ({
-        user: state.user,
         token: state.token,
-        isAuthenticated: state.isAuthenticated,
       }),
+      skipHydration: true,
     },
   ),
 );

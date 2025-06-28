@@ -1,34 +1,32 @@
 'use client';
 
+import { useAuthStore } from '@/stores/auth-store';
+import { LoginRequest } from '@/types/auth';
 import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  GithubOutlined,
-  GoogleOutlined,
-  LockOutlined,
-  UserOutlined,
-  WechatOutlined,
-} from '@ant-design/icons';
-import {
+  App,
   Button,
   Card,
   Checkbox,
   Divider,
   Form,
   Input,
-  message,
   Space,
   Typography,
 } from 'antd';
-import { useState } from 'react';
+import {
+  Eye,
+  EyeOff,
+  Github,
+  Lock,
+  Mail,
+  MessageSquare,
+  User
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const { Title, Text, Link } = Typography;
 
-interface LoginFormData {
-  username: string;
-  password: string;
-  remember: boolean;
-}
 
 // 卡片内装饰气泡 - 只保留这一个
 const CardDecorativeBubble = () => {
@@ -38,29 +36,33 @@ const CardDecorativeBubble = () => {
 };
 
 export default function LoginPage() {
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const {message} = App.useApp()
+  const router = useRouter();
+  useEffect(() => {
+    useAuthStore.persist.rehydrate();
+  }, [])
 
-  // 验证用户名格式（邮箱或手机号）
+  const { login, loading } = useAuthStore();
+
+  const [form] = Form.useForm();
+
+  // 验证用户名格式
   const validateUsername = (username: string) => {
+    const basicRegex = /^.{5,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^1[3-9]\d{9}$/;
-    return emailRegex.test(username) || phoneRegex.test(username);
+    return basicRegex.test(username) || emailRegex.test(username) || phoneRegex.test(username);
   };
 
-  const onFinish = async (values: LoginFormData) => {
-    setLoading(true);
+  const onFinish = async (values: LoginRequest) => {
 
     try {
-      // 模拟登录API调用
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      login(values)
       message.success('登录成功！');
-      console.log('登录数据:', values);
+      router.push('/');
     } catch (error) {
       message.error('登录失败，请检查用户名和密码');
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   const handleThirdPartyLogin = (provider: string) => {
@@ -115,7 +117,7 @@ export default function LoginPage() {
                 >
                   <div>
                     <Input
-                      prefix={<UserOutlined className="text-gray-400" />}
+                      prefix={<User className="text-gray-400" size={18} />}
                       placeholder="邮箱地址或手机号"
                       className="rounded-lg h-12"
                     />
@@ -133,11 +135,11 @@ export default function LoginPage() {
                 >
                   <div>
                     <Input.Password
-                      prefix={<LockOutlined className="text-gray-400" />}
+                      prefix={<Lock className="text-gray-400" size={18} />}
                       placeholder="密码"
                       className="rounded-lg h-12"
                       iconRender={(visible) =>
-                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                        visible ? <Eye size={18} /> : <EyeOff size={18} />
                       }
                     />
                   </div>
@@ -192,7 +194,7 @@ export default function LoginPage() {
               <Space className="w-full justify-center" size="large">
                 <div>
                   <Button
-                    icon={<GithubOutlined />}
+                    icon={<Github size={18} />}
                     shape="circle"
                     size="large"
                     className="w-12 h-12 border-gray-800 text-gray-800 hover:bg-gray-50 hover:border-gray-900"
@@ -201,7 +203,7 @@ export default function LoginPage() {
                 </div>
                 <div>
                   <Button
-                    icon={<WechatOutlined />}
+                    icon={<MessageSquare size={18} />}
                     shape="circle"
                     size="large"
                     className="w-12 h-12 border-green-500 text-green-500 hover:bg-green-50 hover:border-green-600"
@@ -210,7 +212,7 @@ export default function LoginPage() {
                 </div>
                 <div>
                   <Button
-                    icon={<GoogleOutlined />}
+                    icon={<Mail size={18} />}
                     shape="circle"
                     size="large"
                     className="w-12 h-12 border-red-500 text-red-500 hover:bg-red-50 hover:border-red-600"
