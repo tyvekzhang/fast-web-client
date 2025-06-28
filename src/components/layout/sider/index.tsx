@@ -1,8 +1,9 @@
 'use client';
+
+import NavigationMenu from '@/components/layout/sider/navigation-menu';
 import { useLayoutStore } from '@/stores/layout-store';
 import { Layout } from 'antd';
 import { Logo } from './logo';
-import { NavigationMenu } from './navigation-menu';
 
 const { Sider } = Layout;
 
@@ -13,9 +14,7 @@ export function SiderLayout() {
     <Sider
       collapsed={collapsed}
       onCollapse={toggleCollapsed}
-      width={200}
-      collapsedWidth={80}
-      className="!fixed h-screen z-50"
+      className="h-screen"
     >
       <Logo />
       <NavigationMenu />

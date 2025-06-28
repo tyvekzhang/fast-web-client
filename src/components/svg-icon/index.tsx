@@ -1,59 +1,89 @@
-import React, { memo, ReactElement } from 'react';
-import * as AntdIcons from '@ant-design/icons';
+import { cn } from '@/lib/utils'; // Assuming cn is imported from here
+import * as LucideIcons from 'lucide-react';
+import type React from 'react';
+import { memo, type ReactElement } from 'react';
 
 interface SvgIconProps {
   name: string;
-  prefix?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
+  strokeWidth?: number;
+  enableHover?: boolean;
 }
 
-const defaultProps: Required<Pick<SvgIconProps, 'prefix' | 'size'>> = {
-  prefix: 'icon',
-  size: 'md',
+const defaultProps: Required<
+  Pick<SvgIconProps, 'size' | 'strokeWidth' | 'enableHover'>
+> = {
+  size: 'sm',
+  strokeWidth: 2,
+  enableHover: true,
 };
 
 const sizeClassMap: Record<NonNullable<SvgIconProps['size']>, string> = {
   sm: 'w-4 h-4',
   md: 'w-5 h-5',
   lg: 'w-6 h-6',
-  xl: 'w-8 h-8',
+  xl: 'w-10 h-10',
 };
 
 const SvgIcon: React.FC<SvgIconProps> = memo((props) => {
-  const { name, prefix, size, className = '' } = { ...defaultProps, ...props };
+  const { name, size, className, strokeWidth, enableHover } = {
+    ...defaultProps,
+    ...props,
+  };
 
-  const symbolId = `#${prefix}-${name}`;
-  const sizeClass = sizeClassMap[size];
+  const LucideIcon = LucideIcons[name as keyof typeof LucideIcons] as any;
 
-  const AntdIcon = AntdIcons[name as keyof typeof AntdIcons] as any;
-
-  if (!AntdIcon) {
+  if (!LucideIcon) {
+    const QuestionMarkIcon = LucideIcons.HelpCircle;
     return (
-      <svg
-        className={`inline-block align-middle fill-current ${sizeClass} ${className}`}
-      >
-        <use href={symbolId} />
-      </svg>
+      <QuestionMarkIcon
+        className={cn(
+          'inline-block align-middle text-inherit',
+          sizeClassMap[size],
+          enableHover &&
+            'transition-all duration-200 ease-in-out hover:opacity-75 hover:scale-105 cursor-pointer',
+          className,
+        )}
+        strokeWidth={strokeWidth}
+      />
     );
   }
 
   return (
-    <AntdIcon
-      className={`inline-block align-middle ${sizeClass} ${className}`}
+    <LucideIcon
+      className={cn(
+        'inline-block align-middle text-inherit',
+        sizeClassMap[size],
+        enableHover &&
+          'transition-all duration-200 ease-in-out hover:opacity-75 hover:scale-105 cursor-pointer',
+        className,
+      )}
+      strokeWidth={strokeWidth}
     />
   );
 });
+
+SvgIcon.displayName = 'SvgIcon';
 
 export function buildSvgIcon(
   name?: string,
   size?: SvgIconProps['size'],
   className?: string,
-  prefix?: string,
+  strokeWidth?: number,
+  enableHover?: boolean,
 ): ReactElement | null {
   if (!name) return null;
-  return <SvgIcon name={name} size={size} className={className}
-                  prefix={prefix} />;
+
+  return (
+    <SvgIcon
+      name={name}
+      size={size}
+      className={className}
+      strokeWidth={strokeWidth}
+      enableHover={enableHover}
+    />
+  );
 }
 
 export default SvgIcon;

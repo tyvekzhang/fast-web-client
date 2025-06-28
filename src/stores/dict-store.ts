@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import { fetchAllDictData } from '@/service/dict-data-service';
+import { create } from 'zustand';
 
 interface DictState {
   dictData: Record<string, any>;

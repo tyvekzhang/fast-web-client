@@ -1,20 +1,20 @@
-import { create } from 'zustand';
 import { getMenus } from '@/service/menu-service';
-import type { ServerMenu, MenuItem } from '@/types/menu';
+import type { MenuItem, MenuRecord } from '@/types/menu';
 import { convertToMenuItems } from '@/utils/menu-util';
+import { create } from 'zustand';
 
 interface MenuState {
-  menuList: ServerMenu[];
+  menuList: MenuRecord[];
   menuItems: MenuItem[];
   loading: boolean;
-  fetchMenus: () => Promise<void>;
+  setMenuList: () => Promise<void>;
 }
 
 export const useMenuStore = create<MenuState>((set) => ({
   menuList: [],
   menuItems: [],
   loading: false,
-  fetchMenus: async () => {
+  setMenuList: async () => {
     set({ loading: true });
     try {
       const menus = await getMenus();

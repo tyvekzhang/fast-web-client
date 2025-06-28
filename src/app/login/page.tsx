@@ -171,7 +171,7 @@ export default function LoginPage() {
                       type="primary"
                       htmlType="submit"
                       loading={loading}
-                      className="w-full h-12 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                      className="w-full h-12 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 transition-all duration-200"
                       size="large"
                     >
                       {loading ? '登录中...' : '登录'}

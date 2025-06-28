@@ -1,5 +1,5 @@
-import type { ServerMenu } from '@/types/menu';
+import type { MenuRecord } from '@/types/menu';
 
-export function getMenus(): ServerMenu[] {
-  return []
+export function getMenus(): MenuRecord[] {
+  return [];
 }

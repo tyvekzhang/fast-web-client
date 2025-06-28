@@ -18,14 +18,8 @@ export default function MainLayout({
       <SiderLayout />
       <Layout>
         <HeaderLayout />
-        <Content
-          className={`p-6 transition-all duration-200 ${
-            collapsed ? 'ml-[80px]' : 'ml-[200px]'
-          }`}
-        >
-          <div className="bg-white rounded-lg p-6 min-h-[calc(100vh-152px)]">
-            {children}
-          </div>
+        <Content className="p-6 transition-all duration-200 bg-gray-50">
+          {children}
         </Content>
       </Layout>
     </Layout>

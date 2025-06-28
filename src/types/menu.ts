@@ -1,17 +1,15 @@
 import type { MenuProps } from 'antd';
 
-export interface ServerMenu {
+export interface MenuRecord {
   name: string;
   path: string;
   icon?: string;
-  children?: ServerMenu[];
+  children?: MenuRecord[];
 }
 
 export type MenuItem = Required<MenuProps>['items'][number];
 
-
 export interface MenuPage {
-
   /** 主键 */
   id: string;
 
@@ -53,11 +51,9 @@ export interface MenuPage {
 
   /** 备注信息 */
   comment: string;
-
 }
 
 export interface MenuCreate {
-
   /** 名称 */
   name: string;
 
@@ -93,11 +89,9 @@ export interface MenuCreate {
 
   /** 备注信息 */
   comment: string;
-
 }
 
 export interface MenuQuery {
-
   /** 主键 */
   id: string;
 
@@ -133,11 +127,9 @@ export interface MenuQuery {
 
   /** 创建时间 */
   create_time: string;
-
 }
 
 export interface MenuModify {
-
   /** 主键 */
   id: string;
 
@@ -176,7 +168,6 @@ export interface MenuModify {
 
   /** 备注信息 */
   comment: string;
-
 }
 
 export interface MenuBatchModify {
@@ -218,11 +209,9 @@ export interface MenuBatchModify {
 
   /** 备注信息 */
   comment: string;
-
 }
 
 export interface MenuDetail {
-
   /** 主键 */
   id: string;
 
@@ -264,5 +253,4 @@ export interface MenuDetail {
 
   /** 备注信息 */
   comment: string;
-
 }

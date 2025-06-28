@@ -1,21 +1,17 @@
 'use client';
-import {
-  LogoutOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
 import { Avatar, Dropdown, MenuProps } from 'antd';
+import { LogOut, Settings, User } from 'lucide-react';
 
 const items: MenuProps['items'] = [
   {
     key: '1',
     label: 'Profile',
-    icon: <UserOutlined />,
+    icon: <User className="w-4 h-4" />,
   },
   {
     key: '2',
     label: 'Settings',
-    icon: <SettingOutlined />,
+    icon: <Settings className="w-4 h-4" />,
   },
   {
     type: 'divider',
@@ -23,7 +19,7 @@ const items: MenuProps['items'] = [
   {
     key: '3',
     label: 'Logout',
-    icon: <LogoutOutlined />,
+    icon: <LogOut className="w-4 h-4" />,
   },
 ];
 
@@ -31,7 +27,7 @@ export function UserDropdown() {
   return (
     <Dropdown menu={{ items }} placement="bottomRight" arrow>
       <div className="flex items-center gap-2 cursor-pointer">
-        <Avatar icon={<UserOutlined />} />
+        <Avatar icon={<User className="w-4 h-4" />} />
         <span className="font-medium">John Doe</span>
       </div>
     </Dropdown>

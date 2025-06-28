@@ -1,7 +1,7 @@
-import type { ServerMenu, MenuItem } from '@/types/menu';
 import { buildSvgIcon } from '@/components/svg-icon';
+import type { MenuItem, MenuRecord } from '@/types/menu';
 
-export const convertToMenuItems = (menus: ServerMenu[]): MenuItem[] => {
+export const convertToMenuItems = (menus: MenuRecord[]): MenuItem[] => {
   return menus.map((menu) => ({
     label: menu.name,
     key: menu.path,
@@ -10,10 +10,12 @@ export const convertToMenuItems = (menus: ServerMenu[]): MenuItem[] => {
   }));
 };
 
-
-export const calculateOpenKeys = (pathname: string, menus: ServerMenu[]): string[] => {
+export const calculateOpenKeys = (
+  pathname: string,
+  menus: MenuRecord[],
+): string[] => {
   const keys: string[] = [];
-  const findParent = (items: ServerMenu[], target: string): boolean => {
+  const findParent = (items: MenuRecord[], target: string): boolean => {
     return items.some((item) => {
       if (item.path === target) return true;
       if (item.children) {

@@ -1,30 +1,23 @@
 'use client';
 
-import { memo, useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { Menu, Spin } from 'antd';
-import type { MenuProps } from 'antd';
-import { useMenuStore } from '@/stores/menu-store';
 import { useDictStore } from '@/stores/dict-store';
+import { useMenuStore } from '@/stores/menu-store';
 import { calculateOpenKeys } from '@/utils/menu-util';
+import type { MenuProps } from 'antd';
+import { Menu } from 'antd';
+import { usePathname, useRouter } from 'next/navigation';
+import { memo, useEffect, useState } from 'react';
 
 const LayoutMenu = memo(() => {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Zustand 状态管理
-  const {
-    menuList,
-    menuItems,
-    loading,
-    fetchMenus,
-  } = useMenuStore();
+  const { menuList, menuItems, fetchMenus } = useMenuStore();
   const { dictData, fetchDictData } = useDictStore();
 
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([pathname]);
 
-  // 初始化加载菜单和字典
   useEffect(() => {
     const loadData = async () => {
       if (Object.keys(dictData).length === 0) {
@@ -34,7 +27,6 @@ const LayoutMenu = memo(() => {
     loadData();
   }, [fetchMenus, fetchDictData, dictData]);
 
-  // 监听路由变化，更新菜单选中项与展开项
   useEffect(() => {
     setSelectedKeys([pathname]);
     if (menuItems.length > 0) {
@@ -60,7 +52,6 @@ const LayoutMenu = memo(() => {
       items={menuItems}
       onClick={handleMenuClick}
       onOpenChange={handleOpenChange}
-      style={{ height: '100%', borderRight: 0 }}
     />
   );
 });
