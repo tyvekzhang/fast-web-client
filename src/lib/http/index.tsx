@@ -1,7 +1,8 @@
 import { APP_CONFIG, CONSTANTS } from '@/config';
 import { API_RESPONSE_FORMAT, HTTP_CONFIG } from '@/config/api';
-import { ENV, isDebugEnabled } from '@/config/env';
+import { isDebugEnabled } from '@/config/env';
 import NProgress from '@/lib/http/n-progress';
+import { Token } from '@/types/auth';
 import axios, {
   type AxiosInstance,
   AxiosRequestConfig,
@@ -39,18 +40,18 @@ class HttpClient {
     this.instance.interceptors.request.use(
       (config) => {
         NProgress.start();
-        // Add authentication token
-        const token = this.getToken();
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-
         if (isDebugEnabled()) {
           console.log(`🚀 [${config.method?.toUpperCase()}] ${config.url}`, {
             params: config.params,
             data: config.data,
           });
         }
+        // Add authentication token
+        const token = this.getToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token.access_token}`;
+        }
+        debugger
 
         return config;
       },
@@ -113,7 +114,6 @@ class HttpClient {
         }
 
         const { status, data } = error.response;
-
         if (status === HTTP_CONFIG.STATUS_CODES.UNAUTHORIZED) {
           this.handleUnauthorized();
         }
@@ -126,7 +126,7 @@ class HttpClient {
     );
   }
 
-  private getToken(): string | null {
+  private getToken(): Token | null {
     // Get token from localStorage
     try {
       const authStorage = localStorage.getItem(
@@ -144,7 +144,7 @@ class HttpClient {
 
   private handleUnauthorized() {
     // Clear authentication information
-    localStorage.removeItem(ENV.APP_NAME + APP_CONFIG.STORAGE_KEYS.AUTH);
+    localStorage.removeItem(APP_CONFIG.STORAGE_KEYS.AUTH);
 
     // Redirect to login page
     if (typeof window !== 'undefined') {

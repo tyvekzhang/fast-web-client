@@ -206,7 +206,7 @@ export default function LoginPage() {
                     icon={<MessageSquare size={18} />}
                     shape="circle"
                     size="large"
-                    className="w-12 h-12 border-green-500 text-green-500 hover:bg-green-50 hover:border-green-600"
+                    className="w-12 h-12 border-gray-800 text-gray-800 hover:bg-gray-50 hover:border-gray-900"
                     onClick={() => handleThirdPartyLogin('微信')}
                   />
                 </div>
@@ -215,7 +215,7 @@ export default function LoginPage() {
                     icon={<Mail size={18} />}
                     shape="circle"
                     size="large"
-                    className="w-12 h-12 border-red-500 text-red-500 hover:bg-red-50 hover:border-red-600"
+                    className="w-12 h-12 border-gray-800 text-gray-800 hover:bg-gray-50 hover:border-gray-900"
                     onClick={() => handleThirdPartyLogin('Google')}
                   />
                 </div>

@@ -18,7 +18,6 @@ export const useMenuStore = create<MenuState>((set) => ({
     set({ loading: true });
     try {
       const menus = await getMenus();
-      debugger
       set({
         menuList: menus,
         menuItems: convertToMenuItems(menus),

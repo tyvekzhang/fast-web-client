@@ -22,7 +22,6 @@ export const useAuthStore = create<AuthStore>()(
         set({ loading: true });
         try {
           const response = await login(loginRequest);
-          debugger
           set({
             token: response,
             loading: false
@@ -48,7 +47,7 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         token: state.token,
       }),
-      skipHydration: true,
+      // skipHydration: true,
     },
   ),
 );

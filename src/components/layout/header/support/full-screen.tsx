@@ -13,9 +13,9 @@ export default function FullScreen() {
     >
       <span onClick={toggleFullscreen}>
         {!isFullscreen ? (
-          <SvgIcon name="Maximize2" />
+          <SvgIcon name="Expand" />
         ) : (
-          <SvgIcon name="Minimize2" />
+          <SvgIcon name="Shrink" />
         )}
       </span>
     </Tooltip>
