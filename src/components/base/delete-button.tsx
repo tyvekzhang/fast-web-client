@@ -1,6 +1,6 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import React from "react";
+import React from 'react';
 
 interface DeleteButtonProps {
   onDelete: () => void;
@@ -26,4 +26,3 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({ onDelete }) => {
 };
 
 export default DeleteButton;
-

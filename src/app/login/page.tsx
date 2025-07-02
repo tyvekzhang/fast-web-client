@@ -20,13 +20,12 @@ import {
   Lock,
   Mail,
   MessageSquare,
-  User
+  User,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const { Title, Text, Link } = Typography;
-
 
 // 卡片内装饰气泡 - 只保留这一个
 const CardDecorativeBubble = () => {
@@ -36,11 +35,11 @@ const CardDecorativeBubble = () => {
 };
 
 export default function LoginPage() {
-  const {message} = App.useApp()
+  const { message } = App.useApp();
   const router = useRouter();
   useEffect(() => {
     useAuthStore.persist.rehydrate();
-  }, [])
+  }, []);
 
   const { login, loading } = useAuthStore();
 
@@ -51,18 +50,21 @@ export default function LoginPage() {
     const basicRegex = /^.{5,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^1[3-9]\d{9}$/;
-    return basicRegex.test(username) || emailRegex.test(username) || phoneRegex.test(username);
+    return (
+      basicRegex.test(username) ||
+      emailRegex.test(username) ||
+      phoneRegex.test(username)
+    );
   };
 
   const onFinish = async (values: LoginRequest) => {
-
     try {
-      login(values)
+      login(values);
       message.success('登录成功！');
       router.push('/');
     } catch (error) {
       message.error('登录失败，请检查用户名和密码');
-    } 
+    }
   };
 
   const handleThirdPartyLogin = (provider: string) => {

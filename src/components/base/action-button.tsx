@@ -1,5 +1,9 @@
 import ColumnVisibilityControl from '@/components/base/column-visibility-control';
-import { EyeInvisibleOutlined, EyeOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import { Button, Popconfirm, Popover, Space, Tooltip } from 'antd';
 import React from 'react';
 
@@ -74,12 +78,21 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
           </Button>
         )}
         {config.showExport && (
-          <Button loading={isExportLoading} disabled={isExportDisabled} onClick={onExport} className="btn-export">
+          <Button
+            loading={isExportLoading}
+            disabled={isExportDisabled}
+            onClick={onExport}
+            className="btn-export"
+          >
             导出
           </Button>
         )}
         {config.showModify && (
-          <Button disabled={isBatchModifyDisabled} onClick={onBatchModify} className="btn-batch-update">
+          <Button
+            disabled={isBatchModifyDisabled}
+            onClick={onBatchModify}
+            className="btn-batch-update"
+          >
             编辑
           </Button>
         )}
@@ -92,7 +105,11 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             okText="是"
             cancelText="否"
           >
-            <Button loading={isBatchRemoveLoading} disabled={isBatchRemoveDisabled} className="btn-batch-delete">
+            <Button
+              loading={isBatchRemoveLoading}
+              disabled={isBatchRemoveDisabled}
+              className="btn-batch-delete"
+            >
               删除
             </Button>
           </Popconfirm>

@@ -1,8 +1,8 @@
-"use client"
+'use client';
 import { message } from '@/components/GlobalToast';
 import { userExportTemplate } from '@/service/user';
-import { Inbox as InboxOutlined } from 'lucide-react';
 import { Button, Modal, Upload, UploadFile } from 'antd';
+import { Inbox as InboxOutlined } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -22,7 +22,9 @@ const Import: React.FC<ImportProps> = ({
   isLoading,
   handleFileUpload,
 }) => {
-  const [fileList, setFileList] = useState<UploadFile<any>[] | undefined>(undefined);
+  const [fileList, setFileList] = useState<UploadFile<any>[] | undefined>(
+    undefined,
+  );
   const clearFileList = () => {
     setFileList([]);
     handleFileUpload(null);
@@ -37,14 +39,21 @@ const Import: React.FC<ImportProps> = ({
     >
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isLoading} onClick={handleUserImport}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isLoading}
+      onClick={handleUserImport}
+    >
       确定
     </Button>,
   ];
   const handleUserExportTemplate = async () => {
     await userExportTemplate();
   };
-  const customUploadRequest = (options: UploadRequestOption): void | undefined => {
+  const customUploadRequest = (
+    options: UploadRequestOption,
+  ): void | undefined => {
     const { onSuccess, onError } = options;
     const file = options.file as RcFile;
     if (!file.name.endsWith('.xls') && !file.name.endsWith('.xlsx')) {

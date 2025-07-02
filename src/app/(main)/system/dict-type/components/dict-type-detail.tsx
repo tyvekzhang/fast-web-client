@@ -9,16 +9,14 @@ interface DictTypeDetailDrawerProps {
 }
 
 const DictTypeDetailComponent: React.FC<DictTypeDetailDrawerProps> = ({
-                                                                     isDictTypeDetailDrawerVisible,
-                                                                     onDictTypeDetailClose,
-                                                                     dictTypeDetail,
-                                                                   }) => {
+  isDictTypeDetailDrawerVisible,
+  onDictTypeDetailClose,
+  dictTypeDetail,
+}) => {
   const footerButtons = useMemo(
     () => (
       <Space>
-        <Button onClick={onDictTypeDetailClose}>
-          关闭
-        </Button>
+        <Button onClick={onDictTypeDetailClose}>关闭</Button>
       </Space>
     ),
     [onDictTypeDetailClose],
@@ -33,13 +31,23 @@ const DictTypeDetailComponent: React.FC<DictTypeDetailDrawerProps> = ({
       destroyOnClose
       width={600}
     >
-      { dictTypeDetail && (
+      {dictTypeDetail && (
         <Descriptions column={1} bordered>
-          <Descriptions.Item label="字典名称">{ dictTypeDetail.name}</Descriptions.Item>
-          <Descriptions.Item label="字典类型">{ dictTypeDetail.type}</Descriptions.Item>
-          <Descriptions.Item label="状态">{ dictTypeDetail.status}</Descriptions.Item>
-          <Descriptions.Item label="备注">{ dictTypeDetail.comment}</Descriptions.Item>
-          <Descriptions.Item label="创建时间">{ dictTypeDetail.create_time}</Descriptions.Item>
+          <Descriptions.Item label="字典名称">
+            {dictTypeDetail.name}
+          </Descriptions.Item>
+          <Descriptions.Item label="字典类型">
+            {dictTypeDetail.type}
+          </Descriptions.Item>
+          <Descriptions.Item label="状态">
+            {dictTypeDetail.status}
+          </Descriptions.Item>
+          <Descriptions.Item label="备注">
+            {dictTypeDetail.comment}
+          </Descriptions.Item>
+          <Descriptions.Item label="创建时间">
+            {dictTypeDetail.create_time}
+          </Descriptions.Item>
         </Descriptions>
       )}
     </Drawer>

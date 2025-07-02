@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { UserQueryForm } from '@/types/user';
 import { Button, DatePicker, Form, Input, Select, Space } from 'antd';
 import { FormInstance } from 'antd/es/form';
@@ -13,7 +13,13 @@ interface SearchProps {
   status: string | undefined;
 }
 
-const Search: React.FC<SearchProps> = ({ form, handleUserQuery, handleChangeState, handleQueryReset, status }) => {
+const Search: React.FC<SearchProps> = ({
+  form,
+  handleUserQuery,
+  handleChangeState,
+  handleQueryReset,
+  status,
+}) => {
   const { styles } = useStyles();
   const [initStatus, setInitStatus] = useState(status);
   useEffect(() => {
@@ -54,7 +60,11 @@ const Search: React.FC<SearchProps> = ({ form, handleUserQuery, handleChangeStat
           </Form.Item>
           <div className={styles.searchOperation}>
             <Form.Item>
-              <Button type="primary" htmlType="submit" className={styles.searchBtn}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className={styles.searchBtn}
+              >
                 搜索
               </Button>
               <Button onClick={handleQueryReset}>重置</Button>

@@ -51,7 +51,6 @@ class HttpClient {
         if (token) {
           config.headers.Authorization = `Bearer ${token.access_token}`;
         }
-        debugger
 
         return config;
       },
@@ -70,16 +69,15 @@ class HttpClient {
         if (this.isFileAttachment(response)) {
           return response;
         } else if (this.isTokenResponse(data)) {
-          return data
+          return data;
         }
-
 
         const standardResponse = data as StandardResponse;
         const code = standardResponse.code;
         const resData = standardResponse.data;
         if (code === API_RESPONSE_FORMAT.SUCCESS_CODE) {
           if (resData) {
-            return resData
+            return resData;
           }
           return standardResponse.msg;
         }
@@ -129,9 +127,7 @@ class HttpClient {
   private getToken(): Token | null {
     // Get token from localStorage
     try {
-      const authStorage = localStorage.getItem(
-        APP_CONFIG.STORAGE_KEYS.AUTH,
-      );
+      const authStorage = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.AUTH);
       if (authStorage) {
         const parsed = JSON.parse(authStorage);
         return parsed.state?.token || null;

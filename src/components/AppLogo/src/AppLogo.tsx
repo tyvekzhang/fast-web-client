@@ -10,7 +10,9 @@ import useStyles from './style';
 const AppLogo: FC = () => {
   const { styles } = useStyles();
   const navigate = useNavigate();
-  const getMenuFold = useAppSelector((state) => state.app.appConfig?.menuSetting?.menuFold);
+  const getMenuFold = useAppSelector(
+    (state) => state.app.appConfig?.menuSetting?.menuFold,
+  );
 
   const handleClick = () => {
     navigate('/home');
@@ -22,7 +24,9 @@ const AppLogo: FC = () => {
         {/* 图标 */}
         <img className={styles.logoImg} src={logoImg} alt="logo" />
         {/* 名称 */}
-        <div className={classNames(styles.logoName, { hidden: getMenuFold })}>{appSetting.name}</div>
+        <div className={classNames(styles.logoName, { hidden: getMenuFold })}>
+          {appSetting.name}
+        </div>
       </Space>
     </div>
   );

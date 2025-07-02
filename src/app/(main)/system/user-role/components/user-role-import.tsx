@@ -1,9 +1,9 @@
 import { message } from '@/components/GlobalToast';
 import { exportUserRoleTemplate } from '@/service/user-role';
 import { UserRoleCreate } from '@/types/user-role';
-import { Inbox as InboxOutlined } from 'lucide-react';
 import { Button, Modal, Table, Upload, UploadFile } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Inbox as InboxOutlined } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -23,15 +23,24 @@ const UserRoleImportComponent: React.FC<UserRoleImportProps> = ({
   isUserRoleImportLoading,
   handleUserRoleImport,
 }) => {
-  const [UserRoleImportFileList, setUserRoleImportFileList] = useState<RcFile[]>([]);
-  const [UserRoleCreateList, setUserRoleCreateList] = useState<UserRoleCreate[]>([]);
+  const [UserRoleImportFileList, setUserRoleImportFileList] = useState<
+    RcFile[]
+  >([]);
+  const [UserRoleCreateList, setUserRoleCreateList] = useState<
+    UserRoleCreate[]
+  >([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
     <Button key="back" onClick={handleUserRoleImportCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isUserRoleImportLoading} onClick={handleUserRoleImportConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isUserRoleImportLoading}
+      onClick={handleUserRoleImportConfirm}
+    >
       确定
     </Button>,
   ];
@@ -43,7 +52,9 @@ const UserRoleImportComponent: React.FC<UserRoleImportProps> = ({
         return;
       }
       try {
-        const UserRolePageList = await onUserRoleImportFinish(UserRoleImportFileList);
+        const UserRolePageList = await onUserRoleImportFinish(
+          UserRoleImportFileList,
+        );
         setIsUploadShow(false);
         setUserRoleCreateList(UserRolePageList as UserRoleCreate[]);
       } finally {
@@ -57,47 +68,48 @@ const UserRoleImportComponent: React.FC<UserRoleImportProps> = ({
   // 表格列信息
   const UserRolePageColumns: ColumnsType<UserRoleCreate> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: UserRoleCreate, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: UserRoleCreate, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "角色ID",
-      dataIndex: "role_id",
-      key: "role_id",
-      render: (text) => (text ? text : "-"),
+      title: '角色ID',
+      dataIndex: 'role_id',
+      key: 'role_id',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "创建者",
-      dataIndex: "creator",
-      key: "creator",
-      render: (text) => (text ? text : "-"),
+      title: '创建者',
+      dataIndex: 'creator',
+      key: 'creator',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "创建时间",
-      dataIndex: "create_time",
-      key: "create_time",
-      render: (text) => (text ? text : "-"),
+      title: '创建时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "更新者",
-      dataIndex: "updater",
-      key: "updater",
-      render: (text) => (text ? text : "-"),
+      title: '更新者',
+      dataIndex: 'updater',
+      key: 'updater',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "",
-      dataIndex: "deleted",
-      key: "deleted",
-      render: (text) => (text ? text : "-"),
+      title: '',
+      dataIndex: 'deleted',
+      key: 'deleted',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -105,7 +117,9 @@ const UserRoleImportComponent: React.FC<UserRoleImportProps> = ({
     await exportUserRoleTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -144,7 +158,7 @@ const UserRoleImportComponent: React.FC<UserRoleImportProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={ UserRoleImportFileList}
+              fileList={UserRoleImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="sc-upload-drag-icon">
@@ -154,15 +168,18 @@ const UserRoleImportComponent: React.FC<UserRoleImportProps> = ({
               <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleUserRoleExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleUserRoleExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={ UserRolePageColumns}
-            dataSource={ UserRoleCreateList}
+            columns={UserRolePageColumns}
+            dataSource={UserRoleCreateList}
             pagination={false}
             bordered={false}
             rowKey={'id'}

@@ -1,41 +1,43 @@
 import httpClient from '@/lib/http';
+import { downloadBlob } from '@/service/util';
 import { BaseQueryImpl, PageQuery, PageResult } from '@/types';
 import {
-  MenuQuery,
-  MenuCreate,
-  MenuModify,
-  MenuDetail,
-  MenuPage,
   MenuBatchModify,
+  MenuCreate,
+  MenuDetail,
+  MenuModify,
+  MenuPage,
+  MenuQuery,
 } from '@/types/menu';
 import { AxiosResponse } from 'axios';
-import { downloadBlob } from '@/service/util';
 
 /**
  * 分页查询Menu
- * 
+ *
  * @param pageQuery 分页参数
  * @param menuQuery 查询条件
  * @returns 含Menu详情列表的分页结果
  */
-export function fetchMenuByPage(pageQuery?: PageQuery, menuQuery?: Partial<MenuQuery>) {
+export function fetchMenuByPage(
+  pageQuery?: PageQuery,
+  menuQuery?: Partial<MenuQuery>,
+) {
   let pageQueryParams: PageQuery;
   if (pageQuery === null || pageQuery === undefined) {
     pageQueryParams = BaseQueryImpl.create(1, 200);
   } else {
-    pageQueryParams = pageQuery
+    pageQueryParams = pageQuery;
   }
-   const params = {
+  const params = {
     ...pageQueryParams,
-    ...menuQuery
+    ...menuQuery,
   };
   return httpClient.get<PageResult<MenuPage>>('/menu/page', params);
 }
 
-
 /**
  * 获取Menu详情
- * 
+ *
  * @param id Menu的ID
  * @returns Menu详细信息
  */
@@ -45,7 +47,7 @@ export function fetchMenuDetail(id: string) {
 
 /**
  * 导出Menu数据导入模板
- * 
+ *
  */
 export async function exportMenuTemplate() {
   const response = await httpClient.get<AxiosResponse>(
@@ -60,7 +62,7 @@ export async function exportMenuTemplate() {
 
 /**
  * 导出Menu数据
- * 
+ *
  * @param ids 要导出的Menu的ID列表
  */
 export async function exportMenuPage(ids: string[]) {
@@ -75,7 +77,7 @@ export async function exportMenuPage(ids: string[]) {
 
 /**
  * 创建Menu
- * 
+ *
  * @param menuCreate 创建数据
  * @returns 创建的Menu的ID
  */
@@ -85,7 +87,7 @@ export function createMenu(menuCreate: MenuCreate) {
 
 /**
  * 导入Menu数据并进行校验
- * 
+ *
  * @param file 上传的Excel文件
  * @returns 校验结果列表
  */
@@ -97,7 +99,7 @@ export function importMenu(file: File) {
 
 /**
  * 批量创建Menu
- * 
+ *
  * @param menuCreateList 创建数据列表
  * @returns 创建的Menu的ID列表
  */
@@ -110,7 +112,7 @@ export function batchCreateMenu(menuCreateList: MenuCreate[]) {
 
 /**
  * 移除Menu
- * 
+ *
  * @param id 要移除的Menu的Id
  */
 export function removeMenu(id: string) {
@@ -119,7 +121,7 @@ export function removeMenu(id: string) {
 
 /**
  * 批量移除Menu
- * 
+ *
  * @param ids 要移除的Menu的ID数组
  */
 export function batchRemoveMenu(ids: string[]) {
@@ -128,7 +130,7 @@ export function batchRemoveMenu(ids: string[]) {
 
 /**
  * 更新Menu信息
- * 
+ *
  * @param menuModify 包含ID数组和修改的数据
  */
 export function modifyMenu(menuModify: MenuModify) {
@@ -137,7 +139,7 @@ export function modifyMenu(menuModify: MenuModify) {
 
 /**
  * 批量更新Menu信息
- * 
+ *
  * @param menuBatchModify 包含ID数组和修改的数据
  */
 export function batchModifyMenu(menuBatchModify: MenuBatchModify) {

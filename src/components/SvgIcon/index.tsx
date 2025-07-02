@@ -1,6 +1,6 @@
+import * as AntdIcons from '@ant-design/icons';
 import React, { memo } from 'react';
 import useStyles from './style';
-import * as AntdIcons from '@ant-design/icons';
 
 interface SvgIconProp {
   name: string;
@@ -36,12 +36,11 @@ const SvgIcon: React.FC<SvgIconProp> = memo((props) => {
       <svg className={styles.svgIcon} style={iconStyle}>
         <use href={symbolId} />
       </svg>
-    )
+    );
   }
 
   // 渲染 Ant Design 图标
-  return <AntdIcon style={iconStyle} className={styles.svgIcon}/>;
-
+  return <AntdIcon style={iconStyle} className={styles.svgIcon} />;
 });
 
 export default SvgIcon;

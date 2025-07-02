@@ -1,15 +1,15 @@
 import httpClient from '@/lib/http';
+import { downloadBlob } from '@/service/util';
 import { BaseQueryImpl, PageQuery, PageResult } from '@/types';
 import {
-  DictDataQuery,
-  DictDataCreate,
-  DictDataModify,
-  DictDataDetail,
-  DictDataPage,
   DictDataBatchModify,
+  DictDataCreate,
+  DictDataDetail,
+  DictDataModify,
+  DictDataPage,
+  DictDataQuery,
 } from '@/types/dict-data';
 import { AxiosResponse } from 'axios';
-import { downloadBlob } from '@/service/util';
 
 export function fetchAllDictData() {
   return httpClient.get<Record<number, any>>('/dict-data/all');
@@ -21,20 +21,22 @@ export function fetchAllDictData() {
  * @param dictDataQuery 查询条件
  * @returns 含DictData详情列表的分页结果
  */
-export function fetchDictDataByPage(pageQuery?: PageQuery, dictDataQuery?: Partial<DictDataQuery>) {
+export function fetchDictDataByPage(
+  pageQuery?: PageQuery,
+  dictDataQuery?: Partial<DictDataQuery>,
+) {
   let pageQueryParams: PageQuery;
   if (pageQuery === null || pageQuery === undefined) {
     pageQueryParams = BaseQueryImpl.create(1, 200);
   } else {
-    pageQueryParams = pageQuery
+    pageQueryParams = pageQuery;
   }
-   const params = {
+  const params = {
     ...pageQueryParams,
-    ...dictDataQuery
+    ...dictDataQuery,
   };
   return httpClient.get<PageResult<DictDataPage>>('/dict-data/page', params);
 }
-
 
 /**
  * 获取DictData详情
@@ -70,9 +72,13 @@ export async function exportDictDataPage(ids: string[]) {
   const params = {
     ids: ids,
   };
-  const response = await httpClient.get<AxiosResponse>(`/dict-data/export`, params, {
-    responseType: 'blob',
-  });
+  const response = await httpClient.get<AxiosResponse>(
+    `/dict-data/export`,
+    params,
+    {
+      responseType: 'blob',
+    },
+  );
   downloadBlob(response, '字典数据导出.xlsx');
 }
 
@@ -108,7 +114,10 @@ export function batchCreateDictData(dictDataCreateList: DictDataCreate[]) {
   if (!dictDataCreateList?.length) {
     return Promise.resolve([]);
   }
-  return httpClient.post<number[]>('/dict-data/batch-create', dictDataCreateList);
+  return httpClient.post<number[]>(
+    '/dict-data/batch-create',
+    dictDataCreateList,
+  );
 }
 
 /**

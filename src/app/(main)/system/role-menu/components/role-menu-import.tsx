@@ -1,9 +1,9 @@
 import { message } from '@/components/GlobalToast';
 import { exportRoleMenuTemplate } from '@/service/role-menu';
 import { RoleMenuCreate } from '@/types/role-menu';
-import { Inbox as InboxOutlined } from 'lucide-react';
 import { Button, Modal, Table, Upload, UploadFile } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Inbox as InboxOutlined } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -23,15 +23,24 @@ const RoleMenuImportComponent: React.FC<RoleMenuImportProps> = ({
   isRoleMenuImportLoading,
   handleRoleMenuImport,
 }) => {
-  const [RoleMenuImportFileList, setRoleMenuImportFileList] = useState<RcFile[]>([]);
-  const [RoleMenuCreateList, setRoleMenuCreateList] = useState<RoleMenuCreate[]>([]);
+  const [RoleMenuImportFileList, setRoleMenuImportFileList] = useState<
+    RcFile[]
+  >([]);
+  const [RoleMenuCreateList, setRoleMenuCreateList] = useState<
+    RoleMenuCreate[]
+  >([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
     <Button key="back" onClick={handleRoleMenuImportCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isRoleMenuImportLoading} onClick={handleRoleMenuImportConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isRoleMenuImportLoading}
+      onClick={handleRoleMenuImportConfirm}
+    >
       确定
     </Button>,
   ];
@@ -43,7 +52,9 @@ const RoleMenuImportComponent: React.FC<RoleMenuImportProps> = ({
         return;
       }
       try {
-        const RoleMenuPageList = await onRoleMenuImportFinish(RoleMenuImportFileList);
+        const RoleMenuPageList = await onRoleMenuImportFinish(
+          RoleMenuImportFileList,
+        );
         setIsUploadShow(false);
         setRoleMenuCreateList(RoleMenuPageList as RoleMenuCreate[]);
       } finally {
@@ -57,53 +68,54 @@ const RoleMenuImportComponent: React.FC<RoleMenuImportProps> = ({
   // 表格列信息
   const RoleMenuPageColumns: ColumnsType<RoleMenuCreate> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: RoleMenuCreate, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: RoleMenuCreate, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "角色ID",
-      dataIndex: "role_id",
-      key: "role_id",
-      render: (text) => (text ? text : "-"),
+      title: '角色ID',
+      dataIndex: 'role_id',
+      key: 'role_id',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "菜单ID",
-      dataIndex: "menu_id",
-      key: "menu_id",
-      render: (text) => (text ? text : "-"),
+      title: '菜单ID',
+      dataIndex: 'menu_id',
+      key: 'menu_id',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "创建者",
-      dataIndex: "creator",
-      key: "creator",
-      render: (text) => (text ? text : "-"),
+      title: '创建者',
+      dataIndex: 'creator',
+      key: 'creator',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "创建时间",
-      dataIndex: "create_time",
-      key: "create_time",
-      render: (text) => (text ? text : "-"),
+      title: '创建时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "更新者",
-      dataIndex: "updater",
-      key: "updater",
-      render: (text) => (text ? text : "-"),
+      title: '更新者',
+      dataIndex: 'updater',
+      key: 'updater',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "",
-      dataIndex: "deleted",
-      key: "deleted",
-      render: (text) => (text ? text : "-"),
+      title: '',
+      dataIndex: 'deleted',
+      key: 'deleted',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -111,7 +123,9 @@ const RoleMenuImportComponent: React.FC<RoleMenuImportProps> = ({
     await exportRoleMenuTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -150,7 +164,7 @@ const RoleMenuImportComponent: React.FC<RoleMenuImportProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={ RoleMenuImportFileList}
+              fileList={RoleMenuImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="sc-upload-drag-icon">
@@ -160,15 +174,18 @@ const RoleMenuImportComponent: React.FC<RoleMenuImportProps> = ({
               <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleRoleMenuExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleRoleMenuExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={ RoleMenuPageColumns}
-            dataSource={ RoleMenuCreateList}
+            columns={RoleMenuPageColumns}
+            dataSource={RoleMenuCreateList}
             pagination={false}
             bordered={false}
             rowKey={'id'}

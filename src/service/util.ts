@@ -1,6 +1,8 @@
 import { AxiosResponse } from 'axios';
 
-export function extractFilename(disposition: string | undefined): string | null {
+export function extractFilename(
+  disposition: string | undefined,
+): string | null {
   if (!disposition) return null;
 
   const filenameMatch = disposition.split(/;(.+)/)[1]?.split(/=(.+)/)[1];
@@ -15,9 +17,14 @@ export function extractFilename(disposition: string | undefined): string | null 
   return filename;
 }
 
-export function downloadBlob(response: AxiosResponse, default_filename: string): void {
+export function downloadBlob(
+  response: AxiosResponse,
+  default_filename: string,
+): void {
   const data: Blob = response.data;
-  const disposition = response.headers['content-disposition'] || response.headers['contentDisposition'];
+  const disposition =
+    response.headers['content-disposition'] ||
+    response.headers['contentDisposition'];
   const filename = extractFilename(disposition) || default_filename;
   const url = window.URL.createObjectURL(data);
 

@@ -12,7 +12,6 @@ export interface AppMenu {
 }
 
 export interface MenuPage {
-
   /** 主键 */
   id: string;
 
@@ -39,11 +38,9 @@ export interface MenuPage {
 
   /** 创建时间 */
   create_time: string;
-
 }
 
 export interface MenuCreate {
-
   /** 名称 */
   name: string;
 
@@ -79,21 +76,17 @@ export interface MenuCreate {
 
   /** 备注信息 */
   comment: string;
-
 }
 
 export interface MenuQuery {
-
   /** 名称 */
   name: string;
 
   /** 创建时间 */
   create_time: string[];
-
 }
 
 export interface MenuModify {
-
   /** 主键 */
   id: string;
 
@@ -132,7 +125,6 @@ export interface MenuModify {
 
   /** 备注信息 */
   comment: string;
-
 }
 
 export interface MenuBatchModify {
@@ -174,11 +166,9 @@ export interface MenuBatchModify {
 
   /** 备注信息 */
   comment: string;
-
 }
 
 export interface MenuDetail {
-
   /** 主键 */
   id: string;
 
@@ -220,5 +210,4 @@ export interface MenuDetail {
 
   /** 备注信息 */
   comment: string;
-
 }

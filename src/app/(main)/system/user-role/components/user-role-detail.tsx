@@ -9,16 +9,14 @@ interface UserRoleDetailDrawerProps {
 }
 
 const UserRoleDetailComponent: React.FC<UserRoleDetailDrawerProps> = ({
-                                                                     isUserRoleDetailDrawerVisible,
-                                                                     onUserRoleDetailClose,
-                                                                     userRoleDetail,
-                                                                   }) => {
+  isUserRoleDetailDrawerVisible,
+  onUserRoleDetailClose,
+  userRoleDetail,
+}) => {
   const footerButtons = useMemo(
     () => (
       <Space>
-        <Button onClick={onUserRoleDetailClose}>
-          关闭
-        </Button>
+        <Button onClick={onUserRoleDetailClose}>关闭</Button>
       </Space>
     ),
     [onUserRoleDetailClose],
@@ -33,13 +31,23 @@ const UserRoleDetailComponent: React.FC<UserRoleDetailDrawerProps> = ({
       destroyOnClose
       width={600}
     >
-      { userRoleDetail && (
+      {userRoleDetail && (
         <Descriptions column={1} bordered>
-          <Descriptions.Item label="角色ID">{ userRoleDetail.role_id}</Descriptions.Item>
-          <Descriptions.Item label="创建者">{ userRoleDetail.creator}</Descriptions.Item>
-          <Descriptions.Item label="创建时间">{ userRoleDetail.create_time}</Descriptions.Item>
-          <Descriptions.Item label="更新者">{ userRoleDetail.updater}</Descriptions.Item>
-          <Descriptions.Item label="">{ userRoleDetail.deleted}</Descriptions.Item>
+          <Descriptions.Item label="角色ID">
+            {userRoleDetail.role_id}
+          </Descriptions.Item>
+          <Descriptions.Item label="创建者">
+            {userRoleDetail.creator}
+          </Descriptions.Item>
+          <Descriptions.Item label="创建时间">
+            {userRoleDetail.create_time}
+          </Descriptions.Item>
+          <Descriptions.Item label="更新者">
+            {userRoleDetail.updater}
+          </Descriptions.Item>
+          <Descriptions.Item label="">
+            {userRoleDetail.deleted}
+          </Descriptions.Item>
         </Descriptions>
       )}
     </Drawer>

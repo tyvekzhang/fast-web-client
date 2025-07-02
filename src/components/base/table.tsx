@@ -70,7 +70,9 @@ const TailwindTable: React.FC<TailwindTableProps> = ({ columns, data }) => {
             </td>
           ))}
         </tr>
-        {row.children && expandedRows.has(row.key) && row.children.map((child) => renderRow(child, level + 1))}
+        {row.children &&
+          expandedRows.has(row.key) &&
+          row.children.map((child) => renderRow(child, level + 1))}
       </React.Fragment>
     );
   };
@@ -106,7 +108,9 @@ const TailwindTable: React.FC<TailwindTableProps> = ({ columns, data }) => {
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">{data.map((row) => renderRow(row))}</tbody>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {data.map((row) => renderRow(row))}
+              </tbody>
             </table>
           </div>
         </div>

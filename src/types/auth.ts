@@ -1,14 +1,13 @@
 export type LoginRequest = {
-    username: string;
-    password: string;
-}
+  username: string;
+  password: string;
+};
 
 export type Token = {
-  access_token: string
-  expires_in: number
-  refresh_token: string
-}
-
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+};
 
 export interface User {
   id: string;
@@ -35,7 +34,6 @@ export interface Permission {
   action: string;
   description: string;
 }
-
 
 export type PermissionAction = 'create' | 'read' | 'update' | 'delete';
 export type PermissionResource =

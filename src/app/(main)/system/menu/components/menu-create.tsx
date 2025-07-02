@@ -1,9 +1,9 @@
 import { MenuCreate } from '@/types/menu';
+import { TreeSelectUtil } from '@/utils/select-util';
 import { Button, Form, Input, Modal, Radio, TreeSelect } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 import IconSelect from './IconSelect';
-import { TreeSelectUtil } from '@/utils/select-util';
 
 const menuCreateFormItemLayout = {
   labelCol: { span: 4 },
@@ -20,21 +20,28 @@ interface MenuCreateProps {
 }
 
 const MenuCreateComponent: React.FC<MenuCreateProps> = ({
-                                                          isMenuCreateModalVisible,
-                                                          onMenuCreateCancel,
-                                                          onMenuCreateFinish,
-                                                          isMenuCreateLoading,
-                                                          menuCreateForm,
-                                                          optionDataSource,
-                                                        }) => {
-  const optionDataTransform = [{ name: '根目录', id: 0, children: optionDataSource }];
+  isMenuCreateModalVisible,
+  onMenuCreateCancel,
+  onMenuCreateFinish,
+  isMenuCreateLoading,
+  menuCreateForm,
+  optionDataSource,
+}) => {
+  const optionDataTransform = [
+    { name: '根目录', id: 0, children: optionDataSource },
+  ];
   const menuTreeData = TreeSelectUtil.transform(optionDataTransform);
   const footerButtons = useMemo(
     () => [
       <Button key="back" onClick={onMenuCreateCancel}>
         取消
       </Button>,
-      <Button key="submit" type="primary" loading={isMenuCreateLoading} onClick={() => menuCreateForm.submit()}>
+      <Button
+        key="submit"
+        type="primary"
+        loading={isMenuCreateLoading}
+        onClick={() => menuCreateForm.submit()}
+      >
         确定
       </Button>,
     ],
@@ -64,8 +71,7 @@ const MenuCreateComponent: React.FC<MenuCreateProps> = ({
             placeholder="请选择上级菜单"
             allowClear
             treeData={menuTreeData}
-          >
-          </TreeSelect>
+          ></TreeSelect>
         </Form.Item>
 
         <Form.Item label="菜单类型" name="type">
@@ -80,11 +86,21 @@ const MenuCreateComponent: React.FC<MenuCreateProps> = ({
           <IconSelect onChange={handleIconChange} />
         </Form.Item>
 
-        <Form.Item label="菜单名称" name="name" required rules={[{ required: true, message: '请输入菜单名称' }]}>
+        <Form.Item
+          label="菜单名称"
+          name="name"
+          required
+          rules={[{ required: true, message: '请输入菜单名称' }]}
+        >
           <Input placeholder="请输入菜单名称" />
         </Form.Item>
 
-        <Form.Item label="显示排序" name="sort" required rules={[{ required: true, message: '请输入显示排序' }]}>
+        <Form.Item
+          label="显示排序"
+          name="sort"
+          required
+          rules={[{ required: true, message: '请输入显示排序' }]}
+        >
           <Input placeholder="请输入显示排序" />
         </Form.Item>
 
@@ -95,7 +111,12 @@ const MenuCreateComponent: React.FC<MenuCreateProps> = ({
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="路由地址" name="path" required rules={[{ required: true, message: '请输入路由地址' }]}>
+        <Form.Item
+          label="路由地址"
+          name="path"
+          required
+          rules={[{ required: true, message: '请输入路由地址' }]}
+        >
           <Input placeholder="请输入路由地址" />
         </Form.Item>
 
@@ -118,4 +139,3 @@ const MenuCreateComponent: React.FC<MenuCreateProps> = ({
 };
 
 export default MenuCreateComponent;
-

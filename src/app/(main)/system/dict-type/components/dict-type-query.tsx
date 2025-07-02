@@ -1,6 +1,6 @@
 import { Button, DatePicker, Form, Input, Select, Space } from 'antd';
-import dayjs from 'dayjs';
 import { FormInstance } from 'antd/es/form';
+import dayjs from 'dayjs';
 import React from 'react';
 
 interface DictTypeQueryProps {
@@ -15,10 +15,10 @@ const dictTypeQueryFormItemLayout = {
 };
 
 const DictTypeQueryComponent: React.FC<DictTypeQueryProps> = ({
-                                                                onDictTypeQueryFinish,
-                                                                onDictTypeQueryReset,
-                                                                dictTypeQueryForm,
-                                                              }) => {
+  onDictTypeQueryFinish,
+  onDictTypeQueryReset,
+  dictTypeQueryForm,
+}) => {
   const handleDictTypeQueryReset = () => {
     onDictTypeQueryReset();
     onDictTypeQueryFinish();

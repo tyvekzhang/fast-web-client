@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { UserAdd } from '@/types/user';
 import { Button, Form, Input, Modal, Progress, Space } from 'antd';
 import { FormInstance } from 'antd/es/form';
@@ -17,13 +17,24 @@ interface AddProps {
   formProp: FormInstance;
 }
 
-const Add: React.FC<AddProps> = ({ isModalVisible, handleCancel, handleUserAdd, isLoading, formProp }) => {
+const Add: React.FC<AddProps> = ({
+  isModalVisible,
+  handleCancel,
+  handleUserAdd,
+  isLoading,
+  formProp,
+}) => {
   const footerButtons = useMemo(
     () => [
       <Button key="back" onClick={handleCancel}>
         取消
       </Button>,
-      <Button key="submit" type="primary" loading={isLoading} onClick={() => formProp.submit()}>
+      <Button
+        key="submit"
+        type="primary"
+        loading={isLoading}
+        onClick={() => formProp.submit()}
+      >
         确定
       </Button>,
     ],
@@ -90,8 +101,18 @@ const Add: React.FC<AddProps> = ({ isModalVisible, handleCancel, handleUserAdd, 
 
   return (
     <div>
-      <Modal title="用户新增" open={isModalVisible} onCancel={handleCancel} footer={footerButtons}>
-        <Form {...formPropItemLayout} form={formProp} name="userAdd" onFinish={onFinish}>
+      <Modal
+        title="用户新增"
+        open={isModalVisible}
+        onCancel={handleCancel}
+        footer={footerButtons}
+      >
+        <Form
+          {...formPropItemLayout}
+          form={formProp}
+          name="userAdd"
+          onFinish={onFinish}
+        >
           <Form.Item
             name="username"
             label="用户名"
@@ -115,7 +136,11 @@ const Add: React.FC<AddProps> = ({ isModalVisible, handleCancel, handleUserAdd, 
             ]}
             tooltip="密码至少6位，包括大小写字母、数字"
           >
-            <Input.Password placeholder="请输入" onChange={handleChange} value={password} />
+            <Input.Password
+              placeholder="请输入"
+              onChange={handleChange}
+              value={password}
+            />
             <div>
               <Space>
                 <Progress
@@ -134,17 +159,29 @@ const Add: React.FC<AddProps> = ({ isModalVisible, handleCancel, handleUserAdd, 
                   status={strength.level === 3 ? 'success' : 'active'}
                   strokeLinecap="round"
                 />
-                <div style={{ textAlign: 'right', color: strength.level === 3 ? '#52c41a' : '#000' }}>
+                <div
+                  style={{
+                    textAlign: 'right',
+                    color: strength.level === 3 ? '#52c41a' : '#000',
+                  }}
+                >
                   {strength.text}
                 </div>
               </Space>
             </div>
           </Form.Item>
-          <Form.Item name="nickname" label="昵称" rules={[{ required: true, message: '必填项' }]}>
+          <Form.Item
+            name="nickname"
+            label="昵称"
+            rules={[{ required: true, message: '必填项' }]}
+          >
             <Input placeholder="请输入" />
           </Form.Item>
           <Form.Item name="remark" label="备注">
-            <Input.TextArea placeholder="请输入" autoSize={{ minRows: 3, maxRows: 5 }} />
+            <Input.TextArea
+              placeholder="请输入"
+              autoSize={{ minRows: 3, maxRows: 5 }}
+            />
           </Form.Item>
         </Form>
       </Modal>

@@ -5,7 +5,10 @@ interface TransitionWrapperProps {
   children: React.ReactNode;
 }
 
-const TransitionWrapper: React.FC<TransitionWrapperProps> = ({ show, children }) => {
+const TransitionWrapper: React.FC<TransitionWrapperProps> = ({
+  show,
+  children,
+}) => {
   const [shouldRender, setShouldRender] = useState(show);
 
   useEffect(() => {

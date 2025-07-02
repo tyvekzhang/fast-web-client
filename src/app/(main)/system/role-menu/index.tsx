@@ -1,6 +1,7 @@
-import ActionButtonComponent from "@/components/base/action-button";
-import { PaginatedTable } from "@/components/base/paginated-table";
-import { message } from "@/components/GlobalToast";
+import ActionButtonComponent from '@/components/base/action-button';
+import { PaginatedTable } from '@/components/base/paginated-table';
+import TransitionWrapper from '@/components/base/transition-wrapper';
+import { message } from '@/components/GlobalToast';
 import {
   batchCreateRoleMenu,
   batchModifyRoleMenu,
@@ -12,21 +13,32 @@ import {
   importRoleMenu,
   modifyRoleMenu,
   removeRoleMenu,
-} from "@/service/role-menu";
-import { BaseQueryImpl } from "@/types";
-import { RoleMenuBatchModify, RoleMenuCreate, RoleMenuDetail, RoleMenuModify, RoleMenuPage, RoleMenuQuery } from "@/types/role-menu";
-import RoleMenuBatchModifyComponent from "@/views/system/role-menu/components/role-menu-batch-modify";
-import RoleMenuCreateComponent from "@/views/system/role-menu/components/role-menu-create";
-import RoleMenuImportComponent from "@/views/system/role-menu/components/role-menu-import";
-import RoleMenuModifyComponent from "@/views/system/role-menu/components/role-menu-modify";
-import RoleMenuQueryComponent from "@/views/system/role-menu/components/role-menu-query";
-import { Form } from "antd";
-import { ColumnsType } from "antd/lib/table";
-import type { RcFile } from "rc-upload/lib/interface";
-import React, { useEffect, useState } from "react";
-import { DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined } from '@ant-design/icons';
-import RoleMenuDetailComponent from "@/views/system/role-menu/components/role-menu-detail";
-import TransitionWrapper from '@/components/base/transition-wrapper';
+} from '@/service/role-menu';
+import { BaseQueryImpl } from '@/types';
+import {
+  RoleMenuBatchModify,
+  RoleMenuCreate,
+  RoleMenuDetail,
+  RoleMenuModify,
+  RoleMenuPage,
+  RoleMenuQuery,
+} from '@/types/role-menu';
+import RoleMenuBatchModifyComponent from '@/views/system/role-menu/components/role-menu-batch-modify';
+import RoleMenuCreateComponent from '@/views/system/role-menu/components/role-menu-create';
+import RoleMenuDetailComponent from '@/views/system/role-menu/components/role-menu-detail';
+import RoleMenuImportComponent from '@/views/system/role-menu/components/role-menu-import';
+import RoleMenuModifyComponent from '@/views/system/role-menu/components/role-menu-modify';
+import RoleMenuQueryComponent from '@/views/system/role-menu/components/role-menu-query';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  MoreOutlined,
+} from '@ant-design/icons';
+import { Form } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
+import type { RcFile } from 'rc-upload/lib/interface';
+import React, { useEffect, useState } from 'react';
 
 const RoleMenu: React.FC = () => {
   // 配置模块
@@ -40,24 +52,26 @@ const RoleMenu: React.FC = () => {
   const showMore = false;
 
   // 查询模块
-  const [isRoleMenuQueryShow, setIsRoleMenuQueryShow] = useState<boolean>(true)
-  const [roleMenuPageDataSource, setRoleMenuPageDataSource] = useState<RoleMenuPage[]>([]);
+  const [isRoleMenuQueryShow, setIsRoleMenuQueryShow] = useState<boolean>(true);
+  const [roleMenuPageDataSource, setRoleMenuPageDataSource] = useState<
+    RoleMenuPage[]
+  >([]);
   const [roleMenuPageTotalCount, setRoleMenuPageTotalCount] = useState(0);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const onRoleMenuQueryShow = () => {
-    setIsRoleMenuQueryShow(prevState => !prevState)
-  }
+    setIsRoleMenuQueryShow((prevState) => !prevState);
+  };
   useEffect(() => {
     const fetchData = async () => {
-      const roleMenuQuery = (await roleMenuQueryForm.validateFields()) as RoleMenuQuery;
+      const roleMenuQuery =
+        (await roleMenuQueryForm.validateFields()) as RoleMenuQuery;
       const pageData = BaseQueryImpl.create(current, pageSize);
       const resp = await fetchRoleMenuByPage(pageData, roleMenuQuery);
       setRoleMenuPageDataSource(resp.records);
       setRoleMenuPageTotalCount(resp.total);
     };
-    fetchData().then(() => {
-    });
+    fetchData().then(() => {});
   }, [current, pageSize]);
 
   const handlePaginationChange = (newPage: number, newPageSize: number) => {
@@ -70,8 +84,11 @@ const RoleMenu: React.FC = () => {
   };
 
   // 详情模块
-  const [isRoleMenuDetailDrawerVisible, setIsRoleMenuDetailDrawerVisible] = useState<boolean>(false);
-  const [roleMenuDetail, setRoleMenuDetail] = useState<RoleMenuDetail | null>(null);
+  const [isRoleMenuDetailDrawerVisible, setIsRoleMenuDetailDrawerVisible] =
+    useState<boolean>(false);
+  const [roleMenuDetail, setRoleMenuDetail] = useState<RoleMenuDetail | null>(
+    null,
+  );
   const onRoleMenuDetail = async (roleMenuPage: RoleMenuPage) => {
     setIsRoleMenuDetailDrawerVisible(true);
     const id = roleMenuPage.id;
@@ -86,74 +103,75 @@ const RoleMenu: React.FC = () => {
   // 表格列信息
   const roleMenuPageColumns: ColumnsType<RoleMenuPage> = [
     {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
+      title: 'Id',
+      dataIndex: 'id',
+      key: 'id',
       hidden: true,
     },
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: RoleMenuPage, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: RoleMenuPage, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "角色ID",
-      dataIndex: "role_id",
-      key: "role_id",
-      render: (text) => (text ? text : "-"),
-      width: "6%",
+      title: '角色ID',
+      dataIndex: 'role_id',
+      key: 'role_id',
+      render: (text) => (text ? text : '-'),
+      width: '6%',
     },
     {
-      title: "菜单ID",
-      dataIndex: "menu_id",
-      key: "menu_id",
-      render: (text) => (text ? text : "-"),
-      width: "6%",
+      title: '菜单ID',
+      dataIndex: 'menu_id',
+      key: 'menu_id',
+      render: (text) => (text ? text : '-'),
+      width: '6%',
     },
     {
-      title: "创建者",
-      dataIndex: "creator",
-      key: "creator",
-      render: (text) => (text ? text : "-"),
+      title: '创建者',
+      dataIndex: 'creator',
+      key: 'creator',
+      render: (text) => (text ? text : '-'),
       ellipsis: true,
-      width: "12%",
+      width: '12%',
     },
     {
-      title: "创建时间",
-      dataIndex: "create_time",
-      key: "create_time",
-      render: (text) => (text ? text : "-"),
+      title: '创建时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (text) => (text ? text : '-'),
       ellipsis: true,
-      width: "12%",
+      width: '12%',
     },
     {
-      title: "更新者",
-      dataIndex: "updater",
-      key: "updater",
-      render: (text) => (text ? text : "-"),
+      title: '更新者',
+      dataIndex: 'updater',
+      key: 'updater',
+      render: (text) => (text ? text : '-'),
       ellipsis: true,
-      width: "12%",
+      width: '12%',
     },
     {
-      title: "",
-      dataIndex: "deleted",
-      key: "deleted",
-      render: (text) => (text ? text : "-"),
+      title: '',
+      dataIndex: 'deleted',
+      key: 'deleted',
+      render: (text) => (text ? text : '-'),
       ellipsis: true,
-      width: "12%",
+      width: '12%',
     },
     {
-      title: "操作",
-      key: "action",
-      align: "center",
+      title: '操作',
+      key: 'action',
+      align: 'center',
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onMenuDetail(record)}
+            onClick={() => onMenuDetail(record)}
           >
             <EyeOutlined className="w-3 h-3" />
             详情
@@ -161,7 +179,7 @@ const RoleMenu: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onMenuModify(record)}
+            onClick={() => onMenuModify(record)}
           >
             <EditOutlined className="w-3 h-3" />
             编辑
@@ -169,14 +187,17 @@ const RoleMenu: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-remove"
-            onClick={ () => handleMenuDelete(record)}
+            onClick={() => handleMenuDelete(record)}
           >
             <DeleteOutlined className="w-3 h-3" />
             删除
           </button>
 
           {showMore && (
-            <button type="button" className="flex items-center gap-0.5 text-xs btn-operation">
+            <button
+              type="button"
+              className="flex items-center gap-0.5 text-xs btn-operation"
+            >
               <span>更多</span>
               <MoreOutlined className="w-3 h-3" />
             </button>
@@ -184,19 +205,23 @@ const RoleMenu: React.FC = () => {
         </div>
       ),
     },
-  ]
+  ];
 
-  const [visibleColumns, setVisibleColumns] = useState(roleMenuPageColumns.map(col => col.key));
+  const [visibleColumns, setVisibleColumns] = useState(
+    roleMenuPageColumns.map((col) => col.key),
+  );
   const onToggleColumnVisibility = (columnKey: number) => {
-    setVisibleColumns(prevVisibleColumns => {
+    setVisibleColumns((prevVisibleColumns) => {
       if (prevVisibleColumns.includes(columnKey)) {
-        return prevVisibleColumns.filter(key => key !== columnKey);
+        return prevVisibleColumns.filter((key) => key !== columnKey);
       } else {
         return [...prevVisibleColumns, columnKey];
       }
     });
   };
-  const filteredRoleMenuColumns = roleMenuPageColumns.filter(col => visibleColumns.includes(col.key));
+  const filteredRoleMenuColumns = roleMenuPageColumns.filter((col) =>
+    visibleColumns.includes(col.key),
+  );
 
   const [roleMenuQueryForm] = Form.useForm();
   const handleRoleMenuQueryReset = () => {
@@ -205,27 +230,36 @@ const RoleMenu: React.FC = () => {
   };
   const onRoleMenuQueryFinish = async () => {
     const roleMenuQueryFormData = roleMenuQueryForm.getFieldsValue();
-    const { create_time } = roleMenuQueryFormData
+    const { create_time } = roleMenuQueryFormData;
     if (create_time) {
-      const [startDate, endDate] = create_time
-      roleMenuQueryFormData.create_time = [startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')]
+      const [startDate, endDate] = create_time;
+      roleMenuQueryFormData.create_time = [
+        startDate.format('YYYY-MM-DD'),
+        endDate.format('YYYY-MM-DD'),
+      ];
     }
     const roleMenuQuery = roleMenuQueryFormData as RoleMenuQuery;
     const filteredRoleMenuQuery = Object.fromEntries(
-      Object.entries(roleMenuQuery).filter(([, value]) => value !== undefined && value !== null && value !== ""),
+      Object.entries(roleMenuQuery).filter(
+        ([, value]) => value !== undefined && value !== null && value !== '',
+      ),
     );
     resetPagination();
     await handleRoleMenuQueryFinish(filteredRoleMenuQuery as RoleMenuQuery);
   };
   const handleRoleMenuQueryFinish = async (roleMenuQuery: RoleMenuQuery) => {
-    await fetchRoleMenuByPage(BaseQueryImpl.create(current, pageSize), roleMenuPage).then((resp) => {
+    await fetchRoleMenuByPage(
+      BaseQueryImpl.create(current, pageSize),
+      roleMenuPage,
+    ).then((resp) => {
       setRoleMenuPageDataSource(resp.records);
       setRoleMenuPageTotalCount(resp.total);
     });
   };
 
   // 新增模块
-  const [isRoleMenuCreateModalVisible, setIsRoleMenuCreateModalVisible] = useState(false);
+  const [isRoleMenuCreateModalVisible, setIsRoleMenuCreateModalVisible] =
+    useState(false);
   const [isRoleMenuCreateLoading, setIsRoleMenuCreateLoading] = useState(false);
   const [roleMenuCreateForm] = Form.useForm();
   const onRoleMenuCreate = () => {
@@ -239,7 +273,7 @@ const RoleMenu: React.FC = () => {
     setIsRoleMenuCreateLoading(true);
     try {
       await createRoleMenu(roleMenuCreate);
-      message.success("新增成功");
+      message.success('新增成功');
       roleMenuCreateForm.resetFields();
       await onRoleMenuQueryFinish();
     } finally {
@@ -255,20 +289,24 @@ const RoleMenu: React.FC = () => {
   };
 
   // 批量删除模块
-  const [isBatchRemoveLoading, setIsBatchRemoveLoading] = useState<boolean>(false);
+  const [isBatchRemoveLoading, setIsBatchRemoveLoading] =
+    useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRows, setSelectedRows] = useState<RoleMenuPage[]>([]);
   const resetSelectedRows = () => {
     setSelectedRowKeys([]);
     setSelectedRows([]);
   };
-  const handleSelectionChange = (selectedRowKeys: React.Key[], selectedRows: RoleMenuPage[]) => {
+  const handleSelectionChange = (
+    selectedRowKeys: React.Key[],
+    selectedRows: RoleMenuPage[],
+  ) => {
     setSelectedRows(selectedRows);
     setSelectedRowKeys(selectedRowKeys);
   };
   const handleRoleMenuBatchRemove = async () => {
     if (selectedRowKeys.length === 0) {
-      message.warning("请先选择要删除的项目");
+      message.warning('请先选择要删除的项目');
       return;
     }
     try {
@@ -282,17 +320,19 @@ const RoleMenu: React.FC = () => {
   };
   const handleRoleMenuBatchRemoveCancel = async () => {
     resetSelectedRows();
-    message.info("操作已取消");
+    message.info('操作已取消');
   };
 
   // 单个更新模块
-  const [isRoleMenuModifyModalVisible, setIsRoleMenuModifyModalVisible] = useState<boolean>(false);
-  const [isRoleMenuModifyLoading, setIsRoleMenuModifyLoading] = useState<boolean>(false);
+  const [isRoleMenuModifyModalVisible, setIsRoleMenuModifyModalVisible] =
+    useState<boolean>(false);
+  const [isRoleMenuModifyLoading, setIsRoleMenuModifyLoading] =
+    useState<boolean>(false);
   const [roleMenuModifyForm] = Form.useForm();
   const onRoleMenuModify = (roleMenuPage: RoleMenuPage) => {
     setIsRoleMenuModifyModalVisible(true);
-    setSelectedRowKeys([roleMenuPage.id])
-    setSelectedRows([roleMenuPage])
+    setSelectedRowKeys([roleMenuPage.id]);
+    setSelectedRows([roleMenuPage]);
     roleMenuModifyForm.setFieldsValue({ ...roleMenuPage });
   };
 
@@ -302,13 +342,14 @@ const RoleMenu: React.FC = () => {
     setIsRoleMenuModifyModalVisible(false);
   };
   const handleRoleMenuModifyFinish = async () => {
-    const roleMenuModifyData = (await roleMenuModifyForm.validateFields()) as RoleMenuModify;
-    const roleMenuModify = {...roleMenuModifyData, id: selectedRows[0].id};
+    const roleMenuModifyData =
+      (await roleMenuModifyForm.validateFields()) as RoleMenuModify;
+    const roleMenuModify = { ...roleMenuModifyData, id: selectedRows[0].id };
     setIsRoleMenuModifyLoading(true);
     try {
       await modifyRoleMenu(roleMenuModify);
       roleMenuModifyForm.resetFields();
-      message.success("更新成功");
+      message.success('更新成功');
       await onRoleMenuQueryFinish();
       resetSelectedRows();
     } finally {
@@ -327,27 +368,32 @@ const RoleMenu: React.FC = () => {
       roleMenuBatchModifyForm.resetFields();
     }
   };
-  const [isRoleMenuBatchModifyModalVisible, setIsRoleMenuBatchModifyModalVisible] = useState<boolean>(false);
-  const [isRoleMenuBatchModifyLoading, setIsRoleMenuBatchModifyLoading] = useState<boolean>(false);
+  const [
+    isRoleMenuBatchModifyModalVisible,
+    setIsRoleMenuBatchModifyModalVisible,
+  ] = useState<boolean>(false);
+  const [isRoleMenuBatchModifyLoading, setIsRoleMenuBatchModifyLoading] =
+    useState<boolean>(false);
   const [roleMenuBatchModifyForm] = Form.useForm();
   const handleRoleMenuBatchModifyCancel = async () => {
     roleMenuBatchModifyForm.resetFields();
     setIsRoleMenuBatchModifyModalVisible(false);
     resetSelectedRows();
-    message.info("操作已取消");
+    message.info('操作已取消');
   };
   const handleRoleMenuBatchModifyFinish = async () => {
-    const roleMenuBatchModify = (await roleMenuBatchModifyForm.validateFields()) as RoleMenuBatchModify;
+    const roleMenuBatchModify =
+      (await roleMenuBatchModifyForm.validateFields()) as RoleMenuBatchModify;
     setIsRoleMenuBatchModifyLoading(true);
     if (selectedRows === null || selectedRows.length === 0) {
-      message.warning("请选择要更新的项目")
+      message.warning('请选择要更新的项目');
       return;
     }
     try {
       roleMenuBatchModify.ids = selectedRows.map((row) => row.id);
       await batchModifyRoleMenu(roleMenuBatchModify);
       roleMenuBatchModifyForm.resetFields();
-      message.success("更新成功");
+      message.success('更新成功');
       await onRoleMenuQueryFinish();
       resetSelectedRows();
     } finally {
@@ -357,9 +403,13 @@ const RoleMenu: React.FC = () => {
   };
 
   // 导入模块
-  const [isRoleMenuImportModalVisible, setIsRoleMenuImportModalVisible] = useState<boolean>(false);
-  const [isRoleMenuImportLoading, setIsRoleMenuImportLoading] = useState<boolean>(false);
-  const [roleMenuCreateList, setRoleMenuCreateList] = useState<RoleMenuCreate[]>([]);
+  const [isRoleMenuImportModalVisible, setIsRoleMenuImportModalVisible] =
+    useState<boolean>(false);
+  const [isRoleMenuImportLoading, setIsRoleMenuImportLoading] =
+    useState<boolean>(false);
+  const [roleMenuCreateList, setRoleMenuCreateList] = useState<
+    RoleMenuCreate[]
+  >([]);
 
   const onRoleMenuImport = () => {
     setIsRoleMenuImportModalVisible(true);
@@ -382,7 +432,7 @@ const RoleMenu: React.FC = () => {
     setIsRoleMenuImportLoading(true);
     try {
       await batchCreateRoleMenu(roleMenuCreateList);
-      message.success("导入成功");
+      message.success('导入成功');
       setIsRoleMenuImportModalVisible(false);
       await onRoleMenuQueryFinish();
     } finally {
@@ -395,7 +445,7 @@ const RoleMenu: React.FC = () => {
   const [isExportLoading, setIsExportLoading] = useState<boolean>(false);
   const onRoleMenuExport = async () => {
     if (selectedRowKeys === null || selectedRowKeys.length === 0) {
-      message.warning("请先选择导出的项目");
+      message.warning('请先选择导出的项目');
       return;
     }
     try {
@@ -414,7 +464,7 @@ const RoleMenu: React.FC = () => {
           <RoleMenuQueryComponent
             onRoleMenuQueryFinish={onRoleMenuQueryFinish}
             onRoleMenuQueryReset={handleRoleMenuQueryReset}
-            roleMenuQueryForm={ roleMenuQueryForm}
+            roleMenuQueryForm={roleMenuQueryForm}
           />
         </div>
       </TransitionWrapper>
@@ -433,7 +483,7 @@ const RoleMenu: React.FC = () => {
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={isBatchRemoveLoading}
           isExportLoading={isExportLoading}
-          rawColumns={ roleMenuPageColumns as any[]}
+          rawColumns={roleMenuPageColumns as any[]}
           visibleColumns={visibleColumns as any[]}
           onToggleColumnVisibility={onToggleColumnVisibility}
           actionConfig={actionConfig}
@@ -442,9 +492,9 @@ const RoleMenu: React.FC = () => {
       </div>
       <div>
         <PaginatedTable<RoleMenuPage>
-          columns={ filteredRoleMenuColumns}
-          dataSource={ roleMenuPageDataSource}
-          total={ roleMenuPageTotalCount}
+          columns={filteredRoleMenuColumns}
+          dataSource={roleMenuPageDataSource}
+          total={roleMenuPageTotalCount}
           current={current}
           pageSize={pageSize}
           onPaginationChange={handlePaginationChange}
@@ -460,14 +510,14 @@ const RoleMenu: React.FC = () => {
             onRoleMenuCreateCancel={handleRoleMenuCreateCancel}
             onRoleMenuCreateFinish={handleRoleMenuCreateFinish}
             isRoleMenuCreateLoading={isRoleMenuCreateLoading}
-            roleMenuCreateForm={ roleMenuCreateForm}
+            roleMenuCreateForm={roleMenuCreateForm}
           />
         </div>
         <div>
           <RoleMenuDetailComponent
             isRoleMenuDetailDrawerVisible={isRoleMenuDetailDrawerVisible}
             onRoleMenuDetailClose={onRoleMenuDetailClose}
-            roleMenuDetail={ roleMenuDetail}
+            roleMenuDetail={roleMenuDetail}
           />
         </div>
         <div>
@@ -476,16 +526,18 @@ const RoleMenu: React.FC = () => {
             onRoleMenuModifyCancel={handleRoleMenuModifyCancel}
             onRoleMenuModifyFinish={handleRoleMenuModifyFinish}
             isRoleMenuModifyLoading={isRoleMenuModifyLoading}
-            roleMenuModifyForm={ roleMenuModifyForm}
+            roleMenuModifyForm={roleMenuModifyForm}
           />
         </div>
         <div>
           <RoleMenuBatchModifyComponent
-            isRoleMenuBatchModifyModalVisible={isRoleMenuBatchModifyModalVisible}
+            isRoleMenuBatchModifyModalVisible={
+              isRoleMenuBatchModifyModalVisible
+            }
             onRoleMenuBatchModifyCancel={handleRoleMenuBatchModifyCancel}
             onRoleMenuBatchModifyFinish={handleRoleMenuBatchModifyFinish}
             isRoleMenuBatchModifyLoading={isRoleMenuBatchModifyLoading}
-            roleMenuBatchModifyForm={ roleMenuBatchModifyForm}
+            roleMenuBatchModifyForm={roleMenuBatchModifyForm}
           />
         </div>
         <div>

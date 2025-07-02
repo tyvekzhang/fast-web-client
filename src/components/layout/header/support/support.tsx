@@ -5,11 +5,7 @@ import { HelpCircle } from 'lucide-react';
 export function Support() {
   return (
     <Tooltip title="Help">
-      <Button
-        type="text"
-        icon={<HelpCircle />}
-        shape="circle"
-      />
+      <Button type="text" icon={<HelpCircle />} shape="circle" />
     </Tooltip>
   );
 }

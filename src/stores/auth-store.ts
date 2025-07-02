@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthStore>()(
           const response = await login(loginRequest);
           set({
             token: response,
-            loading: false
+            loading: false,
           });
         } catch (error) {
           set({ loading: false });

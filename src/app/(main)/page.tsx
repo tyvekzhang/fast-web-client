@@ -21,6 +21,9 @@ const Home = () => {
       <Button type="primary" onClick={showToast}>
         Hello world
       </Button>
+      <Button className="bg-secondary" onClick={showToast}>
+        Hello secondary world
+      </Button>
     </div>
   );
 };

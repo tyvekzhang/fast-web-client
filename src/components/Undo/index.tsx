@@ -9,7 +9,12 @@ interface UndoCompProps {
   onHide: () => void; // 新增一个回调函数来通知父组件隐藏
 }
 
-const UndoComp: FC<UndoCompProps> = ({ duration = 5, onUndo, msg = '删除成功', onHide }) => {
+const UndoComp: FC<UndoCompProps> = ({
+  duration = 5,
+  onUndo,
+  msg = '删除成功',
+  onHide,
+}) => {
   const { styles } = useStyles();
 
   useEffect(() => {

@@ -1,8 +1,8 @@
+import { fetchDictTypeByPage } from '@/service/dict-type';
+import { DictTypePage } from '@/types/dict-type';
 import { Button, Form, Input, Select, Space } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useEffect, useState } from 'react';
-import { DictTypePage } from '@/types/dict-type';
-import { fetchDictTypeByPage } from '@/service/dict-type';
 
 interface DictDataQueryProps {
   onDictDataQueryFinish: () => void;
@@ -17,18 +17,20 @@ const dictDataQueryFormItemLayout = {
 };
 
 const DictDataQueryComponent: React.FC<DictDataQueryProps> = ({
-                                                                onDictDataQueryFinish,
-                                                                onDictDataQueryReset,
-                                                                onDictTypeChange,
-                                                                dictDataQueryForm,
-                                                              }) => {
+  onDictDataQueryFinish,
+  onDictDataQueryReset,
+  onDictTypeChange,
+  dictDataQueryForm,
+}) => {
   const handleDictDataQueryReset = () => {
     onDictDataQueryReset();
     onDictDataQueryFinish();
   };
 
   const queryParams = new URLSearchParams(window.location.search);
-  const [dictTypePageDataSource, setDictTypePageDataSource] = useState<DictTypePage[]>([]);
+  const [dictTypePageDataSource, setDictTypePageDataSource] = useState<
+    DictTypePage[]
+  >([]);
   const [dictType, setDictType] = useState(queryParams.get('type'));
   useEffect(() => {
     const fetchData = async () => {
@@ -55,9 +57,9 @@ const DictDataQueryComponent: React.FC<DictDataQueryProps> = ({
         <Select
           placeholder="请选择字典名称"
           onChange={onDictTypeChange}
-          options={dictTypePageDataSource.map(item => ({
+          options={dictTypePageDataSource.map((item) => ({
             value: item.type,
-            label: item.name  ,
+            label: item.name,
           }))}
         />
       </Form.Item>

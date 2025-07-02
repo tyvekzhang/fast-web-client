@@ -20,11 +20,10 @@ const LayoutMenu = memo(() => {
 
   useEffect(() => {
     const loadData = async () => {
-      setMenuList()
+      setMenuList();
     };
     loadData();
   }, []);
-
 
   useEffect(() => {
     const loadData = async () => {

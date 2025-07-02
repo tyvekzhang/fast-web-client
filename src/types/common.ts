@@ -17,7 +17,8 @@ export interface PageData<T> {
   total_count: number;
 }
 
-export interface EditableCellProps<T = any> extends React.HTMLAttributes<HTMLElement> {
+export interface EditableCellProps<T = any>
+  extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: string;

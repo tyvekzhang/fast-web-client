@@ -1,5 +1,5 @@
 import { UserRoleBatchModify } from '@/types/user-role';
-import { Button, DatePicker, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 
@@ -28,7 +28,12 @@ const UserRoleBatchModifyComponent: React.FC<UserRoleBatchModifyProps> = ({
       <Button key="cancel" onClick={onUserRoleBatchModifyCancel}>
         取消
       </Button>,
-      <Button key="submit" type="primary" loading={isUserRoleBatchModifyLoading} onClick={onUserRoleBatchModifyFinish}>
+      <Button
+        key="submit"
+        type="primary"
+        loading={isUserRoleBatchModifyLoading}
+        onClick={onUserRoleBatchModifyFinish}
+      >
         确定
       </Button>,
     ],
@@ -43,26 +48,42 @@ const UserRoleBatchModifyComponent: React.FC<UserRoleBatchModifyProps> = ({
       footer={footerButtons}
       destroyOnClose
     >
-        <Form
-          {... userRoleBatchModifyFormItemLayout}
-          form={ userRoleBatchModifyForm}
-          name="userRoleBatchModify"
-          onFinish={onUserRoleBatchModifyFinish}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
+      <Form
+        {...userRoleBatchModifyFormItemLayout}
+        form={userRoleBatchModifyForm}
+        name="userRoleBatchModify"
+        onFinish={onUserRoleBatchModifyFinish}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
+      >
+        <Form.Item
+          name="role_id"
+          label="角色ID"
+          rules={[{ required: false, message: '请输入' }]}
         >
-          <Form.Item name="role_id" label="角色ID" rules={[{ required: false, message: '请输入' }]}>
-            <Input type="number" placeholder="请输入" />
-          </Form.Item>
-          <Form.Item name="creator" label="创建者" rules={[{ required: false, message: '请输入' }]}>
-            <Input placeholder="请输入" />
-          </Form.Item>
-          <Form.Item name="updater" label="更新者" rules={[{ required: false, message: '请输入' }]}>
-            <Input placeholder="请输入" />
-          </Form.Item>
-          <Form.Item name="deleted" label="" rules={[{ required: false, message: '请输入' }]}>
-            <Input placeholder="请输入" />
-          </Form.Item>
-        </Form>
+          <Input type="number" placeholder="请输入" />
+        </Form.Item>
+        <Form.Item
+          name="creator"
+          label="创建者"
+          rules={[{ required: false, message: '请输入' }]}
+        >
+          <Input placeholder="请输入" />
+        </Form.Item>
+        <Form.Item
+          name="updater"
+          label="更新者"
+          rules={[{ required: false, message: '请输入' }]}
+        >
+          <Input placeholder="请输入" />
+        </Form.Item>
+        <Form.Item
+          name="deleted"
+          label=""
+          rules={[{ required: false, message: '请输入' }]}
+        >
+          <Input placeholder="请输入" />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };

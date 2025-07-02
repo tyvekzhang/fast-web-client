@@ -12,7 +12,9 @@ const ColumnVisibilityControl: React.FC<ColumnVisibilityControlProps> = ({
   visibleColumns,
   onToggleColumnVisibility,
 }) => {
-  const filteredColumns = columns.filter((column) => column.title.toLowerCase() !== 'id');
+  const filteredColumns = columns.filter(
+    (column) => column.title.toLowerCase() !== 'id',
+  );
 
   return (
     <Space direction="vertical">

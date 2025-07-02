@@ -1,5 +1,5 @@
-import { LoginRequest, Token } from "@/types/auth";
-import httpClient from "@/lib/http";
+import httpClient from '@/lib/http';
+import { LoginRequest, Token } from '@/types/auth';
 
 export function login(loginRequest: LoginRequest) {
   return httpClient.post<Token>('/v1/user/login', loginRequest, {

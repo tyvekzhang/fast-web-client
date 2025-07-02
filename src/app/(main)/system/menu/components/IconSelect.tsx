@@ -1,6 +1,6 @@
-import React from 'react';
-import { Select } from 'antd';
 import * as Icons from '@ant-design/icons';
+import { Select } from 'antd';
+import React from 'react';
 
 const { Option } = Select;
 
@@ -9,7 +9,7 @@ interface IconSelectProps {
 }
 
 const IconSelect: React.FC<IconSelectProps> = ({ onChange }) => {
-  const iconList = Object.keys(Icons).filter(key => key.endsWith('Filled'));
+  const iconList = Object.keys(Icons).filter((key) => key.endsWith('Filled'));
 
   const handleChange = (value: string) => {
     if (onChange) {
@@ -24,7 +24,7 @@ const IconSelect: React.FC<IconSelectProps> = ({ onChange }) => {
       optionFilterProp="children"
       onChange={handleChange} // 监听选择事件
     >
-      {iconList.map(iconName => (
+      {iconList.map((iconName) => (
         <Option key={iconName} value={iconName}>
           {React.createElement(Icons[iconName])}
           <span style={{ marginLeft: 8 }}>{iconName}</span>

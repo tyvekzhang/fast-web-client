@@ -1,41 +1,43 @@
 import httpClient from '@/lib/http';
+import { downloadBlob } from '@/service/util';
 import { BaseQueryImpl, PageQuery, PageResult } from '@/types';
 import {
-  RoleMenuQuery,
-  RoleMenuCreate,
-  RoleMenuModify,
-  RoleMenuDetail,
-  RoleMenuPage,
   RoleMenuBatchModify,
+  RoleMenuCreate,
+  RoleMenuDetail,
+  RoleMenuModify,
+  RoleMenuPage,
+  RoleMenuQuery,
 } from '@/types/role-menu';
 import { AxiosResponse } from 'axios';
-import { downloadBlob } from '@/service/util';
 
 /**
  * 分页查询RoleMenu
- * 
+ *
  * @param pageQuery 分页参数
  * @param roleMenuQuery 查询条件
  * @returns 含RoleMenu详情列表的分页结果
  */
-export function fetchRoleMenuByPage(pageQuery?: PageQuery, roleMenuQuery?: Partial<RoleMenuQuery>) {
+export function fetchRoleMenuByPage(
+  pageQuery?: PageQuery,
+  roleMenuQuery?: Partial<RoleMenuQuery>,
+) {
   let pageQueryParams: PageQuery;
   if (pageQuery === null || pageQuery === undefined) {
     pageQueryParams = BaseQueryImpl.create(1, 200);
   } else {
-    pageQueryParams = pageQuery
+    pageQueryParams = pageQuery;
   }
-   const params = {
+  const params = {
     ...pageQueryParams,
-    ...roleMenuQuery
+    ...roleMenuQuery,
   };
   return httpClient.get<PageResult<RoleMenuPage>>('/role-menu/page', params);
 }
 
-
 /**
  * 获取RoleMenu详情
- * 
+ *
  * @param id RoleMenu的ID
  * @returns RoleMenu详细信息
  */
@@ -45,7 +47,7 @@ export function fetchRoleMenuDetail(id: string) {
 
 /**
  * 导出RoleMenu数据导入模板
- * 
+ *
  */
 export async function exportRoleMenuTemplate() {
   const response = await httpClient.get<AxiosResponse>(
@@ -60,22 +62,26 @@ export async function exportRoleMenuTemplate() {
 
 /**
  * 导出RoleMenu数据
- * 
+ *
  * @param ids 要导出的RoleMenu的ID列表
  */
 export async function exportRoleMenuPage(ids: string[]) {
   const params = {
     ids: ids,
   };
-  const response = await httpClient.get<AxiosResponse>(`/role-menu/export`, params, {
-    responseType: 'blob',
-  });
+  const response = await httpClient.get<AxiosResponse>(
+    `/role-menu/export`,
+    params,
+    {
+      responseType: 'blob',
+    },
+  );
   downloadBlob(response, '角色和菜单关联导出.xlsx');
 }
 
 /**
  * 创建RoleMenu
- * 
+ *
  * @param roleMenuCreate 创建数据
  * @returns 创建的RoleMenu的ID
  */
@@ -85,7 +91,7 @@ export function createRoleMenu(roleMenuCreate: RoleMenuCreate) {
 
 /**
  * 导入RoleMenu数据并进行校验
- * 
+ *
  * @param file 上传的Excel文件
  * @returns 校验结果列表
  */
@@ -97,7 +103,7 @@ export function importRoleMenu(file: File) {
 
 /**
  * 批量创建RoleMenu
- * 
+ *
  * @param roleMenuCreateList 创建数据列表
  * @returns 创建的RoleMenu的ID列表
  */
@@ -105,12 +111,15 @@ export function batchCreateRoleMenu(roleMenuCreateList: RoleMenuCreate[]) {
   if (!roleMenuCreateList?.length) {
     return Promise.resolve([]);
   }
-  return httpClient.post<number[]>('/role-menu/batch-create', roleMenuCreateList);
+  return httpClient.post<number[]>(
+    '/role-menu/batch-create',
+    roleMenuCreateList,
+  );
 }
 
 /**
  * 移除RoleMenu
- * 
+ *
  * @param id 要移除的RoleMenu的Id
  */
 export function removeRoleMenu(id: string) {
@@ -119,7 +128,7 @@ export function removeRoleMenu(id: string) {
 
 /**
  * 批量移除RoleMenu
- * 
+ *
  * @param ids 要移除的RoleMenu的ID数组
  */
 export function batchRemoveRoleMenu(ids: string[]) {
@@ -128,7 +137,7 @@ export function batchRemoveRoleMenu(ids: string[]) {
 
 /**
  * 更新RoleMenu信息
- * 
+ *
  * @param roleMenuModify 包含ID数组和修改的数据
  */
 export function modifyRoleMenu(roleMenuModify: RoleMenuModify) {
@@ -137,7 +146,7 @@ export function modifyRoleMenu(roleMenuModify: RoleMenuModify) {
 
 /**
  * 批量更新RoleMenu信息
- * 
+ *
  * @param roleMenuBatchModify 包含ID数组和修改的数据
  */
 export function batchModifyRoleMenu(roleMenuBatchModify: RoleMenuBatchModify) {

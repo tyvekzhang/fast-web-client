@@ -31,7 +31,12 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
     <Button key="back" onClick={handleMenuImportCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isMenuImportLoading} onClick={handleMenuImportConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isMenuImportLoading}
+      onClick={handleMenuImportConfirm}
+    >
       确定
     </Button>,
   ];
@@ -57,65 +62,66 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
   // 表格列信息
   const MenuPageColumns: ColumnsType<MenuCreate> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: MenuCreate, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: MenuCreate, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "名称",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => (text ? text : "-"),
+      title: '名称',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "图标",
-      dataIndex: "icon",
-      key: "icon",
-      render: (text) => (text ? text : "-"),
+      title: '图标',
+      dataIndex: 'icon',
+      key: 'icon',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "权限标识",
-      dataIndex: "permission",
-      key: "permission",
-      render: (text) => (text ? text : "-"),
+      title: '权限标识',
+      dataIndex: 'permission',
+      key: 'permission',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "排序",
-      dataIndex: "sort",
-      key: "sort",
-      render: (text) => (text ? text : "-"),
+      title: '排序',
+      dataIndex: 'sort',
+      key: 'sort',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "路由地址",
-      dataIndex: "path",
-      key: "path",
-      render: (text) => (text ? text : "-"),
+      title: '路由地址',
+      dataIndex: 'path',
+      key: 'path',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "组件路径",
-      dataIndex: "component",
-      key: "component",
-      render: (text) => (text ? text : "-"),
+      title: '组件路径',
+      dataIndex: 'component',
+      key: 'component',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "状态",
-      dataIndex: "status",
-      key: "status",
-      render: (text) => (text ? text : "-"),
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "创建时间",
-      dataIndex: "create_time",
-      key: "create_time",
-      render: (text) => (text ? text : "-"),
+      title: '创建时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -123,7 +129,9 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
     await exportMenuTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -162,7 +170,7 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={ MenuImportFileList}
+              fileList={MenuImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="sc-upload-drag-icon">
@@ -172,15 +180,18 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
               <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleMenuExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleMenuExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={ MenuPageColumns}
-            dataSource={ MenuCreateList}
+            columns={MenuPageColumns}
+            dataSource={MenuCreateList}
             pagination={false}
             bordered={false}
             rowKey={'id'}

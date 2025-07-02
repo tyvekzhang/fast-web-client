@@ -1,6 +1,7 @@
 'use client';
 
 import { APP_CONFIG } from '@/config';
+import { oklchToHex } from '@/lib/utils';
 import { useLanguageStore } from '@/stores/language-store';
 import { useThemeStore } from '@/stores/theme-store';
 import { StyleProvider } from '@ant-design/cssinjs';
@@ -15,9 +16,14 @@ export function AntdProvider({ children }: { children: React.ReactNode }) {
   const { theme: currentTheme } = useThemeStore();
   const { language } = useLanguageStore();
 
-  const colorPrimary = '#1677ff';
-  const primaryDarkBg = '#263238';
-  const submenuDarkBg = '#202b30';
+  const styles = getComputedStyle(document.documentElement);
+  const colorPrimary = oklchToHex(styles.getPropertyValue('--color-primary'));
+  const primaryDarkBg = oklchToHex(
+    styles.getPropertyValue('--color-primary-bg'),
+  );
+  const submenuDarkBg = oklchToHex(
+    styles.getPropertyValue('--color-submenu-bg'),
+  );
 
   return (
     <AntdRegistry>

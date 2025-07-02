@@ -1,6 +1,7 @@
-"use client"
+'use client';
 import { message } from '@/components/GlobalToast';
 import UndoComp from '@/components/Undo';
+import { fetchRoleByPage } from '@/service/role';
 import {
   userAdd,
   userBatchModify,
@@ -12,15 +13,16 @@ import {
   userRemove,
   users,
 } from '@/service/user';
-import { UserAdd, UserBatchModify, UserModify, UserQuery, UserQueryForm, UserRoleAssign } from '@/types/user';
-import BatchModify from './components/BatchModify';
-import Import from './components/Import';
-import Modify from './components/Modify';
-import Search from './components/Search';
-import { CheckCircle2, Trash2, PenLine } from 'lucide-react';
-const CheckCircleOutlined = CheckCircle2;
-const DeleteOutlined = Trash2;
-const EditOutlined = PenLine;
+import { assignUserRole } from '@/service/user-role';
+import { RolePage } from '@/types/role';
+import {
+  UserAdd,
+  UserBatchModify,
+  UserModify,
+  UserQuery,
+  UserQueryForm,
+  UserRoleAssign,
+} from '@/types/user';
 import {
   Button,
   Card,
@@ -35,14 +37,19 @@ import {
 } from 'antd';
 import { TableRowSelection } from 'antd/es/table/interface';
 import dayjs from 'dayjs';
+import { CheckCircle2, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useEffect, useState } from 'react';
-import useStyles from './style';
-import AssignRole from './components/AssignRole';
-import { RolePage } from '@/types/role';
-import { fetchRoleByPage } from '@/service/role';
-import { assignUserRole } from '@/service/user-role';
 import Add from './components/Add';
+import AssignRole from './components/AssignRole';
+import BatchModify from './components/BatchModify';
+import Import from './components/Import';
+import Modify from './components/Modify';
+import Search from './components/Search';
+import useStyles from './style';
+const CheckCircleOutlined = CheckCircle2;
+const DeleteOutlined = Trash2;
+const EditOutlined = PenLine;
 
 const columns = (
   onModify: (user: UserQuery) => void,
@@ -81,7 +88,11 @@ const columns = (
     render: (status: number, record: UserQuery) => {
       if (status === 1) {
         return (
-          <Switch style={{ backgroundColor: '#4096ff' }} checked={true} onChange={() => handleStatusChange(record)} />
+          <Switch
+            style={{ backgroundColor: '#4096ff' }}
+            checked={true}
+            onChange={() => handleStatusChange(record)}
+          />
         );
       }
       return <Switch onChange={() => handleStatusChange(record)} />;
@@ -131,7 +142,11 @@ const columns = (
         >
           删除
         </Button>
-        <button type="button" onClick={() => showAssignRoleModal(record)} className="flex items-center gap-0.5 text-xs btn-operation">
+        <button
+          type="button"
+          onClick={() => showAssignRoleModal(record)}
+          className="flex items-center gap-0.5 text-xs btn-operation"
+        >
           <CheckCircleOutlined className="w-3 h-3" />
           <span>分配角色</span>
         </button>
@@ -143,7 +158,8 @@ const columns = (
 const UserPage: React.FC = () => {
   const { styles } = useStyles();
 
-  const [isUserAddModalVisible, setIsUserAddModalVisible] = useState<boolean>(false);
+  const [isUserAddModalVisible, setIsUserAddModalVisible] =
+    useState<boolean>(false);
   const handleShowModal = () => {
     setIsUserAddModalVisible(true);
   };
@@ -242,7 +258,8 @@ const UserPage: React.FC = () => {
     await userExport(userQueryForm);
   };
 
-  const [isUserEditModalVisible, setIsModifyUserModalVisible] = useState<boolean>(false);
+  const [isUserEditModalVisible, setIsModifyUserModalVisible] =
+    useState<boolean>(false);
   const [isUserEditLoading, setIsUserEditLoading] = useState<boolean>(false);
   const [editForm] = Form.useForm();
   const [editUser, setEditUser] = useState<UserModify | null>(null);
@@ -275,43 +292,46 @@ const UserPage: React.FC = () => {
       setIsUserEditLoading(false);
     }
   };
-  const [isAssignRoleModalVisible, setIsAssignRoleModalVisible] = useState(false)
-  const [isAssignRoleLoading, setIsAssignRoleLoading] = useState(false)
-  const [assignRoleForm] = Form.useForm()
+  const [isAssignRoleModalVisible, setIsAssignRoleModalVisible] =
+    useState(false);
+  const [isAssignRoleLoading, setIsAssignRoleLoading] = useState(false);
+  const [assignRoleForm] = Form.useForm();
 
-  const [availableRoles, setAvailableRoles] = useState<RolePage[]>([])
-  const [userId, setUserId] = useState<string>('')
+  const [availableRoles, setAvailableRoles] = useState<RolePage[]>([]);
+  const [userId, setUserId] = useState<string>('');
 
   const showAssignRoleModal = async (user: UserQuery) => {
-    const resp = await fetchRoleByPage()
-    setAvailableRoles(resp.records)
-    setUserId(user.id)
-    setIsAssignRoleModalVisible(true)
-  }
+    const resp = await fetchRoleByPage();
+    setAvailableRoles(resp.records);
+    setUserId(user.id);
+    setIsAssignRoleModalVisible(true);
+  };
 
   const handleAssignRoleCancel = () => {
-    setIsAssignRoleModalVisible(false)
-    assignRoleForm.resetFields()
-  }
+    setIsAssignRoleModalVisible(false);
+    assignRoleForm.resetFields();
+  };
 
   const handleAssignRole = async (values: { roles: string[] }) => {
-    setIsAssignRoleLoading(true)
+    setIsAssignRoleLoading(true);
     try {
       const userRoleAssign = {
         user_id: userId,
         role_ids: values.roles,
-      }
-      await assignUserRole(userRoleAssign as UserRoleAssign)
-      message.success("角色分配成功")
-      setIsAssignRoleModalVisible(false)
-      assignRoleForm.resetFields()
+      };
+      await assignUserRole(userRoleAssign as UserRoleAssign);
+      message.success('角色分配成功');
+      setIsAssignRoleModalVisible(false);
+      assignRoleForm.resetFields();
     } finally {
-      setIsAssignRoleLoading(false)
+      setIsAssignRoleLoading(false);
     }
-  }
+  };
 
-  const [isUserBatchModifyEnable, setIsUserBatchModifyEnable] = useState<boolean>(true);
-  const [isUserBatchEditModalVisible, setIsUserBatchEditModalVisible] = useState<boolean>(false);
+  const [isUserBatchModifyEnable, setIsUserBatchModifyEnable] =
+    useState<boolean>(true);
+  const [isUserBatchEditModalVisible, setIsUserBatchEditModalVisible] =
+    useState<boolean>(false);
   const onUserBatchEdit = () => {
     setIsUserBatchEditModalVisible(true);
   };
@@ -324,7 +344,8 @@ const UserPage: React.FC = () => {
     setIsUserBatchEditModalVisible(false);
     batchEditForm.resetFields();
   };
-  const [isUserBatchModifyLoading, setIsUserBatchModifyLoading] = useState<boolean>(false);
+  const [isUserBatchModifyLoading, setIsUserBatchModifyLoading] =
+    useState<boolean>(false);
   const handleUserBatchModify = async (data: UserBatchModify) => {
     const ids = selectedRowKeys.map((key) => Number(key));
     if (ids.length === 0) {
@@ -348,8 +369,10 @@ const UserPage: React.FC = () => {
     }
   };
 
-  const [isUserImportModalVisible, setIsUserImportModalVisible] = useState<boolean>(false);
-  const [isUserImportLoading, setIsUserImportLoading] = useState<boolean>(false);
+  const [isUserImportModalVisible, setIsUserImportModalVisible] =
+    useState<boolean>(false);
+  const [isUserImportLoading, setIsUserImportLoading] =
+    useState<boolean>(false);
   const [userImportFile, setUserImportFile] = useState<RcFile | null>(null);
   const onUserImport = () => {
     setIsUserImportModalVisible(true);
@@ -392,7 +415,8 @@ const UserPage: React.FC = () => {
     setIsPasswordVisible((prev) => !prev);
   };
 
-  const [isBatchDeleteEnabled, setIsBatchDeleteEnabled] = useState<boolean>(true);
+  const [isBatchDeleteEnabled, setIsBatchDeleteEnabled] =
+    useState<boolean>(true);
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false);
   const [isShowUndo, setIsShowUndo] = useState<boolean>(false);
   const [recoverUser, setRecoverUser] = useState<UserQuery | null>(null);
@@ -473,7 +497,11 @@ const UserPage: React.FC = () => {
         <Button onClick={handleExport} className={`btn-export`}>
           导出
         </Button>
-        <Button disabled={isUserBatchModifyEnable} onClick={onUserBatchEdit} className={`btn-batch-update`}>
+        <Button
+          disabled={isUserBatchModifyEnable}
+          onClick={onUserBatchEdit}
+          className={`btn-batch-update`}
+        >
           编辑
         </Button>
         <Popconfirm
@@ -533,7 +561,13 @@ const UserPage: React.FC = () => {
         <Table
           loading={isTableLoading}
           dataSource={dataSource}
-          columns={columns(onUserEdit, handleUserDelete, isLoadingDelete, handleStatusChange, showAssignRoleModal)}
+          columns={columns(
+            onUserEdit,
+            handleUserDelete,
+            isLoadingDelete,
+            handleStatusChange,
+            showAssignRoleModal,
+          )}
           rowKey={'id'}
           pagination={false}
           rowSelection={rowSelection}
@@ -550,7 +584,9 @@ const UserPage: React.FC = () => {
             onChange={handlePaginationSearch}
           />
         </div>
-        {isShowUndo && <UndoComp duration={5} onUndo={handleUndo} onHide={handleHide} />}
+        {isShowUndo && (
+          <UndoComp duration={5} onUndo={handleUndo} onHide={handleHide} />
+        )}
       </Card>
     </div>
   );

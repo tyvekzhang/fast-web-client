@@ -126,8 +126,8 @@ const TagItem: FC<TagItemProps> = ({
         onClick={onClick}
         className={`mr-1 h-full flex justify-center items-center cursor-pointer transition-colors duration-200 ${
           active
-            ? 'bg-blue-500 text-white hover:opacity-75'
-            : 'bg-gray-100 text-gray-700 hover:opacity-75'
+            ? 'bg-blue-500 text-white hover:opacity-90'
+            : 'bg-gray-100 text-gray-700 hover:opacity-90'
         }`}
       >
         <span className="max-w-16 truncate">{name}</span>

@@ -78,7 +78,11 @@ export class BaseQueryImpl implements BaseQuery {
    * @param sorter 排序字符串，如 "field1_ascend,field2_descend"
    * @returns PageQuery 分页查询对象
    */
-  static create(current?: number, pageSize?: number, sorter?: string): PageQuery {
+  static create(
+    current?: number,
+    pageSize?: number,
+    sorter?: string,
+  ): PageQuery {
     const query = new BaseQueryImpl(current, pageSize, sorter);
     return query.buildPage();
   }
@@ -89,7 +93,8 @@ export class BaseQueryImpl implements BaseQuery {
    */
   buildPage(): PageQuery {
     // 确保 current 和 pageSize 在合理的范围内
-    const validCurrent = this.current > 0 ? this.current : BaseQueryImpl.DEFAULT_CURRENT;
+    const validCurrent =
+      this.current > 0 ? this.current : BaseQueryImpl.DEFAULT_CURRENT;
     const validPageSize = Math.min(this.pageSize, BaseQueryImpl.MAX_PAGE_SIZE);
 
     let orders: OrderItem[] | undefined = undefined;

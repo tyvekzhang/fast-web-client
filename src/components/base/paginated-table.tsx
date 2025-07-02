@@ -32,7 +32,10 @@ export function PaginatedTable<T extends object>({
     ...(propRowSelection as TableProps<T>['rowSelection']),
   };
 
-  const handlePaginationChange: PaginationProps['onChange'] = (newCurrent, newPageSize) => {
+  const handlePaginationChange: PaginationProps['onChange'] = (
+    newCurrent,
+    newPageSize,
+  ) => {
     onPaginationChange(newCurrent, newPageSize);
   };
 

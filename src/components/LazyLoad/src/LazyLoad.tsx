@@ -14,7 +14,9 @@ const spinnerStyle: React.CSSProperties = {
  * @param {LoadableComponent<any>} Component - 需要访问的组件
  * @returns {ReactNode} 包含加载状态的组件
  */
-const LazyLoad = (Component: LoadableComponent<Record<string, unknown>>): ReactNode => {
+const LazyLoad = (
+  Component: LoadableComponent<Record<string, unknown>>,
+): ReactNode => {
   return (
     <Suspense fallback={<Spin size="large" style={spinnerStyle} />}>
       <Component />

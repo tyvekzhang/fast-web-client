@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Space, Select} from 'antd';
+import { Button, DatePicker, Form, Input, Select, Space } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React from 'react';
 
@@ -26,22 +26,30 @@ const RoleQueryComponent: React.FC<RoleQueryProps> = ({
   return (
     <Form
       {...roleQueryFormItemLayout}
-      form={ roleQueryForm}
+      form={roleQueryForm}
       name="roleQuery"
       onFinish={onRoleQueryFinish}
       layout="horizontal"
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-0 gap-x-4 pt-4 px-2"
     >
-      <Form.Item name="name" label="角色名称" rules={[{ required: false, message: '请输入' }]}>
+      <Form.Item
+        name="name"
+        label="角色名称"
+        rules={[{ required: false, message: '请输入' }]}
+      >
         <Input placeholder="请输入" />
       </Form.Item>
-      <Form.Item name="status" label="角色状态" rules={[{ required: false, message: '请输入' }]}>
+      <Form.Item
+        name="status"
+        label="角色状态"
+        rules={[{ required: false, message: '请输入' }]}
+      >
         <Select
           allowClear
           placeholder="请选择"
           optionFilterProp="label"
-          defaultValue={"1"}
-          onChange={() => {} }
+          defaultValue={'1'}
+          onChange={() => {}}
           options={[
             {
               value: '1',
@@ -54,7 +62,11 @@ const RoleQueryComponent: React.FC<RoleQueryProps> = ({
           ]}
         />
       </Form.Item>
-      <Form.Item name="create_time" label="创建时间" rules={[{ required: false, message: '请输入' }]}>
+      <Form.Item
+        name="create_time"
+        label="创建时间"
+        rules={[{ required: false, message: '请输入' }]}
+      >
         <DatePicker.RangePicker />
       </Form.Item>
       <Form.Item className="flex justify-end">

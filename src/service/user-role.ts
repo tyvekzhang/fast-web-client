@@ -1,16 +1,16 @@
 import httpClient from '@/lib/http';
+import { downloadBlob } from '@/service/util';
 import { BaseQueryImpl, PageQuery, PageResult } from '@/types';
+import { UserRoleAssign } from '@/types/user';
 import {
-  UserRoleQuery,
-  UserRoleCreate,
-  UserRoleModify,
-  UserRoleDetail,
-  UserRolePage,
   UserRoleBatchModify,
+  UserRoleCreate,
+  UserRoleDetail,
+  UserRoleModify,
+  UserRolePage,
+  UserRoleQuery,
 } from '@/types/user-role';
 import { AxiosResponse } from 'axios';
-import { downloadBlob } from '@/service/util';
-import { UserRoleAssign } from '@/types/user';
 
 /**
  * 分页查询UserRole
@@ -19,20 +19,22 @@ import { UserRoleAssign } from '@/types/user';
  * @param userRoleQuery 查询条件
  * @returns 含UserRole详情列表的分页结果
  */
-export function fetchUserRoleByPage(pageQuery?: PageQuery, userRoleQuery?: Partial<UserRoleQuery>) {
+export function fetchUserRoleByPage(
+  pageQuery?: PageQuery,
+  userRoleQuery?: Partial<UserRoleQuery>,
+) {
   let pageQueryParams: PageQuery;
   if (pageQuery === null || pageQuery === undefined) {
     pageQueryParams = BaseQueryImpl.create(1, 200);
   } else {
-    pageQueryParams = pageQuery
+    pageQueryParams = pageQuery;
   }
-   const params = {
+  const params = {
     ...pageQueryParams,
-    ...userRoleQuery
+    ...userRoleQuery,
   };
   return httpClient.get<PageResult<UserRolePage>>('/user-role/page', params);
 }
-
 
 /**
  * 获取UserRole详情
@@ -68,9 +70,13 @@ export async function exportUserRolePage(ids: string[]) {
   const params = {
     ids: ids,
   };
-  const response = await httpClient.get<AxiosResponse>(`/user-role/export`, params, {
-    responseType: 'blob',
-  });
+  const response = await httpClient.get<AxiosResponse>(
+    `/user-role/export`,
+    params,
+    {
+      responseType: 'blob',
+    },
+  );
   downloadBlob(response, '用户和角色关联导出.xlsx');
 }
 
@@ -110,7 +116,10 @@ export function batchCreateUserRole(userRoleCreateList: UserRoleCreate[]) {
   if (!userRoleCreateList?.length) {
     return Promise.resolve([]);
   }
-  return httpClient.post<number[]>('/user-role/batch-create', userRoleCreateList);
+  return httpClient.post<number[]>(
+    '/user-role/batch-create',
+    userRoleCreateList,
+  );
 }
 
 /**

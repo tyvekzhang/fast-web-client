@@ -1,5 +1,5 @@
-import React from 'react';
 import { TreeSelect as AntTreeSelect } from 'antd';
+import React from 'react';
 
 interface TreeSelectProps {
   treeData: any[];
@@ -19,4 +19,3 @@ const TreeSelect: React.FC<TreeSelectProps> = ({ treeData, placeholder }) => {
 };
 
 export default TreeSelect;
-

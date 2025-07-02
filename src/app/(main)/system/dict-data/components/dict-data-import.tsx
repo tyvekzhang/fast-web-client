@@ -1,9 +1,9 @@
 import { message } from '@/components/GlobalToast';
 import { exportDictDataTemplate } from '@/service/dict-data';
 import { DictDataCreate } from '@/types/dict-data';
-import { Inbox as InboxOutlined } from 'lucide-react';
 import { Button, Modal, Table, Upload, UploadFile } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Inbox as InboxOutlined } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -23,15 +23,24 @@ const DictDataImportComponent: React.FC<DictDataImportProps> = ({
   isDictDataImportLoading,
   handleDictDataImport,
 }) => {
-  const [dictDataImportFileList, setDictDataImportFileList] = useState<RcFile[]>([]);
-  const [DictDataCreateList, setDictDataCreateList] = useState<DictDataCreate[]>([]);
+  const [dictDataImportFileList, setDictDataImportFileList] = useState<
+    RcFile[]
+  >([]);
+  const [DictDataCreateList, setDictDataCreateList] = useState<
+    DictDataCreate[]
+  >([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
     <Button key="back" onClick={handleDictDataImportCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isDictDataImportLoading} onClick={handleDictDataImportConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isDictDataImportLoading}
+      onClick={handleDictDataImportConfirm}
+    >
       确定
     </Button>,
   ];
@@ -43,7 +52,9 @@ const DictDataImportComponent: React.FC<DictDataImportProps> = ({
         return;
       }
       try {
-        const DictDataPageList = await onDictDataImportFinish(dictDataImportFileList);
+        const DictDataPageList = await onDictDataImportFinish(
+          dictDataImportFileList,
+        );
         setIsUploadShow(false);
         setDictDataCreateList(DictDataPageList as DictDataCreate[]);
       } finally {
@@ -57,53 +68,54 @@ const DictDataImportComponent: React.FC<DictDataImportProps> = ({
   // 表格列信息
   const DictDataPageColumns: ColumnsType<DictDataCreate> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: DictDataCreate, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: DictDataCreate, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "字典排序",
-      dataIndex: "sort",
-      key: "sort",
-      render: (text) => (text ? text : "-"),
+      title: '字典排序',
+      dataIndex: 'sort',
+      key: 'sort',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "字典标签",
-      dataIndex: "label",
-      key: "label",
-      render: (text) => (text ? text : "-"),
+      title: '字典标签',
+      dataIndex: 'label',
+      key: 'label',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "字典键值",
-      dataIndex: "value",
-      key: "value",
-      render: (text) => (text ? text : "-"),
+      title: '字典键值',
+      dataIndex: 'value',
+      key: 'value',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "字典类型",
-      dataIndex: "type",
-      key: "type",
-      render: (text) => (text ? text : "-"),
+      title: '字典类型',
+      dataIndex: 'type',
+      key: 'type',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "是否默认",
-      dataIndex: "is_default",
-      key: "is_default",
-      render: (text) => (text ? text : "-"),
+      title: '是否默认',
+      dataIndex: 'is_default',
+      key: 'is_default',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "状态",
-      dataIndex: "status",
-      key: "status",
-      render: (text) => (text ? text : "-"),
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -111,7 +123,9 @@ const DictDataImportComponent: React.FC<DictDataImportProps> = ({
     await exportDictDataTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -150,7 +164,7 @@ const DictDataImportComponent: React.FC<DictDataImportProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={ dictDataImportFileList}
+              fileList={dictDataImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="sc-upload-drag-icon">
@@ -160,15 +174,18 @@ const DictDataImportComponent: React.FC<DictDataImportProps> = ({
               <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleDictDataExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleDictDataExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={ DictDataPageColumns}
-            dataSource={ DictDataCreateList}
+            columns={DictDataPageColumns}
+            dataSource={DictDataCreateList}
             pagination={false}
             bordered={false}
             rowKey={'id'}
