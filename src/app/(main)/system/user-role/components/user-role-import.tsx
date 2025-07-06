@@ -1,4 +1,4 @@
-import { message } from '@/components/GlobalToast';
+import { message } from '@/components/global-toast';
 import { exportUserRoleTemplate } from '@/service/user-role';
 import { UserRoleCreate } from '@/types/user-role';
 import { Button, Modal, Table, Upload, UploadFile } from 'antd';
@@ -181,7 +181,7 @@ const UserRoleImportComponent: React.FC<UserRoleImportProps> = ({
             columns={UserRolePageColumns}
             dataSource={UserRoleCreateList}
             pagination={false}
-            bordered={false}
+            variant="borderless"
             rowKey={'id'}
           />
         </div>

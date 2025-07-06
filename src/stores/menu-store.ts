@@ -37,8 +37,10 @@ export const useMenuStore = create<MenuState>((set, get) => ({
         path: menu.path,
         meta: {
           title: menu.name,
+          affix: menu.path === '/' && true,
           icon: menu.icon,
         },
+
         children: menu.children ? convert(menu.children) : undefined,
       }));
 

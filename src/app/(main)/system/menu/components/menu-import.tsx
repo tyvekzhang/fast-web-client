@@ -1,4 +1,4 @@
-import { message } from '@/components/GlobalToast';
+import { message } from '@/components/global-toast';
 import { exportMenuTemplate } from '@/service/menu';
 import { MenuCreate } from '@/types/menu';
 import { InboxOutlined } from '@ant-design/icons';
@@ -193,7 +193,7 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
             columns={MenuPageColumns}
             dataSource={MenuCreateList}
             pagination={false}
-            bordered={false}
+            variant="borderless"
             rowKey={'id'}
           />
         </div>

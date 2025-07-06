@@ -194,7 +194,7 @@ const TagsLayout: React.FC = () => {
         onCloseLeft={() => handleCloseLeft(item.fullPath as string)}
         onCloseRight={() => handleCloseRight(item.fullPath as string)}
         onCloseAll={handleCloseAll}
-        onRefresh={() => handleReload(item.fullPath as string)}
+        onRefresh={() => handleReload()}
       />
     </span>
   ));

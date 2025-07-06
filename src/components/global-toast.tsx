@@ -1,3 +1,4 @@
+'use client';
 import { App } from 'antd';
 import React, { memo } from 'react';
 

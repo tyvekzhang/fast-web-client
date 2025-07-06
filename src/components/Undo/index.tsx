@@ -1,4 +1,4 @@
-import { message } from '@/components/GlobalToast';
+import { message } from '@/components/global-toast';
 import React, { FC, useEffect } from 'react';
 import useStyles from './style';
 

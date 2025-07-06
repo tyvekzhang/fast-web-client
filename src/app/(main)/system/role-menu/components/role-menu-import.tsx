@@ -1,4 +1,4 @@
-import { message } from '@/components/GlobalToast';
+import { message } from '@/components/global-toast';
 import { exportRoleMenuTemplate } from '@/service/role-menu';
 import { RoleMenuCreate } from '@/types/role-menu';
 import { Button, Modal, Table, Upload, UploadFile } from 'antd';
@@ -187,7 +187,7 @@ const RoleMenuImportComponent: React.FC<RoleMenuImportProps> = ({
             columns={RoleMenuPageColumns}
             dataSource={RoleMenuCreateList}
             pagination={false}
-            bordered={false}
+            variant="borderless"
             rowKey={'id'}
           />
         </div>

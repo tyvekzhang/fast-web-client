@@ -20,7 +20,7 @@ export function Logo() {
           className="object-contain"
         />
       ) : (
-        <div className="flex gap-0.5 items-center">
+        <div className="flex gap-1 items-center">
           <Image
             src="/logo.png"
             alt="Logo"

@@ -1,6 +1,6 @@
 'use client';
-import { message } from '@/components/GlobalToast';
-import UndoComp from '@/components/Undo';
+import { message } from '@/components/global-toast';
+import UndoComp from '@/components/undo';
 import { fetchRoleByPage } from '@/service/role';
 import {
   userAdd,
@@ -474,7 +474,7 @@ const UserPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Card bordered={false} className={styles.searchContainer}>
+      <Card variant="borderless" className={styles.searchContainer}>
         <Search
           form={queryForm}
           handleUserQuery={handleUserQuery}
@@ -513,7 +513,7 @@ const UserPage: React.FC = () => {
           </Button>
         </Popconfirm>
       </Space>
-      <Card bordered={false} className={styles.resultContainer}>
+      <Card variant="borderless" className={styles.resultContainer}>
         <Add
           isModalVisible={isUserAddModalVisible}
           handleCancel={handleUserAddCancel}

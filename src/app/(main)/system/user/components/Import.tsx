@@ -1,5 +1,5 @@
 'use client';
-import { message } from '@/components/GlobalToast';
+import { message } from '@/components/global-toast';
 import { userExportTemplate } from '@/service/user';
 import { Button, Modal, Upload, UploadFile } from 'antd';
 import { Inbox as InboxOutlined } from 'lucide-react';

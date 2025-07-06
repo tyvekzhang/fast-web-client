@@ -2,7 +2,7 @@
 import ActionButtonComponent from '@/components/base/action-button';
 import { PaginatedTable } from '@/components/base/paginated-table';
 import TransitionWrapper from '@/components/base/transition-wrapper';
-import { message } from '@/components/GlobalToast';
+import { message } from '@/components/global-toast';
 import {
   batchCreateRole,
   batchModifyRole,

@@ -1,4 +1,4 @@
-import { message } from '@/components/GlobalToast';
+import { message } from '@/components/global-toast';
 import { exportDictTypeTemplate } from '@/service/dict-type';
 import { DictTypeCreate } from '@/types/dict-type';
 import { Button, Modal, Table, Upload, UploadFile } from 'antd';
@@ -181,7 +181,7 @@ const DictTypeImportComponent: React.FC<DictTypeImportProps> = ({
             columns={DictTypePageColumns}
             dataSource={DictTypeCreateList}
             pagination={false}
-            bordered={false}
+            variant="borderless"
             rowKey={'id'}
           />
         </div>

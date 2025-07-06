@@ -4,7 +4,13 @@ import type { LoginRequest, Token } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+interface UserInfo {
+  name: string;
+  avatar?: string;
+}
+
 interface AuthStore {
+  user: UserInfo | null;
   token: Token | null;
   loading: boolean;
   login: (loginRequest: LoginRequest) => Promise<void>;
@@ -17,7 +23,10 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       token: null,
       loading: false,
-
+      user: {
+        name: 'John Doe',
+        avatar: '',
+      },
       login: async (loginRequest: LoginRequest) => {
         set({ loading: true });
         try {
@@ -33,9 +42,7 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: () => {
-        set({
-          token: null,
-        });
+        localStorage.clear();
       },
 
       setLoading: (loading: boolean) => {
@@ -47,7 +54,6 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         token: state.token,
       }),
-      // skipHydration: true,
     },
   ),
 );
