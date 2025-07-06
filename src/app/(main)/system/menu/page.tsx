@@ -58,28 +58,28 @@ const Menu: React.FC = () => {
   const [menuPageDataSource, setMenuPageDataSource] = useState<MenuPage[]>([]);
   const [menuPageTotalCount, setMenuPageTotalCount] = useState(0);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page_size, setpage_size] = useState(10);
   const onMenuQueryShow = () => {
     setIsMenuQueryShow((prevState) => !prevState);
   };
   useEffect(() => {
     const fetchData = async () => {
       const menuQuery = (await menuQueryForm.validateFields()) as MenuQuery;
-      const pageData = BaseQueryImpl.create(current, pageSize);
+      const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await fetchMenuByPage(pageData, menuQuery);
       setMenuPageDataSource(resp.records);
       setMenuPageTotalCount(resp.total);
     };
     fetchData().then(() => {});
-  }, [current, pageSize]);
+  }, [current, page_size]);
 
-  const handlePaginationChange = (newPage: number, newPageSize: number) => {
+  const handlePaginationChange = (newPage: number, newpage_size: number) => {
     setCurrent(newPage);
-    setPageSize(newPageSize);
+    setpage_size(newpage_size);
   };
   const resetPagination = () => {
     setCurrent(1);
-    setPageSize(10);
+    setpage_size(10);
   };
 
   // 详情模块
@@ -267,7 +267,7 @@ const Menu: React.FC = () => {
   };
   const handleMenuQueryFinish = async (menuPage: MenuQuery) => {
     await fetchMenuByPage(
-      BaseQueryImpl.create(current, pageSize),
+      BaseQueryImpl.create(current, page_size),
       menuPage,
     ).then((resp) => {
       setMenuPageDataSource(resp.records);
@@ -510,7 +510,7 @@ const Menu: React.FC = () => {
           dataSource={menuPageDataSource}
           total={menuPageTotalCount}
           current={current}
-          pageSize={pageSize}
+          page_size={page_size}
           onPaginationChange={handlePaginationChange}
           onSelectionChange={handleSelectionChange}
           selectedRowKeys={selectedRowKeys}

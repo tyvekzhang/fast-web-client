@@ -88,11 +88,7 @@ const columns = (
     render: (status: number, record: UserQuery) => {
       if (status === 1) {
         return (
-          <Switch
-            style={{ backgroundColor: '#4096ff' }}
-            checked={true}
-            onChange={() => handleStatusChange(record)}
-          />
+          <Switch checked={true} onChange={() => handleStatusChange(record)} />
         );
       }
       return <Switch onChange={() => handleStatusChange(record)} />;
@@ -126,7 +122,7 @@ const columns = (
         <Button
           style={{ fontSize: 12, color: '#4096ff' }}
           size={'small'}
-          icon={<EditOutlined style={{ marginRight: '-4px' }} />}
+          icon={<EditOutlined className="w-4 h-4" />}
           type={'link'}
           onClick={() => onModify(record)}
         >
@@ -135,7 +131,7 @@ const columns = (
         <Button
           style={{ marginLeft: '-8px', fontSize: 12, color: '#4096ff' }}
           size={'small'}
-          icon={<DeleteOutlined style={{ marginRight: '-4px' }} />}
+          icon={<DeleteOutlined className="w-4 h-4" />}
           type={'link'}
           onClick={() => onDelete(record)}
           loading={loadingDelete}
@@ -185,8 +181,8 @@ const UserPage: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [userQueryForm, setUserQueryForm] = useState<UserQueryForm>({
-    currentPage: 1,
-    pageSize: 10,
+    current: 1,
+    page_size: 10,
     username: undefined,
     nickname: undefined,
     status: undefined,
@@ -221,8 +217,8 @@ const UserPage: React.FC = () => {
     setSize(10);
     setUserQueryForm((prev) => ({
       ...prev,
-      currentPage: 1,
-      pageSize: 10,
+      current: 1,
+      page_size: 10,
       username: data.username?.trim(),
       nickname: data.nickname?.trim(),
       status: data.status,
@@ -234,8 +230,8 @@ const UserPage: React.FC = () => {
     setSize(size);
     setUserQueryForm((prev) => ({
       ...prev,
-      currentPage: current,
-      pageSize: size,
+      current: current,
+      page_size: size,
     }));
   };
   const handleQueryReset = () => {
@@ -245,8 +241,8 @@ const UserPage: React.FC = () => {
     setSize(10);
     setUserQueryForm((prev) => ({
       ...prev,
-      currentPage: 1,
-      pageSize: 10,
+      current: 1,
+      page_size: 10,
       username: undefined,
       nickname: undefined,
       status: undefined,
@@ -488,21 +484,21 @@ const UserPage: React.FC = () => {
         />
       </Card>
       <Space className={styles.resultSearch}>
-        <Button onClick={handleShowModal} className={`btn-add`}>
+        <Button onClick={handleShowModal} type="primary">
           新增
-        </Button>
-        <Button onClick={onUserImport} className={`btn-import`}>
-          导入
-        </Button>
-        <Button onClick={handleExport} className={`btn-export`}>
-          导出
         </Button>
         <Button
           disabled={isUserBatchModifyEnable}
           onClick={onUserBatchEdit}
-          className={`btn-batch-update`}
+          className={`btn btn-batch-update`}
         >
           编辑
+        </Button>
+        <Button onClick={handleExport} className={`btn btn-export`}>
+          导出
+        </Button>
+        <Button onClick={onUserImport} className={`btn btn-import`}>
+          导入
         </Button>
         <Popconfirm
           title="删除所选的内容"
@@ -512,7 +508,7 @@ const UserPage: React.FC = () => {
           okText="是"
           cancelText="否"
         >
-          <Button disabled={isBatchDeleteEnabled} className={`btn-delete`}>
+          <Button disabled={isBatchDeleteEnabled} className={`btn btn-delete`}>
             删除
           </Button>
         </Popconfirm>
@@ -576,7 +572,7 @@ const UserPage: React.FC = () => {
         <div style={{ margin: 8 }}>
           <Pagination
             current={page}
-            pageSize={size}
+            page_size={size}
             total={totalCount}
             align="end"
             showSizeChanger

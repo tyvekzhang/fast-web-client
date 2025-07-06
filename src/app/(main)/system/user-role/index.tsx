@@ -58,7 +58,7 @@ const UserRole: React.FC = () => {
   >([]);
   const [userRolePageTotalCount, setUserRolePageTotalCount] = useState(0);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page_size, setpage_size] = useState(10);
   const onUserRoleQueryShow = () => {
     setIsUserRoleQueryShow((prevState) => !prevState);
   };
@@ -66,21 +66,21 @@ const UserRole: React.FC = () => {
     const fetchData = async () => {
       const userRoleQuery =
         (await userRoleQueryForm.validateFields()) as UserRoleQuery;
-      const pageData = BaseQueryImpl.create(current, pageSize);
+      const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await fetchUserRoleByPage(pageData, userRoleQuery);
       setUserRolePageDataSource(resp.records);
       setUserRolePageTotalCount(resp.total);
     };
     fetchData().then(() => {});
-  }, [current, pageSize]);
+  }, [current, page_size]);
 
-  const handlePaginationChange = (newPage: number, newPageSize: number) => {
+  const handlePaginationChange = (newPage: number, newpage_size: number) => {
     setCurrent(newPage);
-    setPageSize(newPageSize);
+    setpage_size(newpage_size);
   };
   const resetPagination = () => {
     setCurrent(1);
-    setPageSize(10);
+    setpage_size(10);
   };
 
   // 详情模块
@@ -242,7 +242,7 @@ const UserRole: React.FC = () => {
   };
   const handleUserRoleQueryFinish = async (userRoleQuery: UserRoleQuery) => {
     await fetchUserRoleByPage(
-      BaseQueryImpl.create(current, pageSize),
+      BaseQueryImpl.create(current, page_size),
       userRolePage,
     ).then((resp) => {
       setUserRolePageDataSource(resp.records);
@@ -489,7 +489,7 @@ const UserRole: React.FC = () => {
           dataSource={userRolePageDataSource}
           total={userRolePageTotalCount}
           current={current}
-          pageSize={pageSize}
+          page_size={page_size}
           onPaginationChange={handlePaginationChange}
           onSelectionChange={handleSelectionChange}
           selectedRowKeys={selectedRowKeys}

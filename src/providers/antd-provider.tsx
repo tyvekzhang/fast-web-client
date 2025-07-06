@@ -24,6 +24,12 @@ export function AntdProvider({ children }: { children: React.ReactNode }) {
   const submenuDarkBg = oklchToHex(
     styles.getPropertyValue('--color-submenu-bg'),
   );
+  const itemSelectedColor = oklchToHex(
+    styles.getPropertyValue('--color-on-surface-var'),
+  );
+  const itemHoverColor = oklchToHex(
+    styles.getPropertyValue('--color-on-surface-var'),
+  );
 
   return (
     <AntdRegistry>
@@ -40,6 +46,8 @@ export function AntdProvider({ children }: { children: React.ReactNode }) {
                 darkItemBg: primaryDarkBg,
                 darkSubMenuItemBg: submenuDarkBg,
                 darkPopupBg: submenuDarkBg,
+                darkItemSelectedColor: itemSelectedColor,
+                darkItemHoverColor: itemHoverColor,
               },
               Layout: {
                 siderBg: primaryDarkBg,

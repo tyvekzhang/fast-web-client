@@ -59,7 +59,7 @@ const DictData: React.FC = () => {
   >([]);
   const [dictDataPageTotalCount, setDictDataPageTotalCount] = useState(0);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page_size, setpage_size] = useState(10);
   const onDictDataQueryShow = () => {
     setIsDictDataQueryShow((prevState) => !prevState);
   };
@@ -74,21 +74,21 @@ const DictData: React.FC = () => {
       ) {
         dictDataQuery.type = dictType;
       }
-      const pageData = BaseQueryImpl.create(current, pageSize);
+      const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await fetchDictDataByPage(pageData, dictDataQuery);
       setDictDataPageDataSource(resp.records);
       setDictDataPageTotalCount(resp.total);
     };
     fetchData().then(() => {});
-  }, [current, pageSize]);
+  }, [current, page_size]);
 
-  const handlePaginationChange = (newPage: number, newPageSize: number) => {
+  const handlePaginationChange = (newPage: number, newpage_size: number) => {
     setCurrent(newPage);
-    setPageSize(newPageSize);
+    setpage_size(newpage_size);
   };
   const resetPagination = () => {
     setCurrent(1);
-    setPageSize(10);
+    setpage_size(10);
   };
 
   // 详情模块
@@ -253,7 +253,7 @@ const DictData: React.FC = () => {
   };
   const handleDictDataQueryFinish = async (dictDataQuery: DictDataQuery) => {
     await fetchDictDataByPage(
-      BaseQueryImpl.create(current, pageSize),
+      BaseQueryImpl.create(current, page_size),
       dictDataQuery,
     ).then((resp) => {
       setDictDataPageDataSource(resp.records);
@@ -512,7 +512,7 @@ const DictData: React.FC = () => {
           dataSource={dictDataPageDataSource}
           total={dictDataPageTotalCount}
           current={current}
-          pageSize={pageSize}
+          page_size={page_size}
           onPaginationChange={handlePaginationChange}
           onSelectionChange={handleSelectionChange}
           selectedRowKeys={selectedRowKeys}

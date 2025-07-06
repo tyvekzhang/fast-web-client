@@ -7,9 +7,10 @@ export interface ModelBase {
 }
 
 export interface PageBase {
-  currentPage: number;
-  pageSize: number;
+  current: number;
+  page_size: number;
   count?: boolean;
+  sort_str?: string;
 }
 
 export interface PageData<T> {

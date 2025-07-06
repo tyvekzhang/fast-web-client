@@ -15,7 +15,7 @@ export default function MainLayout({
       <SiderLayout />
       <Layout>
         <HeaderLayout />
-        <Content className="p-6 transition-all duration-200 bg-gray-50">
+        <Content className="transition-all duration-200 bg-gray-50">
           {children}
         </Content>
       </Layout>

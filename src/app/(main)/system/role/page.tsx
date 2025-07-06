@@ -57,28 +57,28 @@ const Role: React.FC = () => {
   const [rolePageDataSource, setRolePageDataSource] = useState<RolePage[]>([]);
   const [rolePageTotalCount, setRolePageTotalCount] = useState(0);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page_size, setpage_size] = useState(10);
   const onRoleQueryShow = () => {
     setIsRoleQueryShow((prevState) => !prevState);
   };
   useEffect(() => {
     const fetchData = async () => {
       const roleQuery = (await roleQueryForm.validateFields()) as RoleQuery;
-      const pageData = BaseQueryImpl.create(current, pageSize);
+      const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await fetchRoleByPage(pageData, roleQuery);
       setRolePageDataSource(resp.records);
       setRolePageTotalCount(resp.total);
     };
     fetchData().then(() => {});
-  }, [current, pageSize]);
+  }, [current, page_size]);
 
-  const handlePaginationChange = (newPage: number, newPageSize: number) => {
+  const handlePaginationChange = (newPage: number, newpage_size: number) => {
     setCurrent(newPage);
-    setPageSize(newPageSize);
+    setpage_size(newpage_size);
   };
   const resetPagination = () => {
     setCurrent(1);
-    setPageSize(10);
+    setpage_size(10);
   };
 
   // 详情模块
@@ -244,7 +244,7 @@ const Role: React.FC = () => {
   };
   const handleRoleQueryFinish = async (roleQuery: RoleQuery) => {
     await fetchRoleByPage(
-      BaseQueryImpl.create(current, pageSize),
+      BaseQueryImpl.create(current, page_size),
       roleQuery,
     ).then((resp) => {
       setRolePageDataSource(resp.records);
@@ -487,7 +487,7 @@ const Role: React.FC = () => {
           dataSource={rolePageDataSource}
           total={rolePageTotalCount}
           current={current}
-          pageSize={pageSize}
+          page_size={page_size}
           onPaginationChange={handlePaginationChange}
           onSelectionChange={handleSelectionChange}
           selectedRowKeys={selectedRowKeys}

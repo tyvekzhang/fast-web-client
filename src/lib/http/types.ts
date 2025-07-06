@@ -16,7 +16,7 @@ export type ApiResponse<T = any> = TokenResponse | StandardResponse<T>;
 
 export interface PaginationParams {
   page?: number;
-  pageSize?: number;
+  page_size?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
@@ -25,7 +25,7 @@ export interface PaginationResponse<T> {
   list: T[];
   total: number;
   page: number;
-  pageSize: number;
+  page_size: number;
   totalPages: number;
 }
 

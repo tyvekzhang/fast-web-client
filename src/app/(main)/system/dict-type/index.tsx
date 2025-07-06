@@ -59,7 +59,7 @@ const DictType: React.FC = () => {
   >([]);
   const [dictTypePageTotalCount, setDictTypePageTotalCount] = useState(0);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page_size, setpage_size] = useState(10);
   const onDictTypeQueryShow = () => {
     setIsDictTypeQueryShow((prevState) => !prevState);
   };
@@ -67,21 +67,21 @@ const DictType: React.FC = () => {
     const fetchData = async () => {
       const dictTypeQuery =
         (await dictTypeQueryForm.validateFields()) as DictTypeQuery;
-      const pageData = BaseQueryImpl.create(current, pageSize);
+      const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await fetchDictTypeByPage(pageData, dictTypeQuery);
       setDictTypePageDataSource(resp.records);
       setDictTypePageTotalCount(resp.total);
     };
     fetchData().then(() => {});
-  }, [current, pageSize]);
+  }, [current, page_size]);
 
-  const handlePaginationChange = (newPage: number, newPageSize: number) => {
+  const handlePaginationChange = (newPage: number, newpage_size: number) => {
     setCurrent(newPage);
-    setPageSize(newPageSize);
+    setpage_size(newpage_size);
   };
   const resetPagination = () => {
     setCurrent(1);
-    setPageSize(10);
+    setpage_size(10);
   };
 
   // 详情模块
@@ -255,7 +255,7 @@ const DictType: React.FC = () => {
   };
   const handleDictTypeQueryFinish = async (dictTypeQuery: DictTypeQuery) => {
     await fetchDictTypeByPage(
-      BaseQueryImpl.create(current, pageSize),
+      BaseQueryImpl.create(current, page_size),
       dictTypeQuery,
     ).then((resp) => {
       setDictTypePageDataSource(resp.records);
@@ -502,7 +502,7 @@ const DictType: React.FC = () => {
           dataSource={dictTypePageDataSource}
           total={dictTypePageTotalCount}
           current={current}
-          pageSize={pageSize}
+          page_size={page_size}
           onPaginationChange={handlePaginationChange}
           onSelectionChange={handleSelectionChange}
           selectedRowKeys={selectedRowKeys}

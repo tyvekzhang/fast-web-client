@@ -1,3 +1,14 @@
+import type { MenuProps } from 'antd';
+
+export interface MenuRecord {
+  name: string;
+  path: string;
+  icon?: string;
+  children?: MenuRecord[];
+}
+
+export type MenuItem = Required<MenuProps>['items'][number];
+
 export interface AppMenu {
   name: string;
   path: string;

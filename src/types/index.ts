@@ -15,7 +15,7 @@ export interface ModelBase {
 }
 
 export interface PageBase {
-  currentPage: number;
+  current: number;
   size: number;
   count?: boolean;
 }
@@ -33,7 +33,7 @@ export interface OrderItem {
  */
 export interface PageQuery {
   current: number;
-  pageSize: number;
+  page_size: number;
   orders: OrderItem[];
 }
 
@@ -42,7 +42,7 @@ export interface PageQuery {
  */
 export interface BaseQuery {
   current: number;
-  pageSize: number;
+  page_size: number;
   sorter?: string;
 
   buildPage(): PageQuery;
@@ -62,28 +62,28 @@ export class BaseQueryImpl implements BaseQuery {
   private static readonly MAX_PAGE_SIZE = 200;
 
   current: number;
-  pageSize: number;
+  page_size: number;
   sorter?: string;
 
-  constructor(current?: number, pageSize?: number, sorter?: string) {
+  constructor(current?: number, page_size?: number, sorter?: string) {
     this.current = current || BaseQueryImpl.DEFAULT_CURRENT;
-    this.pageSize = pageSize || BaseQueryImpl.DEFAULT_PAGE_SIZE;
+    this.page_size = page_size || BaseQueryImpl.DEFAULT_PAGE_SIZE;
     this.sorter = sorter;
   }
 
   /**
    * 静态工厂方法，用于创建分页查询并返回 PageQuery 对象
    * @param current 当前页码
-   * @param pageSize 每页大小
+   * @param page_size 每页大小
    * @param sorter 排序字符串，如 "field1_ascend,field2_descend"
    * @returns PageQuery 分页查询对象
    */
   static create(
     current?: number,
-    pageSize?: number,
+    page_size?: number,
     sorter?: string,
   ): PageQuery {
-    const query = new BaseQueryImpl(current, pageSize, sorter);
+    const query = new BaseQueryImpl(current, page_size, sorter);
     return query.buildPage();
   }
 
@@ -92,10 +92,13 @@ export class BaseQueryImpl implements BaseQuery {
    * @returns PageQuery 分页查询对象
    */
   buildPage(): PageQuery {
-    // 确保 current 和 pageSize 在合理的范围内
+    // 确保 current 和 page_size 在合理的范围内
     const validCurrent =
       this.current > 0 ? this.current : BaseQueryImpl.DEFAULT_CURRENT;
-    const validPageSize = Math.min(this.pageSize, BaseQueryImpl.MAX_PAGE_SIZE);
+    const validpage_size = Math.min(
+      this.page_size,
+      BaseQueryImpl.MAX_PAGE_SIZE,
+    );
 
     let orders: OrderItem[] | undefined = undefined;
 
@@ -106,7 +109,7 @@ export class BaseQueryImpl implements BaseQuery {
 
     return <PageQuery>{
       current: validCurrent,
-      pageSize: validPageSize,
+      page_size: validpage_size,
       orders,
     };
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { basicRoutes } from '@/config/routes';
+import { useMenuStore } from '@/stores/menu-store';
 import { useTagsStore } from '@/stores/tag-store';
 import type { RouteObject } from '@/types/route';
 import { searchRoute } from '@/utils/route';
@@ -10,6 +10,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import TagItem from './tag-item';
 
 const TagsLayout: React.FC = () => {
+  const { getRoutes } = useMenuStore();
+  const basicRoutes = getRoutes();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -138,12 +140,9 @@ const TagsLayout: React.FC = () => {
     [router, activeTag],
   );
 
-  const handleReload = useCallback(
-    (fullPath: string) => {
-      router.refresh();
-    },
-    [router],
-  );
+  const handleReload = useCallback(() => {
+    window.location.reload();
+  }, []);
 
   const handleCloseOthers = useCallback(
     (path: string) => {

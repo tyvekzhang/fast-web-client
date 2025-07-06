@@ -29,3 +29,23 @@ export const calculateOpenKeys = (
   findParent(menus, pathname);
   return keys;
 };
+
+export interface RouteObject {
+  path: string;
+  meta: {
+    title: string;
+    affix?: boolean;
+    icon?: string;
+  };
+}
+
+export const convertMenusToRoutes = (menus: MenuRecord[]): RouteObject[] => {
+  return menus.map((menu) => ({
+    path: menu.path,
+    meta: {
+      title: menu.name,
+      icon: menu.icon,
+    },
+    children: menu.children ? convertMenusToRoutes(menu.children) : undefined,
+  }));
+};

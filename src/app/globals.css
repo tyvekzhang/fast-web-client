@@ -7,18 +7,62 @@
 
 @theme inline {
   --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
   --color-primary-bg: var(--color-primary-bg);
   --color-submenu-bg: var(--color-submenu-bg);
+  --color-secondary: var(--secondary);
+  --color-secondary: var(--secondary);
+  --color-on-surface-var: var(--on-surface-var);
 }
 
 :root {
-  --primary: oklch(0.623 0.214 259.815);
+  --primary: oklch(0.6133 0.1925 266.93);
+  --on-primary: oklch(1 0 0);
   --color-primary-bg: oklch(0.3087 0.0195 229.78);
   --color-submenu-bg: oklch(0.281 0.0177 227.38);
+  --secondary: oklch(0.6585 0.0468 275.07);
+  --on-surface-var: oklch(0.9145 0.0081 286.24);
 }
 
 .dark {
-  --primary: oklch(0.546 0.245 262.881);
+  --primary: oklch(0.6714 0.1595 269.04);
+  --on-primary: oklch(1 0 0);
   --color-primary-bg: oklch(0.3087 0.0195 229.78);
   --color-submenu-bg: oklch(0.281 0.0177 227.38);
+  --secondary: oklch(0.8337 0.0747 272.96);
+  --on-surface-var: oklch(0.8293 0.0124 286.13);
+}
+
+@layer components {
+  .card {
+    background-color: var(--color-white);
+    border-radius: var(--rounded-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .btn {
+    @apply transition-colors duration-200 border-0 text-gray-400  hover:text-gray-100 disabled:text-gray-400;
+  }
+
+  .btn-import {
+    @apply bg-emerald-100 hover:bg-emerald-400 disabled:hover:bg-green-100;
+  }
+
+  .btn-export {
+    @apply bg-gray-100 hover:bg-gray-400 disabled:hover:bg-gray-100;
+  }
+
+  .btn-batch-update {
+    @apply bg-gray-100 hover:bg-[#6A5773] hover:text-gray-100 disabled:text-gray-400;
+  }
+
+  .btn-delete {
+    @apply bg-red-100 hover:bg-red-400 disabled:hover:bg-red-100;
+  }
+
+  /* 图标按钮 - 带有图标的版本 */
+  .btn-icon {
+    @apply inline-flex items-center space-x-2;
+  }
 }

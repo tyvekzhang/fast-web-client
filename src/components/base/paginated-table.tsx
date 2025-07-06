@@ -5,8 +5,8 @@ import React from 'react';
 interface PaginatedTableProps<T> extends Omit<TableProps<T>, 'pagination'> {
   total: number;
   current: number;
-  pageSize: number;
-  onPaginationChange: (current: number, pageSize: number) => void;
+  page_size: number;
+  onPaginationChange: (current: number, page_size: number) => void;
   onSelectionChange?: (selectedRowKeys: React.Key[], selectedRows: T[]) => void;
   rowSelectionType?: 'checkbox' | 'radio';
   selectedRowKeys?: React.Key[];
@@ -15,7 +15,7 @@ interface PaginatedTableProps<T> extends Omit<TableProps<T>, 'pagination'> {
 export function PaginatedTable<T extends object>({
   total,
   current,
-  pageSize,
+  page_size,
   onPaginationChange,
   onSelectionChange,
   rowSelectionType = 'checkbox',
@@ -34,9 +34,9 @@ export function PaginatedTable<T extends object>({
 
   const handlePaginationChange: PaginationProps['onChange'] = (
     newCurrent,
-    newPageSize,
+    newpage_size,
   ) => {
-    onPaginationChange(newCurrent, newPageSize);
+    onPaginationChange(newCurrent, newpage_size);
   };
 
   return (
@@ -51,10 +51,10 @@ export function PaginatedTable<T extends object>({
       <div className="mt-4">
         <Pagination
           current={current}
-          pageSize={pageSize}
+          page_size={page_size}
           total={total}
           showTotal={(total) => `共${total}条`}
-          pageSizeOptions={[5, 10, 20, 50, 100]}
+          page_sizeOptions={[5, 10, 20, 50, 100]}
           showSizeChanger
           showQuickJumper
           onChange={handlePaginationChange}

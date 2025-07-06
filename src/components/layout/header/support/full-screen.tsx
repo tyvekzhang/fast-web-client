@@ -12,7 +12,11 @@ export default function FullScreen() {
       mouseEnterDelay={0.5}
     >
       <span onClick={toggleFullscreen}>
-        {!isFullscreen ? <SvgIcon name="Expand" /> : <SvgIcon name="Shrink" />}
+        {!isFullscreen ? (
+          <SvgIcon name="Fullscreen" />
+        ) : (
+          <SvgIcon name="Minimize" />
+        )}
       </span>
     </Tooltip>
   );

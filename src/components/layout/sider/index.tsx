@@ -14,7 +14,7 @@ export function SiderLayout() {
     <Sider
       collapsed={collapsed}
       onCollapse={toggleCollapsed}
-      className="h-screen"
+      className="min-h-screen"
     >
       <Logo />
       <NavigationMenu />
