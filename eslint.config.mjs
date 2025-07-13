@@ -21,6 +21,9 @@ const eslintConfig = [
       '@typescript-eslint/no-empty-object-type': 'off',
       'prefer-const': 'warn',
       'linebreak-style': ['error', 'unix'],
+      'react-hooks/exhaustive-deps': 'warn',
+      'react/display-name': 'off',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
     },
   },
 ];

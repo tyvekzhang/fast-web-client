@@ -14,7 +14,7 @@ export {
 
 // Configuration validation function
 export const validateConfig = () => {
-  const requiredEnvVars = ['NEXT_PUBLIC_APP_NAME', 'NEXT_PUBLIC_API_BASE_URL'];
+  const requiredEnvVars = ['NEXT_PUBLIC_APP_NAME', 'NEXT_PUBLIC_API_HOST'];
 
   const missingVars = requiredEnvVars.filter(
     (varName) => !process.env[varName],

@@ -36,37 +36,37 @@ const MenuQueryComponent: React.FC<MenuQueryProps> = ({
   };
 
   return (
-    <Form
-      {...menuQueryFormItemLayout}
-      form={menuQueryForm}
-      name="menuQuery"
-      onFinish={handleMenuQueryFinish}
-      layout="horizontal"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-0 gap-x-4 pt-4 px-2"
-    >
-      <Form.Item
-        name="name"
-        label="名称"
-        rules={[{ required: false, message: '请输入' }]}
+    <div className="flex justify-between">
+      <Form
+        {...menuQueryFormItemLayout}
+        form={menuQueryForm}
+        name="menuQuery"
+        onFinish={handleMenuQueryFinish}
+        layout="horizontal"
+        className="flex gap-y-0 gap-x-4 pt-4 "
       >
-        <Input placeholder="请输入" />
-      </Form.Item>
-      <Form.Item
-        name="create_time"
-        label="创建时间"
-        rules={[{ required: false, message: '请输入' }]}
-      >
-        <DatePicker.RangePicker format="YYYY-MM-DD" />
-      </Form.Item>
-      <Form.Item className="flex justify-end">
-        <Space className="inline-flex">
-          <Button onClick={handleMenuQueryReset}>重置</Button>
-          <Button type="primary" htmlType="submit">
-            查询
-          </Button>
-        </Space>
-      </Form.Item>
-    </Form>
+        <Form.Item
+          name="name"
+          label="名称"
+          rules={[{ required: false, message: '请输入' }]}
+        >
+          <Input placeholder="请输入" />
+        </Form.Item>
+        <Form.Item
+          name="create_time"
+          label="创建时间"
+          rules={[{ required: false, message: '请输入' }]}
+        >
+          <DatePicker.RangePicker format="YYYY-MM-DD" />
+        </Form.Item>
+      </Form>
+      <Space className="inline-flex">
+        <Button onClick={handleMenuQueryReset}>重置</Button>
+        <Button type="primary" htmlType="submit">
+          查询
+        </Button>
+      </Space>
+    </div>
   );
 };
 

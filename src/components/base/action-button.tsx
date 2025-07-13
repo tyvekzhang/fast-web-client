@@ -1,10 +1,16 @@
 import ColumnVisibilityControl from '@/components/base/column-visibility-control';
-import {
-  EyeInvisibleOutlined,
-  EyeOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
 import { Button, Popconfirm, Popover, Space, Tooltip } from 'antd';
+import {
+  Download,
+  Edit,
+  Eye,
+  EyeOff,
+  HelpCircle,
+  Import,
+  Plus,
+  Settings,
+  Trash2,
+} from 'lucide-react';
 import React from 'react';
 
 interface ActionButtonsConfig {
@@ -65,26 +71,20 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
   };
   const config = { ...defaultConfig, ...actionConfig };
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between border-t border-b border-gray-100 pl-2 py-1">
       <Space className={className}>
         {config.showCreate && (
-          <Button onClick={onCreate} className="btn-add">
+          <Button onClick={onCreate} type="primary" icon={<Plus size={14} />}>
             新增
           </Button>
         )}
         {config.showImport && (
-          <Button onClick={onImport} className="btn-import">
-            导入
-          </Button>
-        )}
-        {config.showExport && (
           <Button
-            loading={isExportLoading}
-            disabled={isExportDisabled}
-            onClick={onExport}
-            className="btn-export"
+            onClick={onImport}
+            className="btn-import"
+            icon={<Import size={14} />}
           >
-            导出
+            导入
           </Button>
         )}
         {config.showModify && (
@@ -92,10 +92,24 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             disabled={isBatchModifyDisabled}
             onClick={onBatchModify}
             className="btn-batch-update"
+            icon={<Edit size={14} />}
           >
             编辑
           </Button>
         )}
+
+        {config.showExport && (
+          <Button
+            loading={isExportLoading}
+            disabled={isExportDisabled}
+            onClick={onExport}
+            className="btn-export"
+            icon={<Download size={14} />}
+          >
+            导出
+          </Button>
+        )}
+
         {config.showRemove && (
           <Popconfirm
             title="删除所选的内容"
@@ -104,11 +118,14 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             onCancel={onConfirmBatchRemoveCancel}
             okText="是"
             cancelText="否"
+            icon={<HelpCircle className="m-1 text-red-500" size={16} />}
           >
             <Button
               loading={isBatchRemoveLoading}
               disabled={isBatchRemoveDisabled}
               className="btn-batch-delete"
+              icon={<Trash2 size={14} />}
+              danger
             >
               删除
             </Button>
@@ -118,8 +135,8 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
       <Space className="pr-2">
         <Tooltip title={isQueryShow ? '隐藏搜索框' : '显示搜索框'}>
           <Button
-            className="border-none"
-            icon={isQueryShow ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+            className="rounded-full"
+            icon={isQueryShow ? <EyeOff size={14} /> : <Eye size={14} />}
             onClick={onQueryShow}
           />
         </Tooltip>
@@ -135,7 +152,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
           placement="bottomRight"
         >
           <Tooltip title="设置列">
-            <Button className="border-none" icon={<SettingOutlined />} />
+            <Button className="rounded-full" icon={<Settings size={14} />} />
           </Tooltip>
         </Popover>
       </Space>

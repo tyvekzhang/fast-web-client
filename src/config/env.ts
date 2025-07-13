@@ -15,6 +15,7 @@ export const ENV = {
   PREFIX_CLS: process.env.NEXT_PREFIX_CLS || 'fw',
 
   // API Configuration
+  API_HOST: process.env.NEXT_PUBLIC_API_HOST || 'http://127.0.0.1:13000',
   API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',
   API_TIMEOUT: Number.parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000'), // 10 seconds
 

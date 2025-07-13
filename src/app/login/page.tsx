@@ -73,7 +73,7 @@ export default function LoginPage() {
   const linkClass = 'text-sm text-blue-400 hover:text-blue-500 font-normal';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-gray to-purple-100 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
       <div className="w-full max-w-md relative z-10">
         <Card className="shadow-lg border-0 rounded-2xl overflow-hidden backdrop-blur-sm bg-white/95 bg-black relative">
           <CardDecorativeBubble />

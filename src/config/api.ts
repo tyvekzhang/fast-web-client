@@ -68,7 +68,8 @@ export const API_ENDPOINTS = {
 
 // HTTP Configuration
 export const HTTP_CONFIG = {
-  BASE_URL: ENV.API_BASE_URL,
+  HOST: ENV.API_HOST,
+  API_BASE_URL: ENV.API_BASE_URL,
   TIMEOUT: ENV.API_TIMEOUT,
   WITH_CREDENTIALS: isDevelopment(),
 

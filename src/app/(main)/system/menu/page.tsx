@@ -3,7 +3,7 @@ import ActionButtonComponent from '@/components/base/action-button';
 import { PaginatedTable } from '@/components/base/paginated-table';
 import TransitionWrapper from '@/components/base/transition-wrapper';
 import { message } from '@/components/global-toast';
-import SvgIcon from '@/components/SvgIcon';
+import SvgIcon from '@/components/svg-icon';
 import {
   batchCreateMenu,
   batchModifyMenu,
@@ -68,6 +68,7 @@ const Menu: React.FC = () => {
       const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await fetchMenuByPage(pageData, menuQuery);
       setMenuPageDataSource(resp.records);
+      debugger;
       setMenuPageTotalCount(resp.total);
     };
     fetchData().then(() => {});
@@ -125,11 +126,7 @@ const Menu: React.FC = () => {
       dataIndex: 'icon',
       key: 'icon',
       render: (text) =>
-        text ? (
-          <SvgIcon style={{ color: '#595959' }} name={text} size={14} />
-        ) : (
-          '-'
-        ),
+        text ? <SvgIcon name={text} strokeWidth={1.3} /> : '-',
       ellipsis: true,
       width: '6%',
     },
@@ -474,13 +471,11 @@ const Menu: React.FC = () => {
   return (
     <div className="w-full mx-auto px-4 bg-white">
       <TransitionWrapper show={isMenuQueryShow}>
-        <div className="shadow-sm">
-          <MenuQueryComponent
-            onMenuQueryFinish={onMenuQueryFinish}
-            onMenuQueryReset={handleMenuQueryReset}
-            menuQueryForm={menuQueryForm}
-          />
-        </div>
+        <MenuQueryComponent
+          onMenuQueryFinish={onMenuQueryFinish}
+          onMenuQueryReset={handleMenuQueryReset}
+          menuQueryForm={menuQueryForm}
+        />
       </TransitionWrapper>
       <div>
         <ActionButtonComponent

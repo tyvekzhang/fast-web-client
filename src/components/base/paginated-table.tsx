@@ -46,15 +46,15 @@ export function PaginatedTable<T extends object>({
         pagination={false}
         rowKey={tableProps.rowKey || 'id'}
         rowSelection={rowSelection}
-        className={`min-h-[400px] ${tableProps.className || ''}`}
+        className={`${tableProps.className || ''}`}
       />
       <div className="mt-4">
         <Pagination
           current={current}
-          page_size={page_size}
+          pageSize={page_size}
           total={total}
           showTotal={(total) => `共${total}条`}
-          page_sizeOptions={[5, 10, 20, 50, 100]}
+          pageSizeOptions={[5, 10, 20, 50, 100]}
           showSizeChanger
           showQuickJumper
           onChange={handlePaginationChange}

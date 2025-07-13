@@ -15,7 +15,7 @@ const defaultProps: Required<
   Pick<SvgIconProps, 'size' | 'strokeWidth' | 'enableHover'>
 > = {
   size: 'md',
-  strokeWidth: 2,
+  strokeWidth: 1.6,
   enableHover: true,
 };
 

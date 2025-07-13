@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import React from 'react';
 
 interface TransitionWrapperProps {
   show: boolean;
@@ -9,27 +10,28 @@ const TransitionWrapper: React.FC<TransitionWrapperProps> = ({
   show,
   children,
 }) => {
-  const [shouldRender, setShouldRender] = useState(show);
-
-  useEffect(() => {
-    if (show) setShouldRender(true);
-  }, [show]);
-
-  const onAnimationEnd = () => {
-    if (!show) setShouldRender(false);
-  };
-
-  return shouldRender ? (
-    <div
-      style={{
-        animation: `${show ? 'slideDown' : 'slideUp'} 0.3s linear`,
-        overflow: 'hidden',
-      }}
-      onAnimationEnd={onAnimationEnd}
-    >
-      {children}
-    </div>
-  ) : null;
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ opacity: 0, scaleY: 0, transformOrigin: 'top' }}
+          animate={{ opacity: 1, scaleY: 1 }}
+          exit={{
+            opacity: 0,
+            scaleY: 0,
+            transition: { type: 'tween', duration: 0.4 },
+          }}
+          transition={{
+            type: 'spring',
+            damping: 20,
+            stiffness: 200,
+          }}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 };
 
 export default TransitionWrapper;

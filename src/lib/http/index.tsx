@@ -14,9 +14,13 @@ import type { ApiResponse, HttpError, StandardResponse } from './types';
 class HttpClient {
   private readonly instance: AxiosInstance;
 
-  constructor(baseURL = HTTP_CONFIG.BASE_URL) {
+  constructor(baseURL = HTTP_CONFIG.API_BASE_URL) {
+    const normalizedBaseURL = baseURL.endsWith('/')
+      ? baseURL.slice(0, -1)
+      : baseURL;
+    const versionedBaseURL = `${normalizedBaseURL}/v1`;
     this.instance = axios.create({
-      baseURL,
+      baseURL: versionedBaseURL,
       timeout: HTTP_CONFIG.TIMEOUT,
       withCredentials: HTTP_CONFIG.WITH_CREDENTIALS,
       paramsSerializer: (params) =>

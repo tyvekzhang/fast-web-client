@@ -41,28 +41,45 @@
     box-shadow: var(--shadow-xl);
   }
 
-  .btn {
-    @apply transition-colors duration-200 border-0 text-gray-400  hover:text-gray-100 disabled:text-gray-400;
-  }
-
+  /* 导入按钮 - 黄绿色系 */
   .btn-import {
-    @apply bg-emerald-100 hover:bg-emerald-400 disabled:hover:bg-green-100;
+    @apply bg-[#f6ffed] text-[#52c41a] border-0;
+    @apply hover:bg-[#52c41a] hover:text-white;
+    @apply disabled:bg-[#f6ffed] disabled:text-[#52c41a] disabled:cursor-not-allowed;
   }
 
+  /* 导出按钮 - 灰色系 */
   .btn-export {
-    @apply bg-gray-100 hover:bg-gray-400 disabled:hover:bg-gray-100;
+    @apply bg-[#f5f5f5] text-[#8c8c8c] border-0;
+    @apply hover:bg-[#8c8c8c] hover:text-white;
+    @apply disabled:bg-gray-100 disabled:text-[#8c8c8c] disabled:cursor-not-allowed;
   }
 
+  /* 批量删除按钮 - 红色系 */
+  .btn-batch-delete {
+    @apply bg-[#fff2e8] text-[#fa541c] border-0;
+    @apply hover:bg-[#ff7a45] hover:text-white;
+    @apply disabled:bg-[#fff2e8] disabled:text-[#fa541c] disabled:cursor-not-allowed;
+  }
+
+  /* 移除按钮 - 蓝色系 (无背景) */
+  .btn-remove {
+    @apply text-[#4096ff] bg-transparent border-0;
+    @apply hover:text-[#ff7a45];
+    @apply disabled:text-[#ff7a45] disabled:cursor-not-allowed;
+  }
+
+  /* 操作按钮 - 蓝色系 (无背景) */
+  .btn-operation {
+    @apply text-[#4096ff] bg-transparent cursor-pointer border-0;
+    @apply hover:text-[#1677ff];
+    @apply disabled:bg-[#4096ff] disabled:text-[#4096ff] disabled:cursor-not-allowed;
+  }
+
+  /* 批量更新按钮 - 蓝色系 */
   .btn-batch-update {
-    @apply bg-gray-100 hover:bg-[#6A5773] hover:text-gray-100 disabled:text-gray-400;
-  }
-
-  .btn-delete {
-    @apply bg-red-100 hover:bg-red-400 disabled:hover:bg-red-100;
-  }
-
-  /* 图标按钮 - 带有图标的版本 */
-  .btn-icon {
-    @apply inline-flex items-center space-x-2;
+    @apply bg-[#e6f4ff] text-[#4096ff] border-0;
+    @apply hover:bg-[#4096ff] hover:text-white;
+    @apply disabled:bg-[#e6f4ff] disabled:text-[#4096ff] disabled:cursor-not-allowed;
   }
 }
