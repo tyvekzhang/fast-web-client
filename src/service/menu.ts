@@ -32,7 +32,7 @@ export function fetchMenuByPage(
     ...pageQueryParams,
     ...menuQuery,
   };
-  return httpClient.get<PageResult<MenuPage>>('/menu/page', params);
+  return httpClient.get<PageResult<MenuPage>>('/menus', params);
 }
 
 /**

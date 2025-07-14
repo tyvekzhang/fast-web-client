@@ -1,7 +1,6 @@
 'use client';
 
 import { APP_CONFIG } from '@/config';
-import { oklchToHex } from '@/lib/utils';
 import { useLanguageStore } from '@/stores/language-store';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
@@ -14,20 +13,11 @@ import React from 'react';
 export function AntdProvider({ children }: { children: React.ReactNode }) {
   const { language } = useLanguageStore();
 
-  const styles = getComputedStyle(document.documentElement);
-  const colorPrimary = oklchToHex(styles.getPropertyValue('--color-primary'));
-  const primaryDarkBg = oklchToHex(
-    styles.getPropertyValue('--color-primary-bg'),
-  );
-  const submenuDarkBg = oklchToHex(
-    styles.getPropertyValue('--color-submenu-bg'),
-  );
-  const itemSelectedColor = oklchToHex(
-    styles.getPropertyValue('--color-on-surface-var'),
-  );
-  const itemHoverColor = oklchToHex(
-    styles.getPropertyValue('--color-on-surface-var'),
-  );
+  const colorPrimary = '#5079f6';
+  const primaryDarkBg = '#263238';
+  const submenuDarkBg = '#202b30';
+  const itemSelectedColor = '#e2e2e8';
+  const itemHoverColor = '#e2e2e8';
 
   return (
     <AntdRegistry>

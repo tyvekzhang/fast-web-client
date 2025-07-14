@@ -37,9 +37,9 @@ export function oklchToHex(oklchStr: string): string | undefined {
   const Z = -0.0763812845 * l - 0.4214819784 * m + 1.5861632204 * s;
 
   // 3. Convert XYZ to linear RGB
-  let r = 3.2409699419 * X - 1.5373831776 * Y - 0.4986107603 * Z;
-  let g = -0.9692436363 * X + 1.8759675015 * Y + 0.0415550574 * Z;
-  let b_ = 0.0556300797 * X - 0.2039769589 * Y + 1.0569715142 * Z;
+  const r = 3.2409699419 * X - 1.5373831776 * Y - 0.4986107603 * Z;
+  const g = -0.9692436363 * X + 1.8759675015 * Y + 0.0415550574 * Z;
+  const b_ = 0.0556300797 * X - 0.2039769589 * Y + 1.0569715142 * Z;
 
   // 4. Apply gamma correction and clamp to [0, 1]
   const toSRGB = (v: number): number => {

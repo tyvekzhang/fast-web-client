@@ -1,4 +1,4 @@
-import SvgIcon from '@/components/svg-icon';
+import { UnfoldIcon } from '@/assets/icons';
 import { cn } from '@/lib/utils';
 import { useLayoutStore } from '@/stores/layout-store';
 
@@ -13,7 +13,8 @@ export default function FoldTrigger() {
       )}
       onClick={toggleCollapsed}
     >
-      <SvgIcon name="Columns2" size="lg" className="text-gray-600" />
+      {/* <SvgIcon name="Columns2" size="lg" className="text-gray-600" /> */}
+      <UnfoldIcon></UnfoldIcon>
     </span>
   );
 }

@@ -2,11 +2,11 @@ import ColumnVisibilityControl from '@/components/base/column-visibility-control
 import { Button, Popconfirm, Popover, Space, Tooltip } from 'antd';
 import {
   Download,
-  Edit,
   Eye,
   EyeOff,
   HelpCircle,
   Import,
+  PenLine,
   Plus,
   Settings,
   Trash2,
@@ -92,7 +92,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             disabled={isBatchModifyDisabled}
             onClick={onBatchModify}
             className="btn-batch-update"
-            icon={<Edit size={14} />}
+            icon={<PenLine size={14} />}
           >
             编辑
           </Button>

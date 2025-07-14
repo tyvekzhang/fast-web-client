@@ -30,8 +30,11 @@ class HttpClient {
     this.setupInterceptors();
   }
 
-  private isTokenResponse(data: ApiResponse): boolean {
-    return CONSTANTS.MAGIC_VALUE.ACCESS_TOKEN in data;
+  private isOriginalResponse(data: ApiResponse): boolean {
+    return (
+      CONSTANTS.MAGIC_VALUE.ACCESS_TOKEN in data ||
+      !(CONSTANTS.MAGIC_VALUE.DATA in data)
+    );
   }
 
   private isFileAttachment(response: AxiosResponse): boolean {
@@ -72,7 +75,7 @@ class HttpClient {
 
         if (this.isFileAttachment(response)) {
           return response;
-        } else if (this.isTokenResponse(data)) {
+        } else if (this.isOriginalResponse(data)) {
           return data;
         }
 

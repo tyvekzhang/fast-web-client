@@ -3,8 +3,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-primary: var(--primary);
   --color-on-primary: var(--on-primary);
@@ -24,15 +22,6 @@
   --on-surface-var: oklch(0.9145 0.0081 286.24);
 }
 
-.dark {
-  --primary: oklch(0.6714 0.1595 269.04);
-  --on-primary: oklch(1 0 0);
-  --color-primary-bg: oklch(0.3087 0.0195 229.78);
-  --color-submenu-bg: oklch(0.281 0.0177 227.38);
-  --secondary: oklch(0.8337 0.0747 272.96);
-  --on-surface-var: oklch(0.8293 0.0124 286.13);
-}
-
 @layer components {
   .card {
     background-color: var(--color-white);
@@ -41,45 +30,51 @@
     box-shadow: var(--shadow-xl);
   }
 
+  /* 按钮基础样式 */
+  .btn {
+    @apply border-0 cursor-pointer transition-colors duration-200;
+    @apply disabled:cursor-not-allowed;
+  }
+
   /* 导入按钮 - 黄绿色系 */
   .btn-import {
-    @apply bg-[#f6ffed] text-[#52c41a] border-0;
-    @apply hover:bg-[#52c41a] hover:text-white;
-    @apply disabled:bg-[#f6ffed] disabled:text-[#52c41a] disabled:cursor-not-allowed;
+    @apply bg-green-50 text-green-600;
+    @apply hover:bg-green-600 hover:text-white;
+    @apply disabled:bg-green-50 disabled:text-green-600;
   }
 
   /* 导出按钮 - 灰色系 */
   .btn-export {
-    @apply bg-[#f5f5f5] text-[#8c8c8c] border-0;
-    @apply hover:bg-[#8c8c8c] hover:text-white;
-    @apply disabled:bg-gray-100 disabled:text-[#8c8c8c] disabled:cursor-not-allowed;
+    @apply bg-gray-100 text-gray-500;
+    @apply hover:bg-gray-500 hover:text-white;
+    @apply disabled:bg-gray-100 disabled:text-gray-500;
   }
 
   /* 批量删除按钮 - 红色系 */
   .btn-batch-delete {
-    @apply bg-[#fff2e8] text-[#fa541c] border-0;
-    @apply hover:bg-[#ff7a45] hover:text-white;
-    @apply disabled:bg-[#fff2e8] disabled:text-[#fa541c] disabled:cursor-not-allowed;
+    @apply bg-orange-50 text-orange-600;
+    @apply hover:bg-orange-500 hover:text-white;
+    @apply disabled:bg-orange-50 disabled:text-orange-600;
   }
 
   /* 移除按钮 - 蓝色系 (无背景) */
   .btn-remove {
-    @apply text-[#4096ff] bg-transparent border-0;
-    @apply hover:text-[#ff7a45];
-    @apply disabled:text-[#ff7a45] disabled:cursor-not-allowed;
+    @apply text-blue-500 bg-transparent;
+    @apply hover:text-orange-500;
+    @apply disabled:text-orange-500;
   }
 
   /* 操作按钮 - 蓝色系 (无背景) */
   .btn-operation {
-    @apply text-[#4096ff] bg-transparent cursor-pointer border-0;
-    @apply hover:text-[#1677ff];
-    @apply disabled:bg-[#4096ff] disabled:text-[#4096ff] disabled:cursor-not-allowed;
+    @apply text-blue-500 bg-transparent;
+    @apply hover:text-blue-600;
+    @apply disabled:text-blue-500;
   }
 
   /* 批量更新按钮 - 蓝色系 */
   .btn-batch-update {
-    @apply bg-[#e6f4ff] text-[#4096ff] border-0;
-    @apply hover:bg-[#4096ff] hover:text-white;
-    @apply disabled:bg-[#e6f4ff] disabled:text-[#4096ff] disabled:cursor-not-allowed;
+    @apply bg-blue-50 text-blue-600;
+    @apply hover:bg-blue-600 hover:text-white;
+    @apply disabled:bg-blue-50 disabled:text-blue-600;
   }
 }

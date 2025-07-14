@@ -1,22 +1,6 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: [
-          {
-            loader: '@svgr/webpack',
-            options: {
-              icon: true,
-            },
-          },
-        ],
-        as: '*.js',
-      },
-    },
-  },
-
   reactStrictMode: false,
   typescript: {
     // https://nextjs.org/docs/api-reference/next.config.js/ignoring-typescript-errors

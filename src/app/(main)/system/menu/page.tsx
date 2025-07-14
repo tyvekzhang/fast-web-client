@@ -27,12 +27,7 @@ import {
 } from '@/types/menu';
 import { Form } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import {
-  Trash2 as DeleteOutlined,
-  PenLine as EditOutlined,
-  Eye as EyeOutlined,
-  MoreHorizontal as MoreOutlined,
-} from 'lucide-react';
+import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useEffect, useState } from 'react';
 import MenuBatchModifyComponent from './components/menu-batch-modify';
@@ -68,7 +63,6 @@ const Menu: React.FC = () => {
       const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await fetchMenuByPage(pageData, menuQuery);
       setMenuPageDataSource(resp.records);
-      debugger;
       setMenuPageTotalCount(resp.total);
     };
     fetchData().then(() => {});
@@ -187,7 +181,7 @@ const Menu: React.FC = () => {
             className="flex items-center gap-0.5 text-xs btn-operation"
             onClick={() => onMenuDetail(record)}
           >
-            <EyeOutlined className="w-3 h-3" />
+            <Eye size={14} />
             详情
           </button>
           <button
@@ -195,7 +189,7 @@ const Menu: React.FC = () => {
             className="flex items-center gap-0.5 text-xs btn-operation"
             onClick={() => onMenuModify(record)}
           >
-            <EditOutlined className="w-3 h-3" />
+            <PenLine size={14} />
             编辑
           </button>
           <button
@@ -203,7 +197,7 @@ const Menu: React.FC = () => {
             className="flex items-center gap-0.5 text-xs btn-remove"
             onClick={() => handleMenuDelete(record)}
           >
-            <DeleteOutlined className="w-3 h-3" />
+            <Trash2 size={14} />
             删除
           </button>
 
@@ -213,7 +207,7 @@ const Menu: React.FC = () => {
               className="flex items-center gap-0.5 text-xs btn-operation"
             >
               <span>更多</span>
-              <MoreOutlined className="w-3 h-3" />
+              <MoreHorizontal size={14} />
             </button>
           )}
         </div>

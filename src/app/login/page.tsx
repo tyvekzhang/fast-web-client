@@ -11,15 +11,18 @@ import {
   Form,
   Input,
   Space,
+  Tabs,
   Typography,
   message,
 } from 'antd';
-import { Eye, EyeOff, Lock, User } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff, Lock, Mail, Smartphone, User } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
+const { TabPane } = Tabs;
 
 const CardDecorativeBubble = () => {
   return (
@@ -44,6 +47,8 @@ export default function LoginPage() {
 
   const { login, loading } = useAuthStore();
   const [form] = Form.useForm();
+  const [activeTab, setActiveTab] = useState('password');
+  const [countdown, setCountdown] = useState(0);
 
   const validateUsername = (username: string) => {
     const basicRegex = /^.{5,}$/;
@@ -56,14 +61,52 @@ export default function LoginPage() {
     );
   };
 
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    return phoneRegex.test(phone);
+  };
+
   const onFinish = async (values: LoginRequest) => {
     try {
-      login(values);
+      await login(values);
       message.success('登录成功！');
       router.push('/');
     } catch (error) {
       message.error('登录失败，请检查用户名和密码');
     }
+  };
+
+  const onCodeFinish = async (values: any) => {
+    try {
+      // Here you would typically verify the code with your backend
+      // For now, we'll just simulate a successful login
+      await login({ username: values.phone, password: values.code });
+      message.success('验证码登录成功！');
+      router.push('/');
+    } catch (error) {
+      message.error('验证码登录失败，请检查验证码');
+    }
+  };
+
+  const handleSendCode = () => {
+    const phone = form.getFieldValue('phone');
+    if (!phone || !validatePhone(phone)) {
+      message.error('请输入有效的手机号码');
+      return;
+    }
+
+    // Simulate sending verification code
+    message.success('验证码已发送');
+    setCountdown(60);
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   const handleThirdPartyLogin = (provider: string) => {
@@ -78,86 +121,163 @@ export default function LoginPage() {
         <Card className="shadow-lg border-0 rounded-2xl overflow-hidden backdrop-blur-sm bg-white/95 bg-black relative">
           <CardDecorativeBubble />
 
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <Title level={2} className="mb-2 bg-clip-text text-secondary">
               欢迎回来
             </Title>
-            <Text type="secondary">请登录您的账户继续使用</Text>
           </div>
 
-          <Form
-            form={form}
-            name="login"
-            onFinish={onFinish}
-            autoComplete="off"
-            size="large"
-            className="space-y-6"
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                { required: true, message: '请输入用户名' },
-                {
-                  validator: (_, value) => {
-                    if (!value) return Promise.resolve();
-                    if (validateUsername(value)) return Promise.resolve();
-                    return Promise.reject(
-                      new Error('请输入有效的邮箱地址或手机号'),
-                    );
-                  },
-                },
-              ]}
-            >
-              <Input
-                prefix={<User className="text-gray-400" size={18} />}
-                placeholder="邮箱地址或手机号"
-                className="rounded-lg h-12"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={[
-                { required: true, message: '请输入密码' },
-                { min: 6, message: '密码至少6位字符' },
-              ]}
-            >
-              <Input.Password
-                prefix={<Lock className="text-gray-400" size={18} />}
-                placeholder="密码"
-                className="rounded-lg h-12"
-                iconRender={(visible) =>
-                  visible ? <Eye size={18} /> : <EyeOff size={18} />
-                }
-              />
-            </Form.Item>
-
-            <div className="flex justify-between items-center mb-6">
-              <Form.Item
-                name="remember"
-                valuePropName="checked"
-                className="mb-0"
+          <Tabs activeKey={activeTab} onChange={setActiveTab} centered>
+            <TabPane tab="密码登录" key="password">
+              <Form
+                form={form}
+                name="login"
+                onFinish={onFinish}
+                autoComplete="off"
+                size="large"
+                className="space-y-6"
               >
-                <Checkbox>记住我</Checkbox>
-              </Form.Item>
-              <Link href="/forgot-password" className={linkClass}>
-                忘记密码？
-              </Link>
-            </div>
+                <Form.Item
+                  name="username"
+                  rules={[
+                    { required: true, message: '请输入用户名' },
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+                        if (validateUsername(value)) return Promise.resolve();
+                        return Promise.reject(
+                          new Error('请输入有效的邮箱地址或手机号'),
+                        );
+                      },
+                    },
+                  ]}
+                >
+                  <Input
+                    prefix={<User className="text-gray-400" size={18} />}
+                    placeholder="邮箱地址或手机号"
+                    className="rounded-lg h-12"
+                  />
+                </Form.Item>
 
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-                className="w-full h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
+                <Form.Item
+                  name="password"
+                  rules={[
+                    { required: true, message: '请输入密码' },
+                    { min: 6, message: '密码至少6位字符' },
+                  ]}
+                >
+                  <Input.Password
+                    prefix={<Lock className="text-gray-400" size={18} />}
+                    placeholder="密码"
+                    className="rounded-lg h-12"
+                    iconRender={(visible) =>
+                      visible ? <Eye size={18} /> : <EyeOff size={18} />
+                    }
+                  />
+                </Form.Item>
+
+                <div className="flex justify-between items-center mb-6">
+                  <Form.Item
+                    name="remember"
+                    valuePropName="checked"
+                    className="mb-0"
+                  >
+                    <Checkbox>记住我</Checkbox>
+                  </Form.Item>
+                  <Link href="/forgot-password" className={linkClass}>
+                    忘记密码？
+                  </Link>
+                </div>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={loading}
+                    className="w-full h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
+                  >
+                    {loading ? '登录中...' : '登录'}
+                  </Button>
+                </Form.Item>
+              </Form>
+            </TabPane>
+            <TabPane tab="验证码登录" key="code">
+              <Form
+                form={form}
+                name="codeLogin"
+                onFinish={onCodeFinish}
+                autoComplete="off"
+                size="large"
+                className="space-y-6"
               >
-                {loading ? '登录中...' : '登录'}
-              </Button>
-            </Form.Item>
-          </Form>
+                <Form.Item
+                  name="phone"
+                  rules={[
+                    { required: true, message: '请输入手机号' },
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+                        if (validatePhone(value)) return Promise.resolve();
+                        return Promise.reject(new Error('请输入有效的手机号'));
+                      },
+                    },
+                  ]}
+                >
+                  <Input
+                    prefix={<Smartphone className="text-gray-400" size={18} />}
+                    placeholder="手机号"
+                    className="rounded-lg h-12"
+                  />
+                </Form.Item>
 
-          <Divider className="my-6">
+                <Form.Item
+                  name="code"
+                  rules={[
+                    { required: true, message: '请输入验证码' },
+                    { len: 6, message: '验证码为6位数字' },
+                  ]}
+                >
+                  <div className="flex space-x-2">
+                    <Input
+                      prefix={<Mail className="text-gray-400" size={18} />}
+                      placeholder="验证码"
+                      className="rounded-lg h-12 flex-1"
+                    />
+                    <Button
+                      onClick={handleSendCode}
+                      disabled={countdown > 0}
+                      className="h-12"
+                    >
+                      {countdown > 0 ? `${countdown}s后重试` : '获取验证码'}
+                    </Button>
+                  </div>
+                </Form.Item>
+
+                <div className="flex justify-between items-center mb-6">
+                  <Form.Item
+                    name="remember"
+                    valuePropName="checked"
+                    className="mb-0"
+                  >
+                    <Checkbox>记住我</Checkbox>
+                  </Form.Item>
+                </div>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={loading}
+                    className="w-full h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
+                  >
+                    {loading ? '登录中...' : '登录'}
+                  </Button>
+                </Form.Item>
+              </Form>
+            </TabPane>
+          </Tabs>
+
+          <Divider className="my-4">
             <Text type="secondary" className="text-sm">
               或使用以下方式登录
             </Text>

@@ -1,5 +1,6 @@
 import { Button, DatePicker, Form, Input, Space } from 'antd';
 import { FormInstance } from 'antd/es/form';
+import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
 interface MenuQueryProps {
@@ -61,8 +62,14 @@ const MenuQueryComponent: React.FC<MenuQueryProps> = ({
         </Form.Item>
       </Form>
       <Space className="inline-flex">
-        <Button onClick={handleMenuQueryReset}>重置</Button>
-        <Button type="primary" htmlType="submit">
+        <Button
+          onClick={handleMenuQueryReset}
+          className="bg-gray-50"
+          icon={<RotateCcw size={14} />}
+        >
+          重置
+        </Button>
+        <Button type="primary" htmlType="submit" icon={<Search size={14} />}>
           查询
         </Button>
       </Space>
