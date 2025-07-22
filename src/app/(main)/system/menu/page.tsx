@@ -137,7 +137,7 @@ const Menu: React.FC = () => {
       dataIndex: 'sort',
       key: 'sort',
       render: (text) => (text ? text : '-'),
-      width: '4%',
+      width: '6%',
     },
     {
       title: '路由地址',
@@ -181,7 +181,7 @@ const Menu: React.FC = () => {
             className="flex items-center gap-0.5 text-xs btn-operation"
             onClick={() => onMenuDetail(record)}
           >
-            <Eye size={14} />
+            <Eye size={12} />
             详情
           </button>
           <button
@@ -189,7 +189,7 @@ const Menu: React.FC = () => {
             className="flex items-center gap-0.5 text-xs btn-operation"
             onClick={() => onMenuModify(record)}
           >
-            <PenLine size={14} />
+            <PenLine size={12} />
             编辑
           </button>
           <button
@@ -197,7 +197,7 @@ const Menu: React.FC = () => {
             className="flex items-center gap-0.5 text-xs btn-remove"
             onClick={() => handleMenuDelete(record)}
           >
-            <Trash2 size={14} />
+            <Trash2 size={12} />
             删除
           </button>
 
@@ -207,7 +207,7 @@ const Menu: React.FC = () => {
               className="flex items-center gap-0.5 text-xs btn-operation"
             >
               <span>更多</span>
-              <MoreHorizontal size={14} />
+              <MoreHorizontal size={12} />
             </button>
           )}
         </div>
