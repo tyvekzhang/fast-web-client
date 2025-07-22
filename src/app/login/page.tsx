@@ -2,7 +2,7 @@
 
 import { GitHubIcon, GoogleIcon, WeChatIcon } from '@/assets/icons';
 import { useAuthStore } from '@/stores/auth-store';
-import { LoginRequest } from '@/types/auth';
+import { OAuth2PasswordRequestForm } from '@/types/auth';
 import {
   Button,
   Card,
@@ -66,7 +66,7 @@ export default function LoginPage() {
     return phoneRegex.test(phone);
   };
 
-  const onFinish = async (values: LoginRequest) => {
+  const onFinish = async (values: OAuth2PasswordRequestForm) => {
     try {
       await login(values);
       message.success('登录成功！');

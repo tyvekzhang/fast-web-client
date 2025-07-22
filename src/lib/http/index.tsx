@@ -2,7 +2,7 @@ import { APP_CONFIG, CONSTANTS } from '@/config';
 import { API_RESPONSE_FORMAT, HTTP_CONFIG } from '@/config/api';
 import { isDebugEnabled } from '@/config/env';
 import NProgress from '@/lib/http/n-progress';
-import { Token } from '@/types/auth';
+import { UserCredential } from '@/types/auth';
 import axios, {
   type AxiosInstance,
   AxiosRequestConfig,
@@ -131,7 +131,7 @@ class HttpClient {
     );
   }
 
-  private getToken(): Token | null {
+  private getToken(): UserCredential | null {
     // Get token from localStorage
     try {
       const authStorage = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.AUTH);

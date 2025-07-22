@@ -1,6 +1,6 @@
 import { APP_CONFIG } from '@/config';
-import { login } from '@/service/auth-service';
-import type { LoginRequest, Token } from '@/types/auth';
+import { signInWithEmailAndPassword } from '@/service/auth-service';
+import type { OAuth2PasswordRequestForm, UserCredential } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -11,9 +11,9 @@ interface UserInfo {
 
 interface AuthStore {
   user: UserInfo | null;
-  token: Token | null;
+  token: UserCredential | null;
   loading: boolean;
-  login: (loginRequest: LoginRequest) => Promise<void>;
+  login: (loginRequest: OAuth2PasswordRequestForm) => Promise<void>;
   logout: () => void;
   setLoading: (loading: boolean) => void;
 }
@@ -27,10 +27,10 @@ export const useAuthStore = create<AuthStore>()(
         name: 'John Doe',
         avatar: '',
       },
-      login: async (loginRequest: LoginRequest) => {
+      login: async (loginRequest: OAuth2PasswordRequestForm) => {
         set({ loading: true });
         try {
-          const response = await login(loginRequest);
+          const response = await signInWithEmailAndPassword(loginRequest);
           set({
             token: response,
             loading: false,
