@@ -81,6 +81,5 @@ export interface SQLSchema {
 
 export interface GenTableExecute {
   database_id: number;
-  sql_statement: string
+  sql_statement: string;
 }
-

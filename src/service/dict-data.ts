@@ -1,6 +1,6 @@
 import httpClient from '@/lib/http';
 import { downloadBlob } from '@/service/util';
-import { BaseQueryImpl, PaginationRequest, PageResult } from '@/types';
+import { BaseQueryImpl, PageResult, PaginationRequest } from '@/types';
 import {
   DictDataBatchModify,
   DictDataCreate,

@@ -6,37 +6,37 @@ import { message } from '@/components/global-toast';
 import SvgIcon from '@/components/svg-icon';
 import {
   batchCreateMenus,
-  batchUpdateMenus,
   batchDeleteMenu,
+  batchUpdateMenus,
   createMenu,
+  deleteMenu,
   exportMenuPage,
-  listMenus,
   getMenu,
   importMenu,
+  listMenus,
   updateMenu,
-  deleteMenu,
 } from '@/service/menu';
 import { BaseQueryImpl } from '@/types';
 import {
-  MenuBatchModify,
   CreateMenu,
+  ListMenusRequest,
+  Menu,
+  MenuBatchModify,
   MenuDetail,
   UpdateMenu,
-  Menu,
-  ListMenusRequest,
 } from '@/types/menu';
 import { Form } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import dayjs from 'dayjs';
 import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useEffect, useState } from 'react';
 import MenuBatchModifyComponent from './components/batch-update-menu';
 import MenuCreateComponent from './components/create-menu';
-import MenuDetailComponent from './components/menu-detail';
 import MenuImportComponent from './components/import-menu';
+import MenuDetailComponent from './components/menu-detail';
 import MenuModifyComponent from './components/modify-menu';
 import MenuQueryComponent from './components/query-menu';
-import dayjs from 'dayjs';
 
 const MenuPage: React.FC = () => {
   // 配置模块
@@ -60,13 +60,14 @@ const MenuPage: React.FC = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      const menuQuery = (await menuQueryForm.validateFields()) as ListMenusRequest;
+      const menuQuery =
+        (await menuQueryForm.validateFields()) as ListMenusRequest;
       const pageData = BaseQueryImpl.create(current, page_size);
       const resp = await listMenus({ ...pageData, ...menuQuery });
       setMenuPageDataSource(resp.records);
       setMenuPageTotalCount(resp.total);
     };
-    fetchData().then(() => { });
+    fetchData().then(() => {});
   }, [current, page_size]);
 
   const handlePaginationChange = (newPage: number, newpage_size: number) => {
@@ -167,7 +168,8 @@ const MenuPage: React.FC = () => {
       title: '创建时间',
       dataIndex: 'create_time',
       key: 'create_time',
-      render: (text) => text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-',
+      render: (text) =>
+        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-',
       ellipsis: true,
       width: '12%',
     },
@@ -258,9 +260,10 @@ const MenuPage: React.FC = () => {
     await handleMenuQueryFinish(filteredMenuQuery as ListMenusRequest);
   };
   const handleMenuQueryFinish = async (menuPage: ListMenusRequest) => {
-    await listMenus(
-      { ...BaseQueryImpl.create(current, page_size), ...menuPage, }
-    ).then((resp) => {
+    await listMenus({
+      ...BaseQueryImpl.create(current, page_size),
+      ...menuPage,
+    }).then((resp) => {
       setMenuPageDataSource(resp.records);
       setMenuPageTotalCount(resp.total);
     });
@@ -281,7 +284,7 @@ const MenuPage: React.FC = () => {
   const handleMenuCreateFinish = async (data: CreateMenu) => {
     setIsMenuCreateLoading(true);
     try {
-      await createMenu({ "menu": data });
+      await createMenu({ menu: data });
       message.success('新增成功');
       menuCreateForm.resetFields();
       await onMenuQueryFinish();
@@ -356,7 +359,7 @@ const MenuPage: React.FC = () => {
     const menuModify = { ...menuModifyData, id: selectedRows[0].id };
     setIsMenuModifyLoading(true);
     try {
-      await updateMenu({"menu": menuModify});
+      await updateMenu({ menu: menuModify });
       menuModifyForm.resetFields();
       message.success('更新成功');
       await onMenuQueryFinish();
@@ -398,7 +401,7 @@ const MenuPage: React.FC = () => {
     }
     try {
       const ids = selectedRows.map((row) => row.id);
-      await batchUpdateMenus({"ids": ids, "menu": menuBatchModify});
+      await batchUpdateMenus({ ids: ids, menu: menuBatchModify });
       menuBatchModifyForm.resetFields();
       message.success('更新成功');
       await onMenuQueryFinish();
@@ -436,7 +439,7 @@ const MenuPage: React.FC = () => {
   const handleMenuImport = async () => {
     setIsMenuImportLoading(true);
     try {
-      await batchCreateMenus({"menus": menuCreateList});
+      await batchCreateMenus({ menus: menuCreateList });
       message.success('导入成功');
       setIsMenuImportModalVisible(false);
       await onMenuQueryFinish();

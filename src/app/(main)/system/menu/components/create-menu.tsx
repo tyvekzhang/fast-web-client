@@ -1,9 +1,9 @@
+import IconPicker from '@/components/base/icon-picker';
 import { CreateMenu } from '@/types/menu';
 import { TreeSelectUtil } from '@/utils/select-util';
 import { Button, Form, Input, Modal, Radio, TreeSelect } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
-import IconPicker from '@/components/base/icon-picker';
 
 const menuCreateFormItemLayout = {
   labelCol: { span: 4 },

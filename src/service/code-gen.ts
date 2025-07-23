@@ -1,6 +1,10 @@
-import { downloadBlob } from '@/service/util';
-import { CodePreviewResponse, GenTableDetail, TableDataResponse } from '@/types/code-gen';
 import httpClient from '@/lib/http';
+import { downloadBlob } from '@/service/util';
+import {
+  CodePreviewResponse,
+  GenTableDetail,
+  TableDataResponse,
+} from '@/types/code-gen';
 import { AxiosResponse } from 'axios';
 
 export const codeModify = (genTableDetail: GenTableDetail) => {
@@ -19,16 +23,23 @@ export const codeList = () => {
   return httpClient.get<TableDataResponse>(`/gen-table/list`);
 };
 
-export const importTables = (database_id: number, tableIds: number[], backend: string) => {
+export const importTables = (
+  database_id: number,
+  tableIds: number[],
+  backend: string,
+) => {
   const data = {
     database_id: database_id,
     table_ids: tableIds,
-    backend: backend
+    backend: backend,
   };
   return httpClient.post('/gen-table/import', data);
 };
 
-export const downloadCode = async (tableId: number, fileName: string = 'code.zip') => {
+export const downloadCode = async (
+  tableId: number,
+  fileName: string = 'code.zip',
+) => {
   const response = await httpClient.get<AxiosResponse>(
     `/gen-table/download/${tableId}`,
     {},

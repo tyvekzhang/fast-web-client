@@ -1,23 +1,19 @@
 import httpClient from '@/lib/http';
 import { downloadBlob } from '@/service/util';
-import { BaseQueryImpl, PaginationRequest, PageResult } from '@/types';
+import { PageResult } from '@/types';
 import {
-  MenuBatchModify,
-  CreateMenu,
-  MenuDetail,
-  UpdateMenu,
-  Menu,
-  ListMenusRequest,
-  CreateMenuRequest,
-  UpdateMenuRequest,
   BatchCreateMenusRequest,
-  BatchUpdateMenusResponse,
-  BatchUpdateMenusRequest,
   BatchDeleteMenusRequest,
+  BatchUpdateMenusRequest,
+  BatchUpdateMenusResponse,
+  CreateMenuRequest,
   ExportMenusRequest,
   ImportMenusRequest,
-  ImportMenu,
   ImportMenusResponse,
+  ListMenusRequest,
+  Menu,
+  MenuDetail,
+  UpdateMenuRequest,
 } from '@/types/menu';
 import { AxiosResponse } from 'axios';
 
@@ -36,9 +32,7 @@ export function getMenu(id: string) {
  * @param req Request object containing pagination, filter and sort parameters.
  * @returns Paginated list of menus and total count.
  */
-export function listMenus(
-  req: Partial<ListMenusRequest>
-) {
+export function listMenus(req: Partial<ListMenusRequest>) {
   return httpClient.get<PageResult<Menu>>('/menus', req);
 }
 /**
@@ -92,9 +86,6 @@ export function batchDeleteMenu(req: BatchDeleteMenusRequest) {
   return httpClient.delete<void>('/menu:batchDelete', { data: req });
 }
 
-
-
-
 /**
  *  Export the Excel template for menu import.
  *
@@ -119,12 +110,15 @@ export async function exportMenuPage(req: ExportMenusRequest) {
   const params = {
     ids: req.ids,
   };
-  const response = await httpClient.get<AxiosResponse>(`/menus:export`, params, {
-    responseType: 'blob',
-  });
+  const response = await httpClient.get<AxiosResponse>(
+    `/menus:export`,
+    params,
+    {
+      responseType: 'blob',
+    },
+  );
   downloadBlob(response, 'menu_data_export.xlsx');
 }
-
 
 /**
  * Import menus from an uploaded Excel file.

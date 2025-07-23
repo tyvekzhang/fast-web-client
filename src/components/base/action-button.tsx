@@ -36,9 +36,9 @@ interface ActionButtonsProps {
   isBatchRemoveDisabled: boolean;
   isBatchRemoveLoading: boolean;
   isExportLoading: boolean;
-  rawColumns: { key: number; title: string }[];
+  rawColumns: { key: string; title: string }[];
   visibleColumns: string[];
-  onToggleColumnVisibility: (columnKey: number) => void;
+  onToggleColumnVisibility: (columnKey: string) => void;
   className?: string;
   actionConfig?: ActionButtonsConfig;
 }
@@ -81,7 +81,11 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
           </Button>
         )}
         {config.showImport && (
-          <Button onClick={onImport} className="btn-import" icon={<Import size={14} />}>
+          <Button
+            onClick={onImport}
+            className="btn-import"
+            icon={<Import size={14} />}
+          >
             导入
           </Button>
         )}
@@ -129,7 +133,6 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
         )}
       </Space>
       <Space className="pr-2">
-
         <Tooltip title={isQueryShow ? '隐藏搜索框' : '显示搜索框'}>
           <Button
             className="rounded-full"

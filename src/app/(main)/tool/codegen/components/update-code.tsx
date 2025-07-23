@@ -1,9 +1,19 @@
-"use client"
-import { Checkbox, TabsProps } from 'antd';
-import { Button, Form, Input, Modal, Select, Table, Tabs, message } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+'use client';
 import { codeModify, getTableDetail } from '@/service/code-gen';
 import { GenField, GenTable } from '@/types/code-gen';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Table,
+  Tabs,
+  TabsProps,
+  message,
+} from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
 // import { useAppSelector } from '@/stores';
 const { Option } = Select;
 
@@ -19,12 +29,11 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
   const [fieldInfo, setFieldInfo] = useState<GenField[]>([]); // 表格数据
   const [tableForm] = Form.useForm();
   // const { dictData } = useAppSelector((state) => state.dict);
-  const dictData  = {};
+  const dictData = {};
 
   useEffect(() => {
     tableForm.setFieldsValue(tableInfo);
   }, [tableForm, tableInfo]);
-
 
   useEffect(() => {
     const fetchTableDetail = async () => {
@@ -41,21 +50,24 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
 
   const [changedFields, setChangedFields] = useState<Record<string, any>>({});
 
-  const handleFieldChange = useCallback((key: number, dataIndex: string, value: any) => {
-    setChangedFields(prev => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        [dataIndex]: value
-      }
-    }));
-  }, []);
+  const handleFieldChange = useCallback(
+    (key: number, dataIndex: string, value: any) => {
+      setChangedFields((prev) => ({
+        ...prev,
+        [key]: {
+          ...prev[key],
+          [dataIndex]: value,
+        },
+      }));
+    },
+    [],
+  );
   const fieldColumns = [
     {
       title: '主键',
       dataIndex: 'id',
       key: 'id',
-      hidden: true
+      hidden: true,
     },
     {
       title: '序号',
@@ -82,7 +94,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: string, record: GenField) => (
         <Input
           value={changedFields[record.id]?.comment ?? value}
-          onChange={(e) => handleFieldChange(record.id, 'comment', e.target.value)}
+          onChange={(e) =>
+            handleFieldChange(record.id, 'comment', e.target.value)
+          }
         />
       ),
     },
@@ -94,7 +108,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
         <Select
           value={changedFields[record.id]?.js_type ?? value}
           style={{ width: '100%' }}
-          onChange={(newValue) => handleFieldChange(record.id, 'js_type', newValue)}
+          onChange={(newValue) =>
+            handleFieldChange(record.id, 'js_type', newValue)
+          }
         >
           <Option value="String">String</Option>
           <Option value="Number">Number</Option>
@@ -109,7 +125,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       title: '主键',
       dataIndex: 'primary_key',
       key: 'primary_key',
-      render: (value: number) => value === 1 ? '是' : '否',
+      render: (value: number) => (value === 1 ? '是' : '否'),
     },
     {
       title: '可创建',
@@ -118,7 +134,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: number, record: GenField) => (
         <Checkbox
           checked={changedFields[record.id]?.creatable ?? value === 1}
-          onChange={(e) => handleFieldChange(record.id, 'creatable', e.target.checked ? 1 : 0)}
+          onChange={(e) =>
+            handleFieldChange(record.id, 'creatable', e.target.checked ? 1 : 0)
+          }
         />
       ),
     },
@@ -129,7 +147,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: number, record: GenField) => (
         <Checkbox
           checked={changedFields[record.id]?.modifiable ?? value === 1}
-          onChange={(e) => handleFieldChange(record.id, 'modifiable', e.target.checked ? 1 : 0)}
+          onChange={(e) =>
+            handleFieldChange(record.id, 'modifiable', e.target.checked ? 1 : 0)
+          }
         />
       ),
     },
@@ -140,7 +160,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: number, record: GenField) => (
         <Checkbox
           checked={changedFields[record.id]?.queryable ?? value === 1}
-          onChange={(e) => handleFieldChange(record.id, 'queryable', e.target.checked ? 1 : 0)}
+          onChange={(e) =>
+            handleFieldChange(record.id, 'queryable', e.target.checked ? 1 : 0)
+          }
         />
       ),
     },
@@ -151,7 +173,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: number, record: GenField) => (
         <Checkbox
           checked={changedFields[record.id]?.pageable ?? value === 1}
-          onChange={(e) => handleFieldChange(record.id, 'pageable', e.target.checked ? 1 : 0)}
+          onChange={(e) =>
+            handleFieldChange(record.id, 'pageable', e.target.checked ? 1 : 0)
+          }
         />
       ),
     },
@@ -162,7 +186,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: number, record: GenField) => (
         <Checkbox
           checked={changedFields[record.id]?.detailable ?? value === 1}
-          onChange={(e) => handleFieldChange(record.id, 'detailable', e.target.checked ? 1 : 0)}
+          onChange={(e) =>
+            handleFieldChange(record.id, 'detailable', e.target.checked ? 1 : 0)
+          }
         />
       ),
     },
@@ -173,7 +199,13 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: number, record: GenField) => (
         <Checkbox
           checked={changedFields[record.id]?.batch_modifiable ?? value === 1}
-          onChange={(e) => handleFieldChange(record.id, 'batch_modifiable', e.target.checked ? 1 : 0)}
+          onChange={(e) =>
+            handleFieldChange(
+              record.id,
+              'batch_modifiable',
+              e.target.checked ? 1 : 0,
+            )
+          }
         />
       ),
     },
@@ -185,7 +217,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
         <Select
           value={changedFields[record.id]?.query_type ?? value}
           style={{ width: '100%' }}
-          onChange={(newValue) => handleFieldChange(record.id, 'query_type', newValue)}
+          onChange={(newValue) =>
+            handleFieldChange(record.id, 'query_type', newValue)
+          }
         >
           <Option value="EQ">=</Option>
           <Option value="NE">!=</Option>
@@ -206,7 +240,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
         <Select
           value={changedFields[record.id]?.html_type ?? value}
           style={{ width: '100%' }}
-          onChange={(newValue) => handleFieldChange(record.id, 'html_type', newValue)}
+          onChange={(newValue) =>
+            handleFieldChange(record.id, 'html_type', newValue)
+          }
         >
           <Option value="input">文本框</Option>
           {/*<Option value="textarea">文本域</Option>*/}
@@ -228,12 +264,12 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
         const options = [];
         for (const key in dictData) {
           const items = dictData[key];
-          const labels = items.map((item: { label: string; }) => item.label);
+          const labels = items.map((item: { label: string }) => item.label);
           const displayLabel = labels.join(',');
           // 构建正确的 option 对象
           const option = {
             value: key,
-            label: displayLabel
+            label: displayLabel,
           };
           // 正确更新 options 数组
           options.push(option);
@@ -241,42 +277,46 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
         return (
           <Select
             value={changedFields[record.id]?.dict_type ?? value}
-            onChange={(newValue) => handleFieldChange(record.id, 'dict_type', newValue)}
+            onChange={(newValue) =>
+              handleFieldChange(record.id, 'dict_type', newValue)
+            }
             style={{ width: '100%' }}
           >
             {options.map((option) => (
               <Option key={option.value} value={option.value}>
                 <span>{option.value}</span>
-                <span>{" "}</span>
-                <span className='text-gray-400 text-ellipsis'>{option.label}</span>
+                <span> </span>
+                <span className="text-gray-400 text-ellipsis">
+                  {option.label}
+                </span>
               </Option>
             ))}
           </Select>
         );
-      }
+      },
     },
   ];
 
   const handleCodeModifyFinish = async () => {
-    const updatedFieldInfo = fieldInfo.map(field => {
+    const updatedFieldInfo = fieldInfo.map((field) => {
       if (changedFields[field.id]) {
         return { ...field, ...changedFields[field.id] };
       }
       return field;
     });
-    const gen_table = {...tableForm.getFieldsValue()}
+    const gen_table = { ...tableForm.getFieldsValue() };
     const genTableDetail = {
       gen_table: gen_table,
       gen_field: updatedFieldInfo,
     };
-    setIsCodeModifyLoading(true)
+    setIsCodeModifyLoading(true);
     try {
       await codeModify(genTableDetail);
       message.success('更新成功');
     } finally {
-      setIsCodeModifyLoading(false)
+      setIsCodeModifyLoading(false);
     }
-    onClose()
+    onClose();
   };
 
   const items: TabsProps['items'] = [
@@ -284,16 +324,26 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       key: '1',
       label: '表信息',
       children: (
-        <Form layout="horizontal" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} form={tableForm}>
+        <Form
+          layout="horizontal"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          form={tableForm}
+        >
           <div className="grid grid-cols-2 gap-2">
-            <Form.Item label="编号" name="id" required={true} className={"hidden"}>
+            <Form.Item
+              label="编号"
+              name="id"
+              required={true}
+              className={'hidden'}
+            >
               <Input value={tableInfo?.id} />
             </Form.Item>
             <Form.Item label="表名称" name="table_name" required={true}>
               <Input value={tableInfo?.table_name} />
             </Form.Item>
             <Form.Item label="表描述" name="comment">
-              <Input value={tableInfo?.comment  } />
+              <Input value={tableInfo?.comment} />
             </Form.Item>
             <Form.Item label="实体类名称" name="class_name">
               <Input value={tableInfo?.class_name} />
@@ -302,8 +352,8 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
               <Input value={tableInfo?.function_author} />
             </Form.Item>
           </div>
-          <div className={"border-b mb-4"}/>
-          <div className={"grid grid-cols-2 gap-4"}>
+          <div className={'border-b mb-4'} />
+          <div className={'grid grid-cols-2 gap-4'}>
             <Form.Item label="生成模板" name="tpl_category">
               <Select value={tableInfo?.tpl_category}>
                 <Option value="crud">单表（增删改查）</Option>
@@ -333,7 +383,13 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       key: '2',
       label: '字段信息',
       children: (
-        <Table columns={fieldColumns} dataSource={fieldInfo} pagination={false} scroll={{ x: 1500 }} size="small" />
+        <Table
+          columns={fieldColumns}
+          dataSource={fieldInfo}
+          pagination={false}
+          scroll={{ x: 1500 }}
+          size="small"
+        />
       ),
     },
   ];
@@ -343,14 +399,26 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       <Button key="back" onClick={onClose}>
         取消
       </Button>
-      <Button key="submit" type="primary" loading={isCodeModifyLoading} onClick={handleCodeModifyFinish}>
+      <Button
+        key="submit"
+        type="primary"
+        loading={isCodeModifyLoading}
+        onClick={handleCodeModifyFinish}
+      >
         确定
       </Button>
     </div>,
   ];
 
   return (
-    <Modal title="编辑表" open={open} onCancel={onClose} footer={footerButtons} width={1200} style={{ top: 20 }}>
+    <Modal
+      title="编辑表"
+      open={open}
+      onCancel={onClose}
+      footer={footerButtons}
+      width={1200}
+      style={{ top: 20 }}
+    >
       <div style={{ padding: '12px 0' }}>
         <Tabs defaultActiveKey="2" items={items} />
       </div>
@@ -359,4 +427,3 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
 };
 
 export default CodeModify;
-

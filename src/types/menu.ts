@@ -52,18 +52,16 @@ export interface Menu {
   create_time: string;
 }
 
-
 export interface CreateMenuRequest {
-  menu: CreateMenu
+  menu: CreateMenu;
 }
 
 export interface BatchCreateMenusRequest {
-  menus: CreateMenu
+  menus: CreateMenu;
 }
 
-
-export interface ImportMenu extends CreateMenu{
-    errMsg: string
+export interface ImportMenu extends CreateMenu {
+  errMsg: string;
 }
 
 export interface CreateMenu {
@@ -113,9 +111,8 @@ export interface ListMenusRequest extends PaginationRequest {
 }
 
 export interface UpdateMenuRequest {
-  menu: UpdateMenu
+  menu: UpdateMenu;
 }
-
 
 export interface BatchUpdateMenu {
   /** 排序 */
@@ -166,29 +163,28 @@ export interface UpdateMenu {
 }
 
 export interface BatchUpdateMenusRequest {
-  ids: string[]
-  menu: UpdateMenu
+  ids: string[];
+  menu: UpdateMenu;
 }
 
 export interface BatchDeleteMenusRequest {
-  ids: string[]
+  ids: string[];
 }
 
 export interface ExportMenusRequest {
-    ids: string[]
+  ids: string[];
 }
 
 export interface ImportMenusRequest {
-  file: File
+  file: File;
 }
 
-
 export interface ImportMenusResponse {
-  menus: ImportMenu[]
+  menus: ImportMenu[];
 }
 
 export interface BatchUpdateMenusResponse {
-  menus: Menu[]
+  menus: Menu[];
 }
 
 export interface MenuBatchModify {

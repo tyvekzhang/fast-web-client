@@ -101,7 +101,6 @@ export interface GenField {
   update_time: string;
 }
 
-
 export interface GenTableDetail {
   gen_table: GenTable;
   gen_field: GenField[];

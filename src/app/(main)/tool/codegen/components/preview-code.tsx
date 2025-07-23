@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { codePreview } from '@/service/code-gen';
 import { CodePreviewResponse } from '@/types/code-gen';
 import { CloseOutlined, CopyOutlined } from '@ant-design/icons';
@@ -20,8 +20,24 @@ interface TabItem {
   language: string;
 }
 
-const CodePreview: React.FC<CodePreviewProps> = ({ open, onClose, tableId }) => {
-  const [codePreviewData, setCodePreviewData] = useState<CodePreviewResponse | null>(null);
+const CodePreview: React.FC<CodePreviewProps> = ({
+  open,
+  onClose,
+  tableId,
+}) => {
+  const [codePreviewData, setCodePreviewData] =
+    useState<CodePreviewResponse | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('');
+  const [copying, setCopying] = useState(false);
+
+  // 关闭时清理数据
+  useEffect(() => {
+    if (!open) {
+      setCodePreviewData(null);
+      setActiveTab('');
+    }
+  }, [open]);
+
   const processCodeString = useCallback((code: string) => {
     if (!code) return '';
     return code.replace(/\\n/g, '\n').replace(/\\"/g, '"');
@@ -32,6 +48,11 @@ const CodePreview: React.FC<CodePreviewProps> = ({ open, onClose, tableId }) => 
       if (!tableId) return;
       codePreview(tableId).then((resp) => {
         setCodePreviewData(resp);
+        // 默认激活第一个tab
+        if (resp) {
+          if (resp.backend === 'python') setActiveTab('modelPy');
+          else if (resp.backend === 'java') setActiveTab('controller');
+        }
       });
     };
     if (open) {
@@ -43,55 +64,180 @@ const CodePreview: React.FC<CodePreviewProps> = ({ open, onClose, tableId }) => 
     if (!data) return [];
 
     const python_tabs = [
-      { key: 'modelPy', label: 'model.py', children: processCodeString(data.modelPy), language: 'python' },
-      { key: 'schemaPy', label: 'schema.py', children: processCodeString(data.schemaPy), language: 'python' },
-      { key: 'mapperPy', label: 'mapper.py', children: processCodeString(data.mapperPy), language: 'python' },
-      { key: 'servicePy', label: 'service.py', children: processCodeString(data.servicePy), language: 'python' },
-      { key: 'serviceImplPy', label: 'serviceImpl.py', children: processCodeString(data.serviceImplPy), language: 'python' },
-      { key: 'controllerPy', label: 'controller.py', children: processCodeString(data.controllerPy), language: 'python' },
+      {
+        key: 'modelPy',
+        label: 'model.py',
+        children: processCodeString(data.modelPy),
+        language: 'python',
+      },
+      {
+        key: 'schemaPy',
+        label: 'schema.py',
+        children: processCodeString(data.schemaPy),
+        language: 'python',
+      },
+      {
+        key: 'mapperPy',
+        label: 'mapper.py',
+        children: processCodeString(data.mapperPy),
+        language: 'python',
+      },
+      {
+        key: 'servicePy',
+        label: 'service.py',
+        children: processCodeString(data.servicePy),
+        language: 'python',
+      },
+      {
+        key: 'serviceImplPy',
+        label: 'serviceImpl.py',
+        children: processCodeString(data.serviceImplPy),
+        language: 'python',
+      },
+      {
+        key: 'controllerPy',
+        label: 'controller.py',
+        children: processCodeString(data.controllerPy),
+        language: 'python',
+      },
     ];
 
     const java_tabs = [
-      { key: 'controller', label: 'controller.java', children: processCodeString(data.controller), language: 'java' },
-      { key: 'service', label: 'service.java', children: processCodeString(data.service), language: 'java' },
+      {
+        key: 'controller',
+        label: 'controller.java',
+        children: processCodeString(data.controller),
+        language: 'java',
+      },
+      {
+        key: 'service',
+        label: 'service.java',
+        children: processCodeString(data.service),
+        language: 'java',
+      },
       {
         key: 'serviceImpl',
         label: 'serviceImpl.java',
         children: processCodeString(data.serviceImpl),
         language: 'java',
       },
-      { key: 'mapper', label: 'mapper.java', children: processCodeString(data.mapper), language: 'java' },
-      { key: 'model', label: 'model.java', children: processCodeString(data.model), language: 'java' },
-      { key: 'converter', label: 'converter.java', children: processCodeString(data.converter), language: 'java' },
-      { key: 'create', label: 'create.java', children: processCodeString(data.create), language: 'java' },
-      { key: 'modify', label: 'modify.java', children: processCodeString(data.modify), language: 'java' },
+      {
+        key: 'mapper',
+        label: 'mapper.java',
+        children: processCodeString(data.mapper),
+        language: 'java',
+      },
+      {
+        key: 'model',
+        label: 'model.java',
+        children: processCodeString(data.model),
+        language: 'java',
+      },
+      {
+        key: 'converter',
+        label: 'converter.java',
+        children: processCodeString(data.converter),
+        language: 'java',
+      },
+      {
+        key: 'create',
+        label: 'create.java',
+        children: processCodeString(data.create),
+        language: 'java',
+      },
+      {
+        key: 'modify',
+        label: 'modify.java',
+        children: processCodeString(data.modify),
+        language: 'java',
+      },
       {
         key: 'batchModify',
         label: 'batchModify.java',
         children: processCodeString(data.batchModify),
         language: 'java',
       },
-      { key: 'query', label: 'query.java', children: processCodeString(data.query), language: 'java' },
-      { key: 'detail', label: 'detail.java', children: processCodeString(data.detail), language: 'java' },
-      { key: 'page', label: 'page.java', children: processCodeString(data.page), language: 'java' },
+      {
+        key: 'query',
+        label: 'query.java',
+        children: processCodeString(data.query),
+        language: 'java',
+      },
+      {
+        key: 'detail',
+        label: 'detail.java',
+        children: processCodeString(data.detail),
+        language: 'java',
+      },
+      {
+        key: 'page',
+        label: 'page.java',
+        children: processCodeString(data.page),
+        language: 'java',
+      },
     ];
 
     const react_tabs = [
-      { key: 'index', label: 'index.tsx', children: processCodeString(data.index), language: 'js' },
-      { key: 'router', label: 'router.tsx', children: processCodeString(data.router), language: 'js' },
-      { key: 'iQuery', label: 'iQuery.tsx', children: processCodeString(data.iQuery), language: 'js' },
-      { key: 'iCreate', label: 'iCreate.tsx', children: processCodeString(data.iCreate), language: 'js' },
-      { key: 'iDetail', label: 'iDetail.tsx', children: processCodeString(data.iDetail), language: 'js' },
-      { key: 'iModify', label: 'iModify.tsx', children: processCodeString(data.iModify), language: 'js' },
+      {
+        key: 'index',
+        label: 'index.tsx',
+        children: processCodeString(data.index),
+        language: 'js',
+      },
+      {
+        key: 'router',
+        label: 'router.tsx',
+        children: processCodeString(data.router),
+        language: 'js',
+      },
+      {
+        key: 'iQuery',
+        label: 'iQuery.tsx',
+        children: processCodeString(data.iQuery),
+        language: 'js',
+      },
+      {
+        key: 'iCreate',
+        label: 'iCreate.tsx',
+        children: processCodeString(data.iCreate),
+        language: 'js',
+      },
+      {
+        key: 'iDetail',
+        label: 'iDetail.tsx',
+        children: processCodeString(data.iDetail),
+        language: 'js',
+      },
+      {
+        key: 'iModify',
+        label: 'iModify.tsx',
+        children: processCodeString(data.iModify),
+        language: 'js',
+      },
       {
         key: 'iBatchModify',
         label: 'iBatchModify.tsx',
         children: processCodeString(data.iBatchModify),
         language: 'js',
       },
-      { key: 'iImport', label: 'iImport.tsx', children: processCodeString(data.iImport), language: 'js' },
-      { key: 'api', label: 'api.ts', children: processCodeString(data.api), language: 'js' },
-      { key: 'type', label: 'type.ts', children: processCodeString(data.type), language: 'js' },
+      {
+        key: 'iImport',
+        label: 'iImport.tsx',
+        children: processCodeString(data.iImport),
+        language: 'js',
+      },
+      {
+        key: 'api',
+        label: 'api.ts',
+        children: processCodeString(data.api),
+        language: 'js',
+      },
+      {
+        key: 'type',
+        label: 'type.ts',
+        children: processCodeString(data.type),
+        language: 'js',
+      },
     ];
 
     let displayTabs: TabItem[] = [];
@@ -106,29 +252,47 @@ const CodePreview: React.FC<CodePreviewProps> = ({ open, onClose, tableId }) => 
 
   const items = buildItems(codePreviewData);
 
-  const copyToClipboard = (async (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        message.success('已复制');
-      })
-      .catch(() => {
-        message.error('复制失败，请手动复制');
-      });
-  });
+  // 复制按钮防抖
+  const copyToClipboard = async (text: string) => {
+    if (copying) return;
+    setCopying(true);
+    try {
+      await navigator.clipboard.writeText(text);
+      message.success('已复制');
+    } catch {
+      message.error('复制失败，请手动复制');
+    } finally {
+      setTimeout(() => setCopying(false), 800);
+    }
+  };
 
-  const renderTabContent = ({ children, language }: { children: string; language: string }) => (
+  // 代码高亮风格自动切换
+  const getLanguage = (lang: string) => {
+    if (lang === 'js') return 'javascript';
+    if (lang === 'java') return 'java';
+    if (lang === 'python') return 'python';
+    return 'text';
+  };
+
+  const renderTabContent = ({
+    children,
+    language,
+  }: {
+    children: string;
+    language: string;
+  }) => (
     <div className="relative">
       <button
         onClick={() => copyToClipboard(children)}
         className="absolute right-2 top-2 p-2 hover:bg-gray-700 rounded"
         title="复制代码"
         aria-label="复制代码"
+        disabled={copying}
       >
         <CopyOutlined className="text-gray-400" />
       </button>
       <SyntaxHighlighter
-        language={language}
+        language={getLanguage(language)}
         style={vscDarkPlus}
         customStyle={{
           margin: 0,
@@ -149,19 +313,35 @@ const CodePreview: React.FC<CodePreviewProps> = ({ open, onClose, tableId }) => 
       onCancel={onClose}
       width={'79%'}
       footer={null}
-      loading={!codePreviewData}
       closeIcon={<CloseOutlined />}
       destroyOnClose
+      bodyStyle={{ minHeight: 400 }}
     >
-      <Tabs
-        items={items.map((item) => ({
-          key: item.key,
-          label: item.label,
-          children: renderTabContent({ children: item.children, language: item.language }),
-        }))
-      }
-
-      />
+      {!codePreviewData || items.length === 0 ? (
+        <div
+          style={{
+            minHeight: 300,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          加载中...
+        </div>
+      ) : (
+        <Tabs
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          items={items.map((item) => ({
+            key: item.key,
+            label: item.label,
+            children: renderTabContent({
+              children: item.children,
+              language: item.language,
+            }),
+          }))}
+        />
+      )}
     </Modal>
   );
 };

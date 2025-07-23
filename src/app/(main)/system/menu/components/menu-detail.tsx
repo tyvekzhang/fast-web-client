@@ -1,6 +1,6 @@
 import { MenuDetail } from '@/types/menu';
-import { Button, Descriptions, Drawer, Space } from 'antd';
-import React, { useMemo } from 'react';
+import { Descriptions, Drawer } from 'antd';
+import React from 'react';
 
 interface MenuDetailDrawerProps {
   isMenuDetailDrawerVisible: boolean;

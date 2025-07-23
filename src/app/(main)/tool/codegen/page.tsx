@@ -1,149 +1,329 @@
-"use client"
-import { Code, Eye, Edit2, Trash2, RefreshCw } from 'lucide-react';
+'use client';
+import ActionButtonComponent from '@/components/base/action-button';
 import type { TableProps } from 'antd';
-import { Button, Card, Form, Input, Popconfirm, Space, Table, Tooltip, message } from 'antd';
-import { useEffect, useState } from 'react';
-import CodeModify from './components/modify-code';
-import CodePreview from './components/preview-code';
+import {
+  Button,
+  Card,
+  Form,
+  FormInstance,
+  Input,
+  Popconfirm,
+  Space,
+  Table,
+  Tooltip,
+  message,
+} from 'antd';
+import { Code, Edit2, Eye, RefreshCw, Trash2 } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ImportTable from './components/import-table';
+import CodePreview from './components/preview-code';
+import CodeModify from './components/update-code';
 
-import { codeList, deleteTable, downloadCode, syncTable } from '@/service/code-gen';
+import {
+  codeList,
+  deleteTable,
+  downloadCode,
+  syncTable,
+} from '@/service/code-gen';
 import { GenTableQueryResponse } from '@/types/code-gen';
 import dayjs from 'dayjs';
 
+interface QueryParams {
+  connection?: string;
+  db_name?: string;
+  table_name?: string;
+  table_remark?: string;
+  current?: number;
+  pageSize?: number;
+}
+
+interface LoadingState {
+  table: boolean;
+  delete: boolean;
+  sync: boolean;
+  generate: boolean;
+  batchDelete: boolean;
+}
+
+const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
+};
+
+const actionConfig = {
+  showCreate: false,
+  showImport: true,
+  showExport: false,
+  showModify: false,
+  showRemove: true,
+};
+
 export default function CodeGen() {
-  const searchForm = Form.useForm();
+  const [form] = Form.useForm();
+  const formRef = useRef<FormInstance>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [currentTableId, setCurrentTableId] = useState<number>(0);
-
-  const handlePreview = (record: GenTableQueryResponse) => {
-    setPreviewOpen(true);
-    setCurrentTableId(record.id);
-  };
-
-  const onCodeModify = (record: GenTableQueryResponse) => {
-    setEditOpen(true)
-    setCurrentTableId(record.id);
-  };
-
-  const handleDelete = async (record: GenTableQueryResponse) => {
-    await deleteTable(record.id);
-    message.success('删除成功');
-    fetchCodeList();
-  };
-
-  const handleSync = async (record: GenTableQueryResponse) => {
-    await syncTable(record.id);
-    message.success('同步成功');
-    fetchCodeList();
-  };
-
-  const handleCodeGenerate = async (record: GenTableQueryResponse) => {
-    setCurrentTableId(record.id);
-    await downloadCode(record.id);
-  };
-
   const [tableData, setTableData] = useState<GenTableQueryResponse[]>([]);
+  const [loading, setLoading] = useState<LoadingState>({
+    table: false,
+    delete: false,
+    sync: false,
+    generate: false,
+    batchDelete: false,
+  });
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
 
-  const fetchCodeList = () => {
-    codeList().then((res) => {
+  const columns: TableProps<GenTableQueryResponse>['columns'] = useMemo(
+    () => [
+      {
+        title: '序号',
+        dataIndex: 'No',
+        key: 'No',
+        render: (_: number, _record: GenTableQueryResponse, rowIndex: number) =>
+          rowIndex + 1,
+        width: '6%',
+      },
+      {
+        title: '连接',
+        dataIndex: 'connection_name',
+        width: '10%',
+      },
+      {
+        title: '数据库',
+        dataIndex: 'database_name',
+        width: '15%',
+      },
+      {
+        title: '表名',
+        dataIndex: 'table_name',
+        width: '10%',
+      },
+      {
+        title: '备注',
+        dataIndex: 'table_comment',
+        render: (text) => text || '--',
+        width: '15%',
+      },
+      {
+        title: '数据模型',
+        dataIndex: 'entity',
+        width: '15%',
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'create_time',
+        width: '18%',
+        render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
+      },
+      {
+        title: '操作',
+        key: 'action',
+        render: (record: GenTableQueryResponse) => (
+          <Space size="small">
+            <Tooltip title="预览">
+              <Button
+                type="link"
+                size="small"
+                icon={<Eye size={14} />}
+                onClick={() => {
+                  setPreviewOpen(true);
+                  setCurrentTableId(record.id);
+                }}
+              />
+            </Tooltip>
+            <Tooltip title="编辑">
+              <Button
+                type="link"
+                size="small"
+                icon={<Edit2 size={14} />}
+                onClick={() => {
+                  setEditOpen(true);
+                  setCurrentTableId(record.id);
+                }}
+              />
+            </Tooltip>
+            <Tooltip title="删除">
+              <Popconfirm
+                title="确定要删除吗？"
+                onConfirm={() => handleDelete(record)}
+              >
+                <Button
+                  size="small"
+                  type="link"
+                  icon={<Trash2 size={14} />}
+                  loading={loading.delete}
+                />
+              </Popconfirm>
+            </Tooltip>
+            <Tooltip title="同步">
+              <Button
+                size="small"
+                type="link"
+                icon={<RefreshCw size={14} />}
+                loading={loading.sync}
+                onClick={() => handleSync(record)}
+              />
+            </Tooltip>
+            <Tooltip title="生成代码">
+              <Button
+                size="small"
+                type="link"
+                loading={loading.generate}
+                onClick={() => handleCodeGenerate(record)}
+                icon={<Code size={14} />}
+              />
+            </Tooltip>
+          </Space>
+        ),
+      },
+    ],
+    [loading],
+  );
+
+  // 查询表格数据
+  const fetchCodeList = async (params?: QueryParams) => {
+    setLoading((prev) => ({ ...prev, table: true }));
+    try {
+      const res = await codeList(params);
       setTableData(res.records);
+    } finally {
+      setLoading((prev) => ({ ...prev, table: false }));
+    }
+  };
+
+  // 查询表单提交
+  const handleSearch = async () => {
+    try {
+      await fetchCodeList({
+        ...form.getFieldsValue(),
+        current: 1,
+        pageSize: pagination.pageSize,
+      });
+      setPagination((prev) => ({ ...prev, current: 1 }));
+    } catch (error) {
+      message.error('查询失败');
+    }
+  };
+
+  // 查询表单重置
+  const handleReset = async () => {
+    form.resetFields();
+    setPagination({ current: 1, pageSize: 10 });
+    await fetchCodeList({ current: 1, pageSize: 10 });
+  };
+
+  // 表格分页变化
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
+    fetchCodeList({
+      ...form.getFieldsValue(),
+      current: pagination.current,
+      pageSize: pagination.pageSize,
     });
   };
+
+  // 单个删除
+  const handleDelete = async (record: GenTableQueryResponse) => {
+    setLoading((prev) => ({ ...prev, delete: true }));
+    try {
+      await deleteTable(record.id);
+      message.success('删除成功');
+      await fetchCodeList({ ...form.getFieldsValue(), ...pagination });
+    } catch (error) {
+      message.error('删除失败');
+    } finally {
+      setLoading((prev) => ({ ...prev, delete: false }));
+    }
+  };
+
+  // 批量删除
+  const handleBatchDelete = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning('请先选择要删除的表');
+      return;
+    }
+
+    setLoading((prev) => ({ ...prev, batchDelete: true }));
+    try {
+      await Promise.all(selectedRowKeys.map((id) => deleteTable(id)));
+      message.success('批量删除成功');
+      setSelectedRowKeys([]);
+      await fetchCodeList({ ...form.getFieldsValue(), ...pagination });
+    } catch (error) {
+      message.error('批量删除失败');
+    } finally {
+      setLoading((prev) => ({ ...prev, batchDelete: false }));
+    }
+  };
+
+  // 同步
+  const handleSync = async (record: GenTableQueryResponse) => {
+    setLoading((prev) => ({ ...prev, sync: true }));
+    try {
+      await syncTable(record.id);
+      message.success('同步成功');
+      await fetchCodeList({ ...form.getFieldsValue(), ...pagination });
+    } catch (error) {
+      message.error('同步失败');
+    } finally {
+      setLoading((prev) => ({ ...prev, sync: false }));
+    }
+  };
+
+  // 生成代码
+  const handleCodeGenerate = async (record: GenTableQueryResponse) => {
+    setLoading((prev) => ({ ...prev, generate: true }));
+    try {
+      setCurrentTableId(record.id);
+      await downloadCode(record.id);
+      message.success('代码生成成功');
+    } catch (error) {
+      message.error('代码生成失败');
+    } finally {
+      setLoading((prev) => ({ ...prev, generate: false }));
+    }
+  };
+
   useEffect(() => {
     fetchCodeList();
   }, [importOpen]);
 
-  const columns: TableProps<GenTableQueryResponse>['columns'] = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      hidden: true,
-    },
-    {
-      title: '序号',
-      dataIndex: 'No',
-      key: 'No',
-      render: (_: number, _record: GenTableQueryResponse, rowIndex: number) => rowIndex + 1,
-      width: '6%',
-    },
-    {
-      title: '连接',
-      dataIndex: 'connectionName',
-      width: '10%',
-    },
-    {
-      title: '数据库',
-      dataIndex: 'databaseName',
-      width: '15%',
-    },
-    {
-      title: '表名',
-      dataIndex: 'tableName',
-      width: '10%',
-    },
-    {
-      title: '备注',
-      dataIndex: 'tableComment',
-      render: (text) => (text ? text : '--'),
-      width: '15%',
-    },
-    {
-      title: '数据模型',
-      dataIndex: 'entity',
-      width: '15%',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      width: '18%',
-      render: (text: string) => (
-        <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span>
-      ),
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (record: GenTableQueryResponse) => (
-        <Space size="small">
-          <Tooltip title="预览">
-            <Button type="link" size={'small'} icon={<Eye size={14} />} onClick={() => handlePreview(record)}></Button>
-          </Tooltip>
-          <Tooltip title="编辑">
-            <Button type="link" size={'small'} icon={<Edit2 size={14} />} onClick={() => onCodeModify(record)}></Button>
-          </Tooltip>
-          <Tooltip title="删除">
-            <Button size={'small'} type="link" icon={<Trash2 size={14} />} onClick={() => handleDelete(record)}></Button>
-          </Tooltip>
-          <Tooltip title="同步">
-            <Button size={'small'} type="link" icon={<RefreshCw size={14} />} onClick={() => handleSync(record)}></Button>
-          </Tooltip>
-          <Tooltip title="生成代码">
-            <Button
-              size={'small'}
-              type="link"
-              onClick={() => handleCodeGenerate(record)}
-              icon={<Code size={14} />}
-            ></Button>
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
+  const rawColumns = useMemo(
+    () =>
+      columns.map((col, idx) => ({
+        key: String(col.key ?? idx),
+        title: col.title as string,
+      })),
+    [columns],
+  );
 
-  const formPropItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    rawColumns.map((col) => col.key),
+  );
+
+  const onToggleColumnVisibility = (columnKey: string) => {
+    setVisibleColumns((prev) =>
+      prev.includes(columnKey)
+        ? prev.filter((key) => key !== columnKey)
+        : [...prev, columnKey],
+    );
   };
 
   return (
     <>
       <Card bordered={false}>
-        <Form {...formPropItemLayout} onFinish={() => { }}>
+        <Form
+          form={form}
+          {...formItemLayout}
+          onFinish={handleSearch}
+          ref={formRef}
+        >
           <Space wrap>
             <Form.Item name="connection" label="连接名">
               <Input placeholder="请输入连接名" />
@@ -158,46 +338,81 @@ export default function CodeGen() {
               <Input placeholder="请输入表描述" />
             </Form.Item>
             <Form.Item wrapperCol={{ span: 24 }}>
-              <Button type="primary" style={{ marginRight: 8 }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ marginRight: 8 }}
+                loading={loading.table}
+              >
                 搜索
               </Button>
-              <Button>重置</Button>
+              <Button onClick={handleReset}>重置</Button>
             </Form.Item>
           </Space>
         </Form>
 
-        <Space wrap style={{ marginBottom: 16 }}>
-          <Button className={`btn-add`}>生成</Button>
-          <Button onClick={() => setImportOpen(true)} className={`btn-import`}>
-            导入
-          </Button>
-          <Popconfirm
-            title="删除所选的内容"
-            description="你确定删除吗? 删除后将无法找回"
-            onConfirm={() => { }}
-            onCancel={() => { }}
-            okText="是"
-            cancelText="否"
-          >
-            <Button className={`btn-delete`}>删除</Button>
-          </Popconfirm>
-        </Space>
+        <ActionButtonComponent
+          onCreate={() => {}}
+          onImport={() => setImportOpen(true)}
+          onExport={() => {}}
+          onBatchModify={() => {}}
+          onConfirmBatchRemove={handleBatchDelete}
+          onConfirmBatchRemoveCancel={() => {}}
+          isQueryShow={true}
+          onQueryShow={() => {}}
+          isExportDisabled={true}
+          isBatchModifyDisabled={true}
+          isBatchRemoveDisabled={selectedRowKeys.length === 0}
+          isBatchRemoveLoading={loading.batchDelete}
+          isExportLoading={false}
+          rawColumns={rawColumns}
+          visibleColumns={visibleColumns}
+          onToggleColumnVisibility={onToggleColumnVisibility}
+          className="mb-2 mt-4"
+          actionConfig={actionConfig}
+        />
 
         <Table
           columns={columns}
           dataSource={tableData}
-          rowKey={"id"}
+          rowKey="id"
+          loading={loading.table}
           rowSelection={{
             selectedRowKeys,
             onChange: (newSelectedRowKeys) => {
-              setSelectedRowKeys(newSelectedRowKeys as string[]);
+              setSelectedRowKeys(newSelectedRowKeys as number[]);
             },
           }}
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: (page, pageSize) => {
+              setPagination({ current: page, pageSize });
+              fetchCodeList({
+                ...form.getFieldsValue(),
+                current: page,
+                pageSize,
+              });
+            },
+          }}
+          onChange={handleTableChange}
         />
       </Card>
 
-      <CodePreview open={previewOpen} onClose={() => setPreviewOpen(false)} tableId={currentTableId} />
-      {editOpen && <CodeModify open={editOpen} onClose={() => setEditOpen(false)} tableId={currentTableId} />}
+      <CodePreview
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        tableId={currentTableId}
+      />
+      {editOpen && (
+        <CodeModify
+          open={editOpen}
+          onClose={() => setEditOpen(false)}
+          tableId={currentTableId}
+        />
+      )}
       <ImportTable open={importOpen} onClose={() => setImportOpen(false)} />
     </>
   );
