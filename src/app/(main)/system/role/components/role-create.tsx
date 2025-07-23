@@ -1,6 +1,6 @@
-import { fetchMenuByPage } from '@/service/menu';
+import { listMenus } from '@/service/menu';
 import { BaseQueryImpl } from '@/types';
-import { MenuPage } from '@/types/menu';
+import { Menu } from '@/types/menu';
 import { RoleCreate } from '@/types/role';
 import { TreeSelectUtil } from '@/utils/select-util';
 import { Button, Form, Input, Modal, Select, TreeSelect } from 'antd';
@@ -27,7 +27,7 @@ const RoleCreateComponent: React.FC<RoleCreateProps> = ({
   isRoleCreateLoading,
   roleCreateForm,
 }) => {
-  const [menuPageDataSource, setMenuPageDataSource] = useState<MenuPage[]>([]);
+  const [menuPageDataSource, setMenuPageDataSource] = useState<Menu[]>([]);
   const optionDataTransform = [
     { name: '菜单根目录', id: 0, children: menuPageDataSource },
   ];
@@ -35,7 +35,7 @@ const RoleCreateComponent: React.FC<RoleCreateProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       const pageData = BaseQueryImpl.create(1, 9999);
-      const resp = await fetchMenuByPage(pageData);
+      const resp = await listMenus(pageData);
       setMenuPageDataSource(resp.records);
     };
     fetchData().then(() => {});

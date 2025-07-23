@@ -1,9 +1,9 @@
-import { MenuCreate } from '@/types/menu';
+import { CreateMenu } from '@/types/menu';
 import { TreeSelectUtil } from '@/utils/select-util';
 import { Button, Form, Input, Modal, Radio, TreeSelect } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
-import IconSelect from './IconSelect';
+import IconPicker from '@/components/base/icon-picker';
 
 const menuCreateFormItemLayout = {
   labelCol: { span: 4 },
@@ -13,7 +13,7 @@ const menuCreateFormItemLayout = {
 interface MenuCreateProps {
   isMenuCreateModalVisible: boolean;
   onMenuCreateCancel: () => void;
-  onMenuCreateFinish: (MenuCreate: MenuCreate) => void;
+  onMenuCreateFinish: (MenuCreate: CreateMenu) => void;
   isMenuCreateLoading: boolean;
   menuCreateForm: FormInstance;
   optionDataSource: any;
@@ -83,7 +83,7 @@ const MenuCreateComponent: React.FC<MenuCreateProps> = ({
         </Form.Item>
 
         <Form.Item label="菜单图标" name="icon">
-          <IconSelect onChange={handleIconChange} />
+          <IconPicker onChange={handleIconChange} />
         </Form.Item>
 
         <Form.Item

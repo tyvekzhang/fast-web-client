@@ -1,147 +1,139 @@
 import httpClient from '@/lib/http';
 import { downloadBlob } from '@/service/util';
-import { BaseQueryImpl, PageQuery, PageResult } from '@/types';
+import { BaseQueryImpl, PaginationRequest, PageResult } from '@/types';
 import {
   MenuBatchModify,
-  MenuCreate,
+  CreateMenu,
   MenuDetail,
-  MenuModify,
-  MenuPage,
-  MenuQuery,
+  UpdateMenu,
+  Menu,
+  ListMenusRequest,
+  CreateMenuRequest,
+  UpdateMenuRequest,
+  BatchCreateMenusRequest,
+  BatchUpdateMenusResponse,
+  BatchUpdateMenusRequest,
+  BatchDeleteMenusRequest,
+  ExportMenusRequest,
+  ImportMenusRequest,
+  ImportMenu,
+  ImportMenusResponse,
 } from '@/types/menu';
 import { AxiosResponse } from 'axios';
 
 /**
- * 分页查询Menu
+ * Retrieve menu details.
  *
- * @param pageQuery 分页参数
- * @param menuQuery 查询条件
- * @returns 含Menu详情列表的分页结果
+ * @param Unique ID of the menu resource.
+ * @returns The menu object containing all its details.
  */
-export function fetchMenuByPage(
-  pageQuery?: PageQuery,
-  menuQuery?: Partial<MenuQuery>,
+export function getMenu(id: string) {
+  return httpClient.get<MenuDetail>(`/menus/${id}`);
+}
+/**
+ * List menus with pagination.
+ *
+ * @param req Request object containing pagination, filter and sort parameters.
+ * @returns Paginated list of menus and total count.
+ */
+export function listMenus(
+  req: Partial<ListMenusRequest>
 ) {
-  let pageQueryParams: PageQuery;
-  if (pageQuery === null || pageQuery === undefined) {
-    pageQueryParams = BaseQueryImpl.create(1, 200);
-  } else {
-    pageQueryParams = pageQuery;
-  }
-  const params = {
-    ...pageQueryParams,
-    ...menuQuery,
-  };
-  return httpClient.get<PageResult<MenuPage>>('/menus', params);
+  return httpClient.get<PageResult<Menu>>('/menus', req);
 }
-
 /**
- * 获取Menu详情
+ * Create a new menu.
  *
- * @param id Menu的ID
- * @returns Menu详细信息
+ * @param req Request object containing menu creation data.
+ * @returns The menu object.
  */
-export function fetchMenuDetail(id: string) {
-  return httpClient.get<MenuDetail>(`/menu/detail/${id}`);
+export function createMenu(req: CreateMenuRequest) {
+  return httpClient.post<number>('/menus', req);
+}
+/**
+ * Update an existing menu.
+ *
+ * @param req Request object containing menu update data.
+ */
+export function updateMenu(req: UpdateMenuRequest) {
+  return httpClient.put<Menu>('/menus', req);
+}
+/**
+ * Delete menu by ID
+ *
+ * @param id The ID of the menu to delete.
+ */
+export function deleteMenu(id: string) {
+  return httpClient.delete<void>(`/menus/${id}`);
+}
+/**
+ *  Batch create menus.
+ *
+ * @param req Request body containing a list of menu creation items.
+ * @returns Response containing the list of created menus.
+ */
+export function batchCreateMenus(req: BatchCreateMenusRequest) {
+  return httpClient.post<number[]>('/menus:batchCreate', req);
+}
+/**
+ * Batch updates multiple menus in a single operation.
+ *
+ * @param req The batch update request data.
+ */
+export function batchUpdateMenus(req: BatchUpdateMenusRequest) {
+  return httpClient.put<BatchUpdateMenusResponse>('/menu:batchUpdate', req);
+}
+/**
+ * Batch delete menus.
+ *
+ * @param req Request object containing delete info.
+ */
+export function batchDeleteMenu(req: BatchDeleteMenusRequest) {
+  return httpClient.delete<void>('/menu:batchDelete', { data: req });
 }
 
+
+
+
 /**
- * 导出Menu数据导入模板
+ *  Export the Excel template for menu import.
  *
  */
 export async function exportMenuTemplate() {
   const response = await httpClient.get<AxiosResponse>(
-    `/menu/export-template`,
+    `/menus:exportTemplate`,
     {},
     {
       responseType: 'blob',
     },
   );
-  downloadBlob(response, '系统菜单导入模板.xlsx');
+  downloadBlob(response, 'menu_import_tpl.xlsx');
 }
 
 /**
- * 导出Menu数据
+ * Export menu data based on the provided menu IDs.
  *
- * @param ids 要导出的Menu的ID列表
+ * @param req Query parameters specifying the menus to export.
  */
-export async function exportMenuPage(ids: string[]) {
+export async function exportMenuPage(req: ExportMenusRequest) {
   const params = {
-    ids: ids,
+    ids: req.ids,
   };
-  const response = await httpClient.get<AxiosResponse>(`/menu/export`, params, {
+  const response = await httpClient.get<AxiosResponse>(`/menus:export`, params, {
     responseType: 'blob',
   });
-  downloadBlob(response, '系统菜单导出.xlsx');
+  downloadBlob(response, 'menu_data_export.xlsx');
 }
 
-/**
- * 创建Menu
- *
- * @param menuCreate 创建数据
- * @returns 创建的Menu的ID
- */
-export function createMenu(menuCreate: MenuCreate) {
-  return httpClient.post<number>('/menu/create', menuCreate);
-}
 
 /**
- * 导入Menu数据并进行校验
+ * Import menus from an uploaded Excel file.
  *
- * @param file 上传的Excel文件
- * @returns 校验结果列表
+ * @param req The request with excel file to import.
+ * @returns  List of successfully parsed menu data.
  */
-export function importMenu(file: File) {
+export function importMenu(req: ImportMenusRequest) {
   const formData = new FormData();
-  formData.append('file', file);
-  return httpClient.post<MenuCreate[]>('/menu/import', formData);
-}
-
-/**
- * 批量创建Menu
- *
- * @param menuCreateList 创建数据列表
- * @returns 创建的Menu的ID列表
- */
-export function batchCreateMenu(menuCreateList: MenuCreate[]) {
-  if (!menuCreateList?.length) {
-    return Promise.resolve([]);
-  }
-  return httpClient.post<number[]>('/menu/batch-create', menuCreateList);
-}
-
-/**
- * 移除Menu
- *
- * @param id 要移除的Menu的Id
- */
-export function removeMenu(id: string) {
-  return httpClient.delete<void>(`/menu/remove/${id}`);
-}
-
-/**
- * 批量移除Menu
- *
- * @param ids 要移除的Menu的ID数组
- */
-export function batchRemoveMenu(ids: string[]) {
-  return httpClient.delete<void>('/menu/batch-remove', { ids: ids });
-}
-
-/**
- * 更新Menu信息
- *
- * @param menuModify 包含ID数组和修改的数据
- */
-export function modifyMenu(menuModify: MenuModify) {
-  return httpClient.put<void>('/menu/modify', menuModify);
-}
-
-/**
- * 批量更新Menu信息
- *
- * @param menuBatchModify 包含ID数组和修改的数据
- */
-export function batchModifyMenu(menuBatchModify: MenuBatchModify) {
-  return httpClient.put<void>('/menu/batch-modify', menuBatchModify);
+  formData.append('file', req.file);
+  return httpClient.post<ImportMenusResponse>('/menus:import', formData);
 }

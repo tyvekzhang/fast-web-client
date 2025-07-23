@@ -8,6 +8,7 @@ import {
   Import,
   PenLine,
   Plus,
+  RotateCcw,
   Settings,
   Trash2,
 } from 'lucide-react';
@@ -70,6 +71,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
     showRemove: true,
   };
   const config = { ...defaultConfig, ...actionConfig };
+
   return (
     <div className="flex justify-between border-t border-b border-gray-100 pl-2 py-1">
       <Space className={className}>
@@ -79,11 +81,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
           </Button>
         )}
         {config.showImport && (
-          <Button
-            onClick={onImport}
-            className="btn-import"
-            icon={<Import size={14} />}
-          >
+          <Button onClick={onImport} className="btn-import" icon={<Import size={14} />}>
             导入
           </Button>
         )}
@@ -97,7 +95,6 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             编辑
           </Button>
         )}
-
         {config.showExport && (
           <Button
             loading={isExportLoading}
@@ -109,7 +106,6 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             导出
           </Button>
         )}
-
         {config.showRemove && (
           <Popconfirm
             title="删除所选的内容"
@@ -133,6 +129,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
         )}
       </Space>
       <Space className="pr-2">
+
         <Tooltip title={isQueryShow ? '隐藏搜索框' : '显示搜索框'}>
           <Button
             className="rounded-full"
@@ -140,6 +137,15 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             onClick={onQueryShow}
           />
         </Tooltip>
+
+        <Tooltip title="刷新页面">
+          <Button
+            className="rounded-full"
+            icon={<RotateCcw size={14} />}
+            onClick={() => window.location.reload()}
+          />
+        </Tooltip>
+
         <Popover
           content={
             <ColumnVisibilityControl

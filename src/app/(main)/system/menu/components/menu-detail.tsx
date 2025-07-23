@@ -13,22 +13,12 @@ const MenuDetailComponent: React.FC<MenuDetailDrawerProps> = ({
   onMenuDetailClose,
   menuDetail,
 }) => {
-  const footerButtons = useMemo(
-    () => (
-      <Space>
-        <Button onClick={onMenuDetailClose}>关闭</Button>
-      </Space>
-    ),
-    [onMenuDetailClose],
-  );
-
   return (
     <Drawer
       title="系统菜单详情"
       open={isMenuDetailDrawerVisible}
       onClose={onMenuDetailClose}
-      extra={footerButtons}
-      destroyOnClose
+      destroyOnHidden
       width={600}
     >
       {menuDetail && (

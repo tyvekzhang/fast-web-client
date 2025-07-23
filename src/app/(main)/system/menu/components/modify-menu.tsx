@@ -1,4 +1,4 @@
-import { MenuModify } from '@/types/menu';
+import { UpdateMenu } from '@/types/menu';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
@@ -8,7 +8,7 @@ interface MenuModifyProps {
   onMenuModifyCancel: () => void;
   onMenuModifyFinish: () => void;
   isMenuModifyLoading: boolean;
-  menuModifyForm: FormInstance<MenuModify>;
+  menuModifyForm: FormInstance<UpdateMenu>;
 }
 
 const menuModifyFormItemLayout = {

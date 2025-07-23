@@ -1,4 +1,5 @@
 import type { MenuProps } from 'antd';
+import { PaginationRequest } from '.';
 
 export interface MenuRecord {
   name: string;
@@ -22,7 +23,7 @@ export interface AppMenu {
   hideBreadcrumb?: boolean;
 }
 
-export interface MenuPage {
+export interface Menu {
   /** 主键 */
   id: string;
 
@@ -51,7 +52,21 @@ export interface MenuPage {
   create_time: string;
 }
 
-export interface MenuCreate {
+
+export interface CreateMenuRequest {
+  menu: CreateMenu
+}
+
+export interface BatchCreateMenusRequest {
+  menus: CreateMenu
+}
+
+
+export interface ImportMenu extends CreateMenu{
+    errMsg: string
+}
+
+export interface CreateMenu {
   /** 名称 */
   name: string;
 
@@ -89,7 +104,7 @@ export interface MenuCreate {
   comment: string;
 }
 
-export interface MenuQuery {
+export interface ListMenusRequest extends PaginationRequest {
   /** 名称 */
   name: string;
 
@@ -97,7 +112,19 @@ export interface MenuQuery {
   create_time: string[];
 }
 
-export interface MenuModify {
+export interface UpdateMenuRequest {
+  menu: UpdateMenu
+}
+
+
+export interface BatchUpdateMenu {
+  /** 排序 */
+  sort: number;
+  /** 类型（1目录 2菜单 3按钮） */
+  type: number;
+}
+
+export interface UpdateMenu {
   /** 主键 */
   id: string;
 
@@ -136,6 +163,32 @@ export interface MenuModify {
 
   /** 备注信息 */
   comment: string;
+}
+
+export interface BatchUpdateMenusRequest {
+  ids: string[]
+  menu: UpdateMenu
+}
+
+export interface BatchDeleteMenusRequest {
+  ids: string[]
+}
+
+export interface ExportMenusRequest {
+    ids: string[]
+}
+
+export interface ImportMenusRequest {
+  file: File
+}
+
+
+export interface ImportMenusResponse {
+  menus: ImportMenu[]
+}
+
+export interface BatchUpdateMenusResponse {
+  menus: Menu[]
 }
 
 export interface MenuBatchModify {

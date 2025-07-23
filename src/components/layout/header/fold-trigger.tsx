@@ -13,7 +13,6 @@ export default function FoldTrigger() {
       )}
       onClick={toggleCollapsed}
     >
-      {/* <SvgIcon name="Columns2" size="lg" className="text-gray-600" /> */}
       <UnfoldIcon></UnfoldIcon>
     </span>
   );

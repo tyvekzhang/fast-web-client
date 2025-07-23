@@ -5,39 +5,40 @@ import TransitionWrapper from '@/components/base/transition-wrapper';
 import { message } from '@/components/global-toast';
 import SvgIcon from '@/components/svg-icon';
 import {
-  batchCreateMenu,
-  batchModifyMenu,
-  batchRemoveMenu,
+  batchCreateMenus,
+  batchUpdateMenus,
+  batchDeleteMenu,
   createMenu,
   exportMenuPage,
-  fetchMenuByPage,
-  fetchMenuDetail,
+  listMenus,
+  getMenu,
   importMenu,
-  modifyMenu,
-  removeMenu,
+  updateMenu,
+  deleteMenu,
 } from '@/service/menu';
 import { BaseQueryImpl } from '@/types';
 import {
   MenuBatchModify,
-  MenuCreate,
+  CreateMenu,
   MenuDetail,
-  MenuModify,
-  MenuPage,
-  MenuQuery,
+  UpdateMenu,
+  Menu,
+  ListMenusRequest,
 } from '@/types/menu';
 import { Form } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useEffect, useState } from 'react';
-import MenuBatchModifyComponent from './components/menu-batch-modify';
-import MenuCreateComponent from './components/menu-create';
+import MenuBatchModifyComponent from './components/batch-update-menu';
+import MenuCreateComponent from './components/create-menu';
 import MenuDetailComponent from './components/menu-detail';
-import MenuImportComponent from './components/menu-import';
-import MenuModifyComponent from './components/menu-modify';
-import MenuQueryComponent from './components/menu-query';
+import MenuImportComponent from './components/import-menu';
+import MenuModifyComponent from './components/modify-menu';
+import MenuQueryComponent from './components/query-menu';
+import dayjs from 'dayjs';
 
-const Menu: React.FC = () => {
+const MenuPage: React.FC = () => {
   // 配置模块
   const actionConfig = {
     showCreate: true,
@@ -50,7 +51,7 @@ const Menu: React.FC = () => {
 
   // 查询模块
   const [isMenuQueryShow, setIsMenuQueryShow] = useState<boolean>(true);
-  const [menuPageDataSource, setMenuPageDataSource] = useState<MenuPage[]>([]);
+  const [menuPageDataSource, setMenuPageDataSource] = useState<Menu[]>([]);
   const [menuPageTotalCount, setMenuPageTotalCount] = useState(0);
   const [current, setCurrent] = useState(1);
   const [page_size, setpage_size] = useState(10);
@@ -59,13 +60,13 @@ const Menu: React.FC = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      const menuQuery = (await menuQueryForm.validateFields()) as MenuQuery;
+      const menuQuery = (await menuQueryForm.validateFields()) as ListMenusRequest;
       const pageData = BaseQueryImpl.create(current, page_size);
-      const resp = await fetchMenuByPage(pageData, menuQuery);
+      const resp = await listMenus({ ...pageData, ...menuQuery });
       setMenuPageDataSource(resp.records);
       setMenuPageTotalCount(resp.total);
     };
-    fetchData().then(() => {});
+    fetchData().then(() => { });
   }, [current, page_size]);
 
   const handlePaginationChange = (newPage: number, newpage_size: number) => {
@@ -81,10 +82,10 @@ const Menu: React.FC = () => {
   const [isMenuDetailDrawerVisible, setIsMenuDetailDrawerVisible] =
     useState<boolean>(false);
   const [menuDetail, setMenuDetail] = useState<MenuDetail | null>(null);
-  const onMenuDetail = async (menuPage: MenuPage) => {
+  const onMenuDetail = async (menuPage: Menu) => {
     setIsMenuDetailDrawerVisible(true);
     const id = menuPage.id;
-    await fetchMenuDetail(id).then(setMenuDetail);
+    await getMenu(id).then(setMenuDetail);
   };
 
   const onMenuDetailClose = async () => {
@@ -93,7 +94,7 @@ const Menu: React.FC = () => {
   };
 
   // 表格列信息
-  const menuPageColumns: ColumnsType<MenuPage> = [
+  const menuPageColumns: ColumnsType<Menu> = [
     {
       title: 'Id',
       dataIndex: 'id',
@@ -104,7 +105,7 @@ const Menu: React.FC = () => {
       title: '序号',
       dataIndex: 'No',
       key: 'No',
-      render: (_: number, _record: MenuPage, rowIndex: number) => rowIndex + 1,
+      render: (_: number, _record: Menu, rowIndex: number) => rowIndex + 1,
       width: '8%',
     },
     {
@@ -166,7 +167,7 @@ const Menu: React.FC = () => {
       title: '创建时间',
       dataIndex: 'create_time',
       key: 'create_time',
-      render: (text) => (text ? text : '-'),
+      render: (text) => text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-',
       ellipsis: true,
       width: '12%',
     },
@@ -246,7 +247,7 @@ const Menu: React.FC = () => {
         endDate.format('YYYY-MM-DD'),
       ];
     }
-    const menuQuery = values as MenuQuery;
+    const menuQuery = values as ListMenusRequest;
     console.log(menuQuery);
     const filteredMenuQuery = Object.fromEntries(
       Object.entries(menuQuery).filter(
@@ -254,12 +255,11 @@ const Menu: React.FC = () => {
       ),
     );
     resetPagination();
-    await handleMenuQueryFinish(filteredMenuQuery as MenuQuery);
+    await handleMenuQueryFinish(filteredMenuQuery as ListMenusRequest);
   };
-  const handleMenuQueryFinish = async (menuPage: MenuQuery) => {
-    await fetchMenuByPage(
-      BaseQueryImpl.create(current, page_size),
-      menuPage,
+  const handleMenuQueryFinish = async (menuPage: ListMenusRequest) => {
+    await listMenus(
+      { ...BaseQueryImpl.create(current, page_size), ...menuPage, }
     ).then((resp) => {
       setMenuPageDataSource(resp.records);
       setMenuPageTotalCount(resp.total);
@@ -278,10 +278,10 @@ const Menu: React.FC = () => {
     menuCreateForm.resetFields();
     setIsMenuCreateModalVisible(false);
   };
-  const handleMenuCreateFinish = async (menuCreate: MenuCreate) => {
+  const handleMenuCreateFinish = async (data: CreateMenu) => {
     setIsMenuCreateLoading(true);
     try {
-      await createMenu(menuCreate);
+      await createMenu({ "menu": data });
       message.success('新增成功');
       menuCreateForm.resetFields();
       await onMenuQueryFinish();
@@ -292,8 +292,8 @@ const Menu: React.FC = () => {
   };
 
   // 单个删除模块
-  const handleMenuDelete = async (menuPage: MenuPage) => {
-    await removeMenu(menuPage.id);
+  const handleMenuDelete = async (menuPage: Menu) => {
+    await deleteMenu(menuPage.id);
     await onMenuQueryFinish();
   };
 
@@ -301,14 +301,14 @@ const Menu: React.FC = () => {
   const [isBatchRemoveLoading, setIsBatchRemoveLoading] =
     useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectedRows, setSelectedRows] = useState<MenuPage[]>([]);
+  const [selectedRows, setSelectedRows] = useState<Menu[]>([]);
   const resetSelectedRows = () => {
     setSelectedRowKeys([]);
     setSelectedRows([]);
   };
   const handleSelectionChange = (
     selectedRowKeys: React.Key[],
-    selectedRows: MenuPage[],
+    selectedRows: Menu[],
   ) => {
     setSelectedRows(selectedRows);
     setSelectedRowKeys(selectedRowKeys);
@@ -320,7 +320,7 @@ const Menu: React.FC = () => {
     }
     try {
       setIsBatchRemoveLoading(true);
-      await batchRemoveMenu(selectedRows.map((row) => row.id));
+      await batchDeleteMenu(selectedRows.map((row) => row.id));
       await onMenuQueryFinish();
       resetSelectedRows();
     } finally {
@@ -338,7 +338,7 @@ const Menu: React.FC = () => {
   const [isMenuModifyLoading, setIsMenuModifyLoading] =
     useState<boolean>(false);
   const [menuModifyForm] = Form.useForm();
-  const onMenuModify = (menuPage: MenuPage) => {
+  const onMenuModify = (menuPage: Menu) => {
     setIsMenuModifyModalVisible(true);
     setSelectedRowKeys([menuPage.id]);
     setSelectedRows([menuPage]);
@@ -352,11 +352,11 @@ const Menu: React.FC = () => {
   };
   const handleMenuModifyFinish = async () => {
     const menuModifyData =
-      (await menuModifyForm.validateFields()) as MenuModify;
+      (await menuModifyForm.validateFields()) as UpdateMenu;
     const menuModify = { ...menuModifyData, id: selectedRows[0].id };
     setIsMenuModifyLoading(true);
     try {
-      await modifyMenu(menuModify);
+      await updateMenu({"menu": menuModify});
       menuModifyForm.resetFields();
       message.success('更新成功');
       await onMenuQueryFinish();
@@ -397,8 +397,8 @@ const Menu: React.FC = () => {
       return;
     }
     try {
-      menuBatchModify.ids = selectedRows.map((row) => row.id);
-      await batchModifyMenu(menuBatchModify);
+      const ids = selectedRows.map((row) => row.id);
+      await batchUpdateMenus({"ids": ids, "menu": menuBatchModify});
       menuBatchModifyForm.resetFields();
       message.success('更新成功');
       await onMenuQueryFinish();
@@ -414,7 +414,7 @@ const Menu: React.FC = () => {
     useState<boolean>(false);
   const [isMenuImportLoading, setIsMenuImportLoading] =
     useState<boolean>(false);
-  const [menuCreateList, setMenuCreateList] = useState<MenuCreate[]>([]);
+  const [menuCreateList, setMenuCreateList] = useState<CreateMenu[]>([]);
 
   const onMenuImport = () => {
     setIsMenuImportModalVisible(true);
@@ -436,7 +436,7 @@ const Menu: React.FC = () => {
   const handleMenuImport = async () => {
     setIsMenuImportLoading(true);
     try {
-      await batchCreateMenu(menuCreateList);
+      await batchCreateMenus({"menus": menuCreateList});
       message.success('导入成功');
       setIsMenuImportModalVisible(false);
       await onMenuQueryFinish();
@@ -494,7 +494,7 @@ const Menu: React.FC = () => {
         />
       </div>
       <div>
-        <PaginatedTable<MenuPage>
+        <PaginatedTable<Menu>
           columns={filteredMenuColumns}
           dataSource={menuPageDataSource}
           total={menuPageTotalCount}
@@ -556,4 +556,4 @@ const Menu: React.FC = () => {
   );
 };
 
-export default Menu;
+export default MenuPage;

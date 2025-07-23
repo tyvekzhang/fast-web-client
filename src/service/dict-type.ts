@@ -1,6 +1,6 @@
 import httpClient from '@/lib/http';
 import { downloadBlob } from '@/service/util';
-import { BaseQueryImpl, PageQuery, PageResult } from '@/types';
+import { BaseQueryImpl, PaginationRequest, PageResult } from '@/types';
 import {
   DictTypeBatchModify,
   DictTypeCreate,
@@ -19,10 +19,10 @@ import { AxiosResponse } from 'axios';
  * @returns 含DictType详情列表的分页结果
  */
 export function fetchDictTypeByPage(
-  pageQuery?: PageQuery,
+  pageQuery?: PaginationRequest,
   dictTypeQuery?: Partial<DictTypeQuery>,
 ) {
-  let pageQueryParams: PageQuery;
+  let pageQueryParams: PaginationRequest;
   if (pageQuery === null || pageQuery === undefined) {
     pageQueryParams = BaseQueryImpl.create(1, 200);
   } else {

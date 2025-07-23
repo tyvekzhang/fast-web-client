@@ -1,6 +1,6 @@
 import httpClient from '@/lib/http';
 import { downloadBlob } from '@/service/util';
-import { BaseQueryImpl, PageQuery, PageResult } from '@/types';
+import { BaseQueryImpl, PaginationRequest, PageResult } from '@/types';
 import {
   DictDataBatchModify,
   DictDataCreate,
@@ -22,10 +22,10 @@ export function fetchAllDictData() {
  * @returns 含DictData详情列表的分页结果
  */
 export function fetchDictDataByPage(
-  pageQuery?: PageQuery,
+  pageQuery?: PaginationRequest,
   dictDataQuery?: Partial<DictDataQuery>,
 ) {
-  let pageQueryParams: PageQuery;
+  let pageQueryParams: PaginationRequest;
   if (pageQuery === null || pageQuery === undefined) {
     pageQueryParams = BaseQueryImpl.create(1, 200);
   } else {

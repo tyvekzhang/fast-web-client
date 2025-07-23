@@ -31,7 +31,7 @@ export interface OrderItem {
 /**
  * 分页接口
  */
-export interface PageQuery {
+export interface PaginationRequest {
   current: number;
   page_size: number;
   orders: OrderItem[];
@@ -45,7 +45,7 @@ export interface BaseQuery {
   page_size: number;
   sorter?: string;
 
-  buildPage(): PageQuery;
+  buildPage(): PaginationRequest;
 }
 
 /**
@@ -82,7 +82,7 @@ export class BaseQueryImpl implements BaseQuery {
     current?: number,
     page_size?: number,
     sorter?: string,
-  ): PageQuery {
+  ): PaginationRequest {
     const query = new BaseQueryImpl(current, page_size, sorter);
     return query.buildPage();
   }
@@ -91,7 +91,7 @@ export class BaseQueryImpl implements BaseQuery {
    * 构建分页查询参数
    * @returns PageQuery 分页查询对象
    */
-  buildPage(): PageQuery {
+  buildPage(): PaginationRequest {
     // 确保 current 和 page_size 在合理的范围内
     const validCurrent =
       this.current > 0 ? this.current : BaseQueryImpl.DEFAULT_CURRENT;
@@ -107,7 +107,7 @@ export class BaseQueryImpl implements BaseQuery {
       orders = this.parseSorter(this.sorter);
     }
 
-    return <PageQuery>{
+    return <PaginationRequest>{
       current: validCurrent,
       page_size: validpage_size,
       orders,

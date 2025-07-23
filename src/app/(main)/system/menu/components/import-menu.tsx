@@ -1,6 +1,6 @@
 import { message } from '@/components/global-toast';
 import { exportMenuTemplate } from '@/service/menu';
-import { MenuCreate } from '@/types/menu';
+import { CreateMenu } from '@/types/menu';
 import { InboxOutlined } from '@ant-design/icons';
 import { Button, Modal, Table, Upload, UploadFile } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -12,7 +12,7 @@ interface MenuImportProps {
   isMenuImportModalVisible: boolean;
   isMenuImportLoading: boolean;
   onMenuImportCancel: () => void;
-  onMenuImportFinish: (fileList: RcFile[]) => Promise<MenuCreate[]>;
+  onMenuImportFinish: (fileList: RcFile[]) => Promise<CreateMenu[]>;
   handleMenuImport: () => void;
 }
 
@@ -24,7 +24,7 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
   handleMenuImport,
 }) => {
   const [MenuImportFileList, setMenuImportFileList] = useState<RcFile[]>([]);
-  const [MenuCreateList, setMenuCreateList] = useState<MenuCreate[]>([]);
+  const [MenuCreateList, setMenuCreateList] = useState<CreateMenu[]>([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
@@ -50,7 +50,7 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
       try {
         const MenuPageList = await onMenuImportFinish(MenuImportFileList);
         setIsUploadShow(false);
-        setMenuCreateList(MenuPageList as MenuCreate[]);
+        setMenuCreateList(MenuPageList as CreateMenu[]);
       } finally {
         setMenuImportFileList([]);
       }
@@ -60,12 +60,12 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
     }
   };
   // 表格列信息
-  const MenuPageColumns: ColumnsType<MenuCreate> = [
+  const MenuPageColumns: ColumnsType<CreateMenu> = [
     {
       title: '序号',
       dataIndex: 'No',
       key: 'No',
-      render: (_: number, _record: MenuCreate, rowIndex: number) =>
+      render: (_: number, _record: CreateMenu, rowIndex: number) =>
         rowIndex + 1,
       width: '8%',
     },
