@@ -89,13 +89,6 @@ const CodePreview: React.FC<CodePreviewProps> = ({
         language: 'python',
       },
 
-
-      {
-        key: 'modelPy',
-        label: 'model.py',
-        children: processCodeString(data.modelPy),
-        language: 'python',
-      },
       {
         key: 'schemaPy',
         label: 'schema.py',
@@ -103,6 +96,12 @@ const CodePreview: React.FC<CodePreviewProps> = ({
         language: 'python',
       },
 
+      {
+        key: 'modelPy',
+        label: 'model.py',
+        children: processCodeString(data.modelPy),
+        language: 'python',
+      },
 
     ];
 
