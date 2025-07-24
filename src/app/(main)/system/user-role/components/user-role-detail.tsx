@@ -28,7 +28,7 @@ const UserRoleDetailComponent: React.FC<UserRoleDetailDrawerProps> = ({
       open={isUserRoleDetailDrawerVisible}
       onClose={onUserRoleDetailClose}
       extra={footerButtons}
-      destroyOnClose
+      destroyOnHidden
       width={600}
     >
       {userRoleDetail && (

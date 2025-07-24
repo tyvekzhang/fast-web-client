@@ -2,9 +2,9 @@ import { Checkbox, Space } from 'antd';
 import React from 'react';
 
 interface ColumnVisibilityControlProps {
-  columns: { key: number; title: string }[];
+  columns: { key: string; title: string }[];
   visibleColumns: string[];
-  onToggleColumnVisibility: (columnKey: number) => void;
+  onToggleColumnVisibility: (columnKey: string) => void;
 }
 
 const ColumnVisibilityControl: React.FC<ColumnVisibilityControlProps> = ({

@@ -314,7 +314,7 @@ const CodePreview: React.FC<CodePreviewProps> = ({
       width={'79%'}
       footer={null}
       closeIcon={<CloseOutlined />}
-      destroyOnClose
+      destroyOnHidden
       bodyStyle={{ minHeight: 400 }}
     >
       {!codePreviewData || items.length === 0 ? (

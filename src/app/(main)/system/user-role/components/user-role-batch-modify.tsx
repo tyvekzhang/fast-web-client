@@ -46,7 +46,7 @@ const UserRoleBatchModifyComponent: React.FC<UserRoleBatchModifyProps> = ({
       open={isUserRoleBatchModifyModalVisible}
       onCancel={onUserRoleBatchModifyCancel}
       footer={footerButtons}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         {...userRoleBatchModifyFormItemLayout}

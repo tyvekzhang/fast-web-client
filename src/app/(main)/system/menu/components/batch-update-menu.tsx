@@ -1,58 +1,58 @@
-import { MenuBatchModify } from '@/types/menu';
+import { BatchUpdateMenu } from '@/types/menu';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 
-interface MenuBatchModifyProps {
-  isMenuBatchModifyModalVisible: boolean;
-  onMenuBatchModifyCancel: () => void;
-  onMenuBatchModifyFinish: () => void;
-  isMenuBatchModifyLoading: boolean;
-  menuBatchModifyForm: FormInstance<MenuBatchModify>;
+interface BatchUpdateMenuProps {
+  isBatchUpdateMenuModalVisible: boolean;
+  onBatchUpdateMenuCancel: () => void;
+  onBatchUpdateMenuFinish: () => void;
+  isBatchUpdateMenuLoading: boolean;
+  batchUpdateMenuForm: FormInstance<BatchUpdateMenu>;
 }
 
-const menuBatchModifyFormItemLayout = {
+const batchUpdateMenuFormItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 18 },
 };
 
-const MenuBatchModifyComponent: React.FC<MenuBatchModifyProps> = ({
-  isMenuBatchModifyModalVisible,
-  onMenuBatchModifyCancel,
-  onMenuBatchModifyFinish,
-  isMenuBatchModifyLoading,
-  menuBatchModifyForm,
+const BatchUpdateMenuComponent: React.FC<BatchUpdateMenuProps> = ({
+  isBatchUpdateMenuModalVisible: isBatchUpdateMenuModalVisible,
+  onBatchUpdateMenuCancel: onBatchUpdateMenuCancel,
+  onBatchUpdateMenuFinish: onBatchUpdateMenuFinish,
+  isBatchUpdateMenuLoading: isBatchUpdateMenuLoading,
+  batchUpdateMenuForm: batchUpdateMenuForm,
 }) => {
   const footerButtons = useMemo(
     () => [
-      <Button key="cancel" onClick={onMenuBatchModifyCancel}>
+      <Button key="cancel" onClick={onBatchUpdateMenuCancel}>
         取消
       </Button>,
       <Button
         key="submit"
         type="primary"
-        loading={isMenuBatchModifyLoading}
-        onClick={onMenuBatchModifyFinish}
+        loading={isBatchUpdateMenuLoading}
+        onClick={onBatchUpdateMenuFinish}
       >
         确定
       </Button>,
     ],
-    [isMenuBatchModifyLoading, onMenuBatchModifyCancel],
+    [isBatchUpdateMenuLoading, onBatchUpdateMenuCancel],
   );
 
   return (
     <Modal
       title="系统菜单编辑"
-      open={isMenuBatchModifyModalVisible}
-      onCancel={onMenuBatchModifyCancel}
+      open={isBatchUpdateMenuModalVisible}
+      onCancel={onBatchUpdateMenuCancel}
       footer={footerButtons}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
-        {...menuBatchModifyFormItemLayout}
-        form={menuBatchModifyForm}
-        name="menuBatchModify"
-        onFinish={onMenuBatchModifyFinish}
+        {...batchUpdateMenuFormItemLayout}
+        form={batchUpdateMenuForm}
+        name="batchUpdateMenu"
+        onFinish={onBatchUpdateMenuFinish}
         className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
       >
         <Form.Item
@@ -119,13 +119,6 @@ const MenuBatchModifyComponent: React.FC<MenuBatchModifyProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
         <Form.Item
-          name="parent_id"
-          label="父ID"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入" />
-        </Form.Item>
-        <Form.Item
           name="status"
           label="状态"
           rules={[{ required: false, message: '请输入' }]}
@@ -160,4 +153,4 @@ const MenuBatchModifyComponent: React.FC<MenuBatchModifyProps> = ({
   );
 };
 
-export default MenuBatchModifyComponent;
+export default BatchUpdateMenuComponent;

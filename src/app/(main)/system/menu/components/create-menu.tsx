@@ -5,26 +5,26 @@ import { Button, Form, Input, Modal, Radio, TreeSelect } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 
-const menuCreateFormItemLayout = {
+const createMenuFormItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 15 },
 };
 
-interface MenuCreateProps {
-  isMenuCreateModalVisible: boolean;
-  onMenuCreateCancel: () => void;
-  onMenuCreateFinish: (MenuCreate: CreateMenu) => void;
-  isMenuCreateLoading: boolean;
-  menuCreateForm: FormInstance;
+interface CreateMenuProps {
+  isCreateMenuModalVisible: boolean;
+  onCreateMenuCancel: () => void;
+  onCreateMenuFinish: (CreateMenu: CreateMenu) => void;
+  isCreateMenuLoading: boolean;
+  createMenuForm: FormInstance;
   optionDataSource: any;
 }
 
-const MenuCreateComponent: React.FC<MenuCreateProps> = ({
-  isMenuCreateModalVisible,
-  onMenuCreateCancel,
-  onMenuCreateFinish,
-  isMenuCreateLoading,
-  menuCreateForm,
+const CreateMenuComponent: React.FC<CreateMenuProps> = ({
+  isCreateMenuModalVisible,
+  onCreateMenuCancel,
+  onCreateMenuFinish,
+  isCreateMenuLoading,
+  createMenuForm,
   optionDataSource,
 }) => {
   const optionDataTransform = [
@@ -33,37 +33,37 @@ const MenuCreateComponent: React.FC<MenuCreateProps> = ({
   const menuTreeData = TreeSelectUtil.transform(optionDataTransform);
   const footerButtons = useMemo(
     () => [
-      <Button key="back" onClick={onMenuCreateCancel}>
+      <Button key="back" onClick={onCreateMenuCancel}>
         取消
       </Button>,
       <Button
         key="submit"
         type="primary"
-        loading={isMenuCreateLoading}
-        onClick={() => menuCreateForm.submit()}
+        loading={isCreateMenuLoading}
+        onClick={() => createMenuForm.submit()}
       >
         确定
       </Button>,
     ],
-    [isMenuCreateLoading, menuCreateForm, onMenuCreateCancel],
+    [isCreateMenuLoading, createMenuForm, onCreateMenuCancel],
   );
   const handleIconChange = async (iconName: string) => {
-    menuCreateForm.setFieldsValue({ icon: iconName });
+    createMenuForm.setFieldsValue({ icon: iconName });
   };
 
   return (
     <Modal
       title="添加菜单"
-      open={isMenuCreateModalVisible}
-      onCancel={onMenuCreateCancel}
+      open={isCreateMenuModalVisible}
+      onCancel={onCreateMenuCancel}
       footer={footerButtons}
       width={'60%'}
     >
       <Form
-        {...menuCreateFormItemLayout}
-        form={menuCreateForm}
-        name="menuCreate"
-        onFinish={onMenuCreateFinish}
+        {...createMenuFormItemLayout}
+        form={createMenuForm}
+        name="createMenu"
+        onFinish={onCreateMenuFinish}
         layout="horizontal"
       >
         <Form.Item label="上级菜单" name="parent_id">
@@ -138,4 +138,4 @@ const MenuCreateComponent: React.FC<MenuCreateProps> = ({
   );
 };
 
-export default MenuCreateComponent;
+export default CreateMenuComponent;

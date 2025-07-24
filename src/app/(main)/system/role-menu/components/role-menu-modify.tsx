@@ -46,7 +46,7 @@ const RoleMenuModifyComponent: React.FC<RoleMenuModifyProps> = ({
       open={isRoleMenuModifyModalVisible}
       onCancel={onRoleMenuModifyCancel}
       footer={footerButtons}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         {...roleMenuModifyFormItemLayout}

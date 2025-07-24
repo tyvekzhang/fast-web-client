@@ -16,10 +16,15 @@ import React from 'react';
 
 interface ActionButtonsConfig {
   showCreate?: boolean;
+  createText?: string;
   showImport?: boolean;
+  importText?: string;
   showExport?: boolean;
+  exportText?: string;
   showModify?: boolean;
+  modifyText?: string;
   showRemove?: boolean;
+  removeText?: string;
 }
 
 interface ActionButtonsProps {
@@ -65,10 +70,15 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
 }) => {
   const defaultConfig = {
     showCreate: true,
+    createText: '新增', // 默认值
     showImport: false,
+    importText: '导入', // 默认值
     showExport: false,
+    exportText: '导出', // 默认值
     showModify: false,
+    modifyText: '编辑', // 默认值
     showRemove: true,
+    removeText: '删除', // 默认值
   };
   const config = { ...defaultConfig, ...actionConfig };
 
@@ -77,7 +87,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
       <Space className={className}>
         {config.showCreate && (
           <Button onClick={onCreate} type="primary" icon={<Plus size={14} />}>
-            新增
+            {config.createText}
           </Button>
         )}
         {config.showImport && (
@@ -86,7 +96,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             className="btn-import"
             icon={<Import size={14} />}
           >
-            导入
+            {config.importText}
           </Button>
         )}
         {config.showModify && (
@@ -96,7 +106,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             className="btn-batch-update"
             icon={<PenLine size={14} />}
           >
-            编辑
+            {config.modifyText}
           </Button>
         )}
         {config.showExport && (
@@ -107,7 +117,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             className="btn-export"
             icon={<Download size={14} />}
           >
-            导出
+            {config.exportText}
           </Button>
         )}
         {config.showRemove && (
@@ -127,7 +137,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
               icon={<Trash2 size={14} />}
               danger
             >
-              删除
+              {config.removeText}
             </Button>
           </Popconfirm>
         )}

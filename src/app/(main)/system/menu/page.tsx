@@ -2,7 +2,6 @@
 import ActionButtonComponent from '@/components/base/action-button';
 import { PaginatedTable } from '@/components/base/paginated-table';
 import TransitionWrapper from '@/components/base/transition-wrapper';
-import { message } from '@/components/global-toast';
 import SvgIcon from '@/components/svg-icon';
 import {
   batchCreateMenus,
@@ -18,25 +17,25 @@ import {
 } from '@/service/menu';
 import { BaseQueryImpl } from '@/types';
 import {
+  BatchUpdateMenu,
   CreateMenu,
   ListMenusRequest,
   Menu,
-  MenuBatchModify,
   MenuDetail,
   UpdateMenu,
 } from '@/types/menu';
-import { Form } from 'antd';
+import { Form, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import dayjs from 'dayjs';
 import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useEffect, useState } from 'react';
-import MenuBatchModifyComponent from './components/batch-update-menu';
-import MenuCreateComponent from './components/create-menu';
-import MenuImportComponent from './components/import-menu';
+import BatchUpdateMenuComponent from './components/batch-update-menu';
+import CreateMenuComponent from './components/create-menu';
+import ImportMenuComponent from './components/import-menu';
 import MenuDetailComponent from './components/menu-detail';
-import MenuModifyComponent from './components/modify-menu';
 import MenuQueryComponent from './components/query-menu';
+import UpdateMenuComponent from './components/update-menu';
 
 const MenuPage: React.FC = () => {
   // 配置模块
@@ -190,7 +189,7 @@ const MenuPage: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onMenuModify(record)}
+            onClick={() => onUpdateMenu(record)}
           >
             <PenLine size={12} />
             编辑
@@ -221,7 +220,7 @@ const MenuPage: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState(
     menuPageColumns.map((col) => col.key),
   );
-  const onToggleColumnVisibility = (columnKey: number) => {
+  const onToggleColumnVisibility = (columnKey: string) => {
     setVisibleColumns((prevVisibleColumns) => {
       if (prevVisibleColumns.includes(columnKey)) {
         return prevVisibleColumns.filter((key) => key !== columnKey);
@@ -238,8 +237,10 @@ const MenuPage: React.FC = () => {
   const handleMenuQueryReset = () => {
     resetPagination();
     menuQueryForm.resetFields();
+    onMenuQueryFinish();
   };
   const onMenuQueryFinish = async () => {
+    debugger;
     const values = menuQueryForm.getFieldsValue();
     const { create_time } = values;
     if (create_time) {
@@ -270,27 +271,27 @@ const MenuPage: React.FC = () => {
   };
 
   // 新增模块
-  const [isMenuCreateModalVisible, setIsMenuCreateModalVisible] =
+  const [isCreateMenuModalVisible, setIsCreateMenuModalVisible] =
     useState(false);
-  const [isMenuCreateLoading, setIsMenuCreateLoading] = useState(false);
-  const [menuCreateForm] = Form.useForm();
-  const onMenuCreate = () => {
-    setIsMenuCreateModalVisible(true);
+  const [isCreateMenuLoading, setIsCreateMenuLoading] = useState(false);
+  const [createMenuForm] = Form.useForm();
+  const onCreateMenu = () => {
+    setIsCreateMenuModalVisible(true);
   };
-  const handleMenuCreateCancel = () => {
-    menuCreateForm.resetFields();
-    setIsMenuCreateModalVisible(false);
+  const handleCreateMenuCancel = () => {
+    createMenuForm.resetFields();
+    setIsCreateMenuModalVisible(false);
   };
-  const handleMenuCreateFinish = async (data: CreateMenu) => {
-    setIsMenuCreateLoading(true);
+  const handleCreateMenuFinish = async (data: CreateMenu) => {
+    setIsCreateMenuLoading(true);
     try {
       await createMenu({ menu: data });
       message.success('新增成功');
-      menuCreateForm.resetFields();
+      createMenuForm.resetFields();
       await onMenuQueryFinish();
     } finally {
-      setIsMenuCreateLoading(false);
-      setIsMenuCreateModalVisible(false);
+      setIsCreateMenuLoading(false);
+      setIsCreateMenuModalVisible(false);
     }
   };
 
@@ -323,7 +324,7 @@ const MenuPage: React.FC = () => {
     }
     try {
       setIsBatchRemoveLoading(true);
-      await batchDeleteMenu(selectedRows.map((row) => row.id));
+      await batchDeleteMenu({ ids: selectedRows.map((row) => row.id) });
       await onMenuQueryFinish();
       resetSelectedRows();
     } finally {
@@ -336,45 +337,45 @@ const MenuPage: React.FC = () => {
   };
 
   // 单个更新模块
-  const [isMenuModifyModalVisible, setIsMenuModifyModalVisible] =
+  const [isUpdateMenuModalVisible, setIsUpdateMenuModalVisible] =
     useState<boolean>(false);
-  const [isMenuModifyLoading, setIsMenuModifyLoading] =
+  const [isUpdateMenuLoading, setIsUpdateMenuLoading] =
     useState<boolean>(false);
-  const [menuModifyForm] = Form.useForm();
-  const onMenuModify = (menuPage: Menu) => {
-    setIsMenuModifyModalVisible(true);
+  const [updateMenuForm] = Form.useForm();
+  const onUpdateMenu = (menuPage: Menu) => {
+    setIsUpdateMenuModalVisible(true);
     setSelectedRowKeys([menuPage.id]);
     setSelectedRows([menuPage]);
-    menuModifyForm.setFieldsValue({ ...menuPage });
+    updateMenuForm.setFieldsValue({ ...menuPage });
   };
 
-  const handleMenuModifyCancel = () => {
+  const handleUpdateMenuCancel = () => {
     resetSelectedRows();
-    menuModifyForm.resetFields();
-    setIsMenuModifyModalVisible(false);
+    updateMenuForm.resetFields();
+    setIsUpdateMenuModalVisible(false);
   };
-  const handleMenuModifyFinish = async () => {
-    const menuModifyData =
-      (await menuModifyForm.validateFields()) as UpdateMenu;
-    const menuModify = { ...menuModifyData, id: selectedRows[0].id };
-    setIsMenuModifyLoading(true);
+  const handleUpdateMenuFinish = async () => {
+    const updateMenuData =
+      (await updateMenuForm.validateFields()) as UpdateMenu;
+    const req = { ...updateMenuData, id: selectedRows[0].id };
+    setIsUpdateMenuLoading(true);
     try {
-      await updateMenu({ menu: menuModify });
-      menuModifyForm.resetFields();
+      await updateMenu({ menu: req });
+      updateMenuForm.resetFields();
       message.success('更新成功');
       await onMenuQueryFinish();
       resetSelectedRows();
     } finally {
-      setIsMenuModifyLoading(false);
-      setIsMenuModifyModalVisible(false);
+      setIsUpdateMenuLoading(false);
+      setIsUpdateMenuModalVisible(false);
     }
   };
 
   // 批量更新模块
   const onMenuBatchModify = () => {
     if (selectedRowKeys.length === 1) {
-      setIsMenuModifyModalVisible(true);
-      menuModifyForm.setFieldsValue({ ...selectedRows[0] });
+      setIsUpdateMenuModalVisible(true);
+      updateMenuForm.setFieldsValue({ ...selectedRows[0] });
     } else {
       setIsMenuBatchModifyModalVisible(true);
       menuBatchModifyForm.resetFields();
@@ -393,7 +394,7 @@ const MenuPage: React.FC = () => {
   };
   const handleMenuBatchModifyFinish = async () => {
     const menuBatchModify =
-      (await menuBatchModifyForm.validateFields()) as MenuBatchModify;
+      (await menuBatchModifyForm.validateFields()) as BatchUpdateMenu;
     setIsMenuBatchModifyLoading(true);
     if (selectedRows === null || selectedRows.length === 0) {
       message.warning('请选择要更新的项目');
@@ -413,39 +414,39 @@ const MenuPage: React.FC = () => {
   };
 
   // 导入模块
-  const [isMenuImportModalVisible, setIsMenuImportModalVisible] =
+  const [isImportMenuModalVisible, setIsImportMenuModalVisible] =
     useState<boolean>(false);
-  const [isMenuImportLoading, setIsMenuImportLoading] =
+  const [isImportMenuLoading, setIsImportMenuLoading] =
     useState<boolean>(false);
-  const [menuCreateList, setMenuCreateList] = useState<CreateMenu[]>([]);
+  const [createMenuList, setCreateMenuList] = useState<CreateMenu[]>([]);
 
-  const onMenuImport = () => {
-    setIsMenuImportModalVisible(true);
+  const onImportMenu = () => {
+    setIsImportMenuModalVisible(true);
   };
-  const handleMenuImportCancel = () => {
-    setIsMenuImportModalVisible(false);
+  const handleImportMenuCancel = () => {
+    setIsImportMenuModalVisible(false);
   };
-  const onMenuImportFinish = async (fileList: RcFile[]) => {
+  const onImportMenuFinish = async (fileList: RcFile[]) => {
     try {
-      setIsMenuImportLoading(true);
-      const menuCreateList = await importMenu(fileList[0]);
-      setMenuCreateList(menuCreateList);
-      return menuCreateList;
+      setIsImportMenuLoading(true);
+      const createMenuList = await importMenu({ file: fileList[0] });
+      setCreateMenuList(createMenuList.menus);
+      return createMenuList;
     } finally {
-      setIsMenuImportLoading(false);
+      setIsImportMenuLoading(false);
     }
   };
 
-  const handleMenuImport = async () => {
-    setIsMenuImportLoading(true);
+  const handleImportMenu = async () => {
+    setIsImportMenuLoading(true);
     try {
-      await batchCreateMenus({ menus: menuCreateList });
+      await batchCreateMenus({ menus: createMenuList });
       message.success('导入成功');
-      setIsMenuImportModalVisible(false);
+      setIsImportMenuModalVisible(false);
       await onMenuQueryFinish();
     } finally {
-      setIsMenuImportLoading(false);
-      setMenuCreateList([]);
+      setIsImportMenuLoading(false);
+      setCreateMenuList([]);
     }
   };
 
@@ -458,7 +459,7 @@ const MenuPage: React.FC = () => {
     }
     try {
       setIsExportLoading(true);
-      await exportMenuPage(selectedRows.map((row) => row.id));
+      await exportMenuPage({ ids: selectedRows.map((row) => row.id) });
       resetSelectedRows();
     } finally {
       setIsExportLoading(false);
@@ -476,8 +477,8 @@ const MenuPage: React.FC = () => {
       </TransitionWrapper>
       <div>
         <ActionButtonComponent
-          onCreate={onMenuCreate}
-          onImport={onMenuImport}
+          onCreate={onCreateMenu}
+          onImport={onImportMenu}
           onExport={onMenuExport}
           onBatchModify={onMenuBatchModify}
           onConfirmBatchRemove={handleMenuBatchRemove}
@@ -511,12 +512,12 @@ const MenuPage: React.FC = () => {
       </div>
       <div>
         <div>
-          <MenuCreateComponent
-            isMenuCreateModalVisible={isMenuCreateModalVisible}
-            onMenuCreateCancel={handleMenuCreateCancel}
-            onMenuCreateFinish={handleMenuCreateFinish}
-            isMenuCreateLoading={isMenuCreateLoading}
-            menuCreateForm={menuCreateForm}
+          <CreateMenuComponent
+            isCreateMenuModalVisible={isCreateMenuModalVisible}
+            onCreateMenuCancel={handleCreateMenuCancel}
+            onCreateMenuFinish={handleCreateMenuFinish}
+            isCreateMenuLoading={isCreateMenuLoading}
+            createMenuForm={createMenuForm}
             optionDataSource={menuPageDataSource}
           />
         </div>
@@ -528,30 +529,31 @@ const MenuPage: React.FC = () => {
           />
         </div>
         <div>
-          <MenuModifyComponent
-            isMenuModifyModalVisible={isMenuModifyModalVisible}
-            onMenuModifyCancel={handleMenuModifyCancel}
-            onMenuModifyFinish={handleMenuModifyFinish}
-            isMenuModifyLoading={isMenuModifyLoading}
-            menuModifyForm={menuModifyForm}
+          <UpdateMenuComponent
+            isUpdateMenuModalVisible={isUpdateMenuModalVisible}
+            onUpdateMenuCancel={handleUpdateMenuCancel}
+            onUpdateMenuFinish={handleUpdateMenuFinish}
+            isUpdateMenuLoading={isUpdateMenuLoading}
+            updateMenuForm={updateMenuForm}
+            optionDataSource={menuPageDataSource}
           />
         </div>
         <div>
-          <MenuBatchModifyComponent
-            isMenuBatchModifyModalVisible={isMenuBatchModifyModalVisible}
-            onMenuBatchModifyCancel={handleMenuBatchModifyCancel}
-            onMenuBatchModifyFinish={handleMenuBatchModifyFinish}
-            isMenuBatchModifyLoading={isMenuBatchModifyLoading}
-            menuBatchModifyForm={menuBatchModifyForm}
+          <BatchUpdateMenuComponent
+            isBatchUpdateMenuModalVisible={isMenuBatchModifyModalVisible}
+            onBatchUpdateMenuCancel={handleMenuBatchModifyCancel}
+            onBatchUpdateMenuFinish={handleMenuBatchModifyFinish}
+            isBatchUpdateMenuLoading={isMenuBatchModifyLoading}
+            batchUpdateMenuForm={menuBatchModifyForm}
           />
         </div>
         <div>
-          <MenuImportComponent
-            isMenuImportModalVisible={isMenuImportModalVisible}
-            isMenuImportLoading={isMenuImportLoading}
-            onMenuImportFinish={onMenuImportFinish}
-            onMenuImportCancel={handleMenuImportCancel}
-            handleMenuImport={handleMenuImport}
+          <ImportMenuComponent
+            isImportMenuModalVisible={isImportMenuModalVisible}
+            isImportMenuLoading={isImportMenuLoading}
+            onImportMenuFinish={onImportMenuFinish}
+            onImportMenuCancel={handleImportMenuCancel}
+            handleImportMenu={handleImportMenu}
           />
         </div>
       </div>

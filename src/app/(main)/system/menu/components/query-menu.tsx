@@ -4,7 +4,7 @@ import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
 interface MenuQueryProps {
-  onMenuQueryFinish: () => void;
+  onMenuQueryFinish: (values: any) => void;
   onMenuQueryReset: () => void;
   menuQueryForm: FormInstance;
 }
@@ -21,19 +21,27 @@ const MenuQueryComponent: React.FC<MenuQueryProps> = ({
 }) => {
   const handleMenuQueryReset = () => {
     onMenuQueryReset();
-    onMenuQueryFinish();
+    menuQueryForm.resetFields();
   };
 
-  const handleMenuQueryFinish = (values: any) => {
-    const { create_time } = values;
-    if (create_time) {
-      const [startDate, endDate] = create_time;
-      values.create_time = [
-        startDate.format('YYYY-MM-DD'),
-        endDate.format('YYYY-MM-DD'),
-      ];
+  const handleMenuQuerySubmit = async () => {
+    try {
+      const values = await menuQueryForm.validateFields();
+
+      // 格式化 create_time
+      const { create_time } = values;
+      if (create_time?.length === 2) {
+        const [startDate, endDate] = create_time;
+        values.create_time = [
+          startDate.format('YYYY-MM-DD'),
+          endDate.format('YYYY-MM-DD'),
+        ];
+      }
+
+      onMenuQueryFinish(values);
+    } catch (error) {
+      // validateFields 失败时自动提示，无需额外处理
     }
-    onMenuQueryFinish();
   };
 
   return (
@@ -42,25 +50,25 @@ const MenuQueryComponent: React.FC<MenuQueryProps> = ({
         {...menuQueryFormItemLayout}
         form={menuQueryForm}
         name="menuQuery"
-        onFinish={handleMenuQueryFinish}
         layout="horizontal"
-        className="flex gap-y-0 gap-x-4 pt-4 "
+        className="flex flex-wrap gap-y-0 gap-x-4 pt-4"
       >
         <Form.Item
           name="name"
           label="名称"
-          rules={[{ required: false, message: '请输入' }]}
+          rules={[{ required: false, message: '请输入名称' }]}
         >
-          <Input placeholder="请输入" />
+          <Input placeholder="请输入名称" />
         </Form.Item>
         <Form.Item
           name="create_time"
           label="创建时间"
-          rules={[{ required: false, message: '请输入' }]}
+          rules={[{ required: false, message: '请选择时间' }]}
         >
           <DatePicker.RangePicker format="YYYY-MM-DD" />
         </Form.Item>
       </Form>
+
       <Space className="inline-flex">
         <Button
           onClick={handleMenuQueryReset}
@@ -69,7 +77,11 @@ const MenuQueryComponent: React.FC<MenuQueryProps> = ({
         >
           重置
         </Button>
-        <Button type="primary" htmlType="submit" icon={<Search size={14} />}>
+        <Button
+          type="primary"
+          icon={<Search size={14} />}
+          onClick={handleMenuQuerySubmit}
+        >
           查询
         </Button>
       </Space>

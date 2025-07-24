@@ -46,7 +46,7 @@ const RoleBatchModifyComponent: React.FC<RoleBatchModifyProps> = ({
       open={isRoleBatchModifyModalVisible}
       onCancel={onRoleBatchModifyCancel}
       footer={footerButtons}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         {...roleBatchModifyFormItemLayout}

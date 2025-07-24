@@ -46,7 +46,7 @@ const DictTypeBatchModifyComponent: React.FC<DictTypeBatchModifyProps> = ({
       open={isDictTypeBatchModifyModalVisible}
       onCancel={onDictTypeBatchModifyCancel}
       footer={footerButtons}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         {...dictTypeBatchModifyFormItemLayout}

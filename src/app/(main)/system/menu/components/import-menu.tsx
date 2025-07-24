@@ -1,61 +1,61 @@
-import { message } from '@/components/global-toast';
 import { exportMenuTemplate } from '@/service/menu';
-import { CreateMenu } from '@/types/menu';
-import { InboxOutlined } from '@ant-design/icons';
-import { Button, Modal, Table, Upload, UploadFile } from 'antd';
+import { CreateMenu, ImportMenu, ImportMenusResponse } from '@/types/menu';
+import { Button, Modal, Table, Upload, UploadFile, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Inbox } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 
-interface MenuImportProps {
-  isMenuImportModalVisible: boolean;
-  isMenuImportLoading: boolean;
-  onMenuImportCancel: () => void;
-  onMenuImportFinish: (fileList: RcFile[]) => Promise<CreateMenu[]>;
-  handleMenuImport: () => void;
+interface ImportMenuProps {
+  isImportMenuModalVisible: boolean;
+  isImportMenuLoading: boolean;
+  onImportMenuCancel: () => void;
+  onImportMenuFinish: (fileList: RcFile[]) => Promise<ImportMenusResponse>;
+  handleImportMenu: () => void;
 }
 
-const MenuImportComponent: React.FC<MenuImportProps> = ({
-  isMenuImportModalVisible,
-  onMenuImportCancel,
-  onMenuImportFinish,
-  isMenuImportLoading,
-  handleMenuImport,
+const ImportMenuComponent: React.FC<ImportMenuProps> = ({
+  isImportMenuModalVisible,
+  onImportMenuCancel,
+  onImportMenuFinish,
+  isImportMenuLoading,
+  handleImportMenu,
 }) => {
-  const [MenuImportFileList, setMenuImportFileList] = useState<RcFile[]>([]);
-  const [MenuCreateList, setMenuCreateList] = useState<CreateMenu[]>([]);
+  const [ImportMenuFileList, setImportMenuFileList] = useState<RcFile[]>([]);
+  const [MenuCreateList, setMenuCreateList] = useState<ImportMenu[]>([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
-    <Button key="back" onClick={handleMenuImportCancel}>
+    <Button key="back" onClick={handleImportMenuCancel}>
       取消
     </Button>,
     <Button
       key="submit"
       type="primary"
-      loading={isMenuImportLoading}
-      onClick={handleMenuImportConfirm}
+      loading={isImportMenuLoading}
+      onClick={handleImportMenuConfirm}
     >
       确定
     </Button>,
   ];
 
-  const handleMenuImportConfirm = async () => {
+  const handleImportMenuConfirm = async () => {
     if (isUploadShow) {
-      if (MenuImportFileList.length === 0) {
+      if (ImportMenuFileList.length === 0) {
         message.warning('请先选择文件');
         return;
       }
       try {
-        const MenuPageList = await onMenuImportFinish(MenuImportFileList);
+        const importMenusResponse =
+          await onImportMenuFinish(ImportMenuFileList);
         setIsUploadShow(false);
-        setMenuCreateList(MenuPageList as CreateMenu[]);
+        setMenuCreateList(importMenusResponse.menus);
       } finally {
-        setMenuImportFileList([]);
+        setImportMenuFileList([]);
       }
     } else {
-      handleMenuImport();
+      handleImportMenu();
       setIsUploadShow(true);
     }
   };
@@ -139,26 +139,26 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
       onError?.(new Error('仅支持xls、xlsx格式文件'));
       return;
     }
-    setMenuImportFileList((prev) => [...prev, rcFile]);
+    setImportMenuFileList((prev) => [...prev, rcFile]);
     setTimeout(() => {
       onSuccess?.(rcFile);
     }, 200);
   };
 
   const handleRemove = (file: UploadFile) => {
-    setMenuImportFileList((prev) => prev.filter((f) => f.uid !== file.uid));
+    setImportMenuFileList((prev) => prev.filter((f) => f.uid !== file.uid));
   };
 
-  const handleMenuImportCancel = () => {
-    onMenuImportCancel();
+  const handleImportMenuCancel = () => {
+    onImportMenuCancel();
     setIsUploadShow(true);
   };
 
   return (
     <Modal
       title="系统菜单导入"
-      open={isMenuImportModalVisible}
-      onCancel={handleMenuImportCancel}
+      open={isImportMenuModalVisible}
+      onCancel={handleImportMenuCancel}
       footer={footerButtons}
       width={'70%'}
     >
@@ -170,14 +170,14 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={MenuImportFileList}
+              fileList={ImportMenuFileList}
               customRequest={customUploadRequest as any}
             >
-              <p className="sc-upload-drag-icon">
-                <InboxOutlined />
+              <p className="flex justify-center items-center text-primary">
+                <Inbox />
               </p>
-              <p className="sc-upload-text">{'点击或拖拽到此上传'}</p>
-              <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
+              <p className="text-base">{'点击或拖拽到此上传'}</p>
+              <p className="text-gray-500">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
           <div
@@ -193,7 +193,6 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
             columns={MenuPageColumns}
             dataSource={MenuCreateList}
             pagination={false}
-            variant="borderless"
             rowKey={'id'}
           />
         </div>
@@ -202,4 +201,4 @@ const MenuImportComponent: React.FC<MenuImportProps> = ({
   );
 };
 
-export default MenuImportComponent;
+export default ImportMenuComponent;

@@ -46,7 +46,7 @@ const DictTypeModifyComponent: React.FC<DictTypeModifyProps> = ({
       open={isDictTypeModifyModalVisible}
       onCancel={onDictTypeModifyCancel}
       footer={footerButtons}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         {...dictTypeModifyFormItemLayout}

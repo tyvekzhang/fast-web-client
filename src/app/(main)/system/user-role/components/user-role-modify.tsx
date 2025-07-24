@@ -46,7 +46,7 @@ const UserRoleModifyComponent: React.FC<UserRoleModifyProps> = ({
       open={isUserRoleModifyModalVisible}
       onCancel={onUserRoleModifyCancel}
       footer={footerButtons}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         {...userRoleModifyFormItemLayout}

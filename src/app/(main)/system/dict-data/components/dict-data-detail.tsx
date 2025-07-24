@@ -28,7 +28,7 @@ const DictDataDetailComponent: React.FC<DictDataDetailDrawerProps> = ({
       open={isDictDataDetailDrawerVisible}
       onClose={onDictDataDetailClose}
       extra={footerButtons}
-      destroyOnClose
+      destroyOnHidden
       width={600}
     >
       {dictDataDetail && (

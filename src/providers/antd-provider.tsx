@@ -5,7 +5,7 @@ import { useLanguageStore } from '@/stores/language-store';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import '@ant-design/v5-patch-for-react-19';
-import { App as AntdApp, ConfigProvider } from 'antd';
+import { ConfigProvider } from 'antd';
 import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
 import React from 'react';
@@ -43,7 +43,7 @@ export function AntdProvider({ children }: { children: React.ReactNode }) {
             },
           }}
         >
-          <AntdApp>{children}</AntdApp>
+          {children}
         </ConfigProvider>
       </StyleProvider>
     </AntdRegistry>

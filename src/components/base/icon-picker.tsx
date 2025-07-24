@@ -15,14 +15,7 @@ const iconMap = {
     keywords: ['复制', 'copy', '拷贝', '克隆'],
     icon: LucideIcons.Copy,
   },
-  Cut: {
-    name: '剪切',
-    englishName: 'Cut',
-    category: '基础操作',
-    keywords: ['剪切', 'cut', '剪刀'],
-    icon: LucideIcons.Scissors,
-  },
-  Paste: {
+  Clipboard: {
     name: '粘贴',
     englishName: 'Paste',
     category: '基础操作',
@@ -71,14 +64,7 @@ const iconMap = {
     keywords: ['导入', 'import', '引入', '加载'],
     icon: LucideIcons.Import,
   },
-  Export: {
-    name: '导出',
-    englishName: 'Export',
-    category: '基础操作',
-    keywords: ['导出', 'export', '输出', '保存'],
-    icon: LucideIcons.Download,
-  },
-  Print: {
+  Printer: {
     name: '打印',
     englishName: 'Print',
     category: '基础操作',
@@ -113,21 +99,21 @@ const iconMap = {
     keywords: ['编辑', 'edit', '修改', '更改'],
     icon: LucideIcons.Edit,
   },
-  Delete: {
+  Trash2: {
     name: '删除',
     englishName: 'Delete',
     category: '基础操作',
     keywords: ['删除', 'delete', '移除', '清除'],
     icon: LucideIcons.Trash2,
   },
-  Add: {
+  Plus: {
     name: '添加',
     englishName: 'Add',
     category: '基础操作',
     keywords: ['添加', 'add', '新增', '创建'],
     icon: LucideIcons.Plus,
   },
-  Remove: {
+  Minus: {
     name: '移除',
     englishName: 'Remove',
     category: '基础操作',
@@ -250,20 +236,6 @@ const iconMap = {
   },
 
   // 基础UI元素 Basic UI Elements
-  Plus: {
-    name: '加号',
-    englishName: 'Plus',
-    category: '基础UI',
-    keywords: ['加号', 'plus', '添加', '新增', '正号'],
-    icon: LucideIcons.Plus,
-  },
-  Minus: {
-    name: '减号',
-    englishName: 'Minus',
-    category: '基础UI',
-    keywords: ['减号', 'minus', '删除', '移除', '负号'],
-    icon: LucideIcons.Minus,
-  },
   X: {
     name: '关闭',
     englishName: 'Close',
@@ -592,13 +564,6 @@ const iconMap = {
     keywords: ['表格文件', 'spreadsheet', 'excel', '数据'],
     icon: LucideIcons.FileSpreadsheet,
   },
-  FilePdf: {
-    name: 'PDF文件',
-    englishName: 'PDF File',
-    category: '文件',
-    keywords: ['PDF', 'pdf', '文档', '报告'],
-    icon: LucideIcons.FileText,
-  },
   FileArchive: {
     name: '压缩文件',
     englishName: 'Archive File',
@@ -664,7 +629,7 @@ const iconMap = {
     keywords: ['暂停', 'pause', '停止', '中断'],
     icon: LucideIcons.Pause,
   },
-  Stop: {
+  Square: {
     name: '停止',
     englishName: 'Stop',
     category: '媒体控制',
@@ -699,7 +664,7 @@ const iconMap = {
     keywords: ['快进', 'fast forward', '加速', '前进'],
     icon: LucideIcons.FastForward,
   },
-  Volume: {
+  Volume2: {
     name: '音量',
     englishName: 'Volume',
     category: '媒体控制',
@@ -712,13 +677,6 @@ const iconMap = {
     category: '媒体控制',
     keywords: ['低音量', 'volume', 'low', '小声'],
     icon: LucideIcons.Volume1,
-  },
-  Volume2: {
-    name: '高音量',
-    englishName: 'Volume High',
-    category: '媒体控制',
-    keywords: ['高音量', 'volume', 'high', '大声'],
-    icon: LucideIcons.Volume2,
   },
   VolumeX: {
     name: '静音',
@@ -943,18 +901,11 @@ const iconMap = {
     keywords: ['列表', 'list', '清单', '项目', '条目'],
     icon: LucideIcons.List,
   },
-  Sidebar: {
+  PanelLeft: {
     name: '侧边栏',
     englishName: 'Sidebar',
     category: '导航',
     keywords: ['侧边栏', 'sidebar', '面板', '导航栏'],
-    icon: LucideIcons.PanelLeft,
-  },
-  PanelLeft: {
-    name: '左面板',
-    englishName: 'Panel Left',
-    category: '导航',
-    keywords: ['左面板', 'panel', 'left', '侧栏'],
     icon: LucideIcons.PanelLeft,
   },
   PanelRight: {
@@ -1228,13 +1179,6 @@ const iconMap = {
     category: '交通',
     keywords: ['公交车', 'bus', '巴士', '公共交通'],
     icon: LucideIcons.Bus,
-  },
-  Taxi: {
-    name: '出租车',
-    englishName: 'Taxi',
-    category: '交通',
-    keywords: ['出租车', 'taxi', '的士', '打车'],
-    icon: LucideIcons.Car,
   },
   Fuel: {
     name: '燃料',
@@ -1636,13 +1580,6 @@ const iconMap = {
     keywords: ['重置计时器', 'timer', 'reset', '重置'],
     icon: LucideIcons.TimerReset,
   },
-  Stopwatch: {
-    name: '秒表',
-    englishName: 'Stopwatch',
-    category: '时间日历',
-    keywords: ['秒表', 'stopwatch', '计时', '运动'],
-    icon: LucideIcons.Timer,
-  },
   AlarmClock: {
     name: '闹钟',
     englishName: 'Alarm Clock',
@@ -1880,13 +1817,6 @@ const iconMap = {
   },
 
   // 健康医疗 Health & Medical
-  Heart2: {
-    name: '医疗心脏',
-    englishName: 'Heart Medical',
-    category: '健康医疗',
-    keywords: ['医疗心脏', 'heart', 'medical', '健康'],
-    icon: LucideIcons.Heart,
-  },
   Pill: {
     name: '药丸',
     englishName: 'Pill',
@@ -2273,13 +2203,6 @@ const iconMap = {
     keywords: ['松鼠', 'squirrel', '动物', '坚果'],
     icon: LucideIcons.Squirrel,
   },
-  Butterfly: {
-    name: '蝴蝶',
-    englishName: 'Butterfly',
-    category: '动物自然',
-    keywords: ['蝴蝶', 'butterfly', '昆虫', '美丽'],
-    icon: LucideIcons.Bug,
-  },
   Trees: {
     name: '树木',
     englishName: 'Trees',
@@ -2287,7 +2210,7 @@ const iconMap = {
     keywords: ['树木', 'trees', '森林', '自然'],
     icon: LucideIcons.Trees,
   },
-  Tree: {
+  TreeDeciduous: {
     name: '树',
     englishName: 'Tree',
     category: '动物自然',
@@ -2315,7 +2238,7 @@ const iconMap = {
     keywords: ['叶子', 'leaf', '植物', '绿色'],
     icon: LucideIcons.Leaf,
   },
-  Seedling: {
+  Sprout: {
     name: '幼苗',
     englishName: 'Seedling',
     category: '动物自然',
@@ -2402,13 +2325,6 @@ const iconMap = {
     category: '形状符号',
     keywords: ['圆形', 'circle', '形状', '几何'],
     icon: LucideIcons.Circle,
-  },
-  Square: {
-    name: '正方形',
-    englishName: 'Square',
-    category: '形状符号',
-    keywords: ['正方形', 'square', '形状', '几何'],
-    icon: LucideIcons.Square,
   },
   Triangle: {
     name: '三角形',
@@ -2682,13 +2598,6 @@ const iconMap = {
   },
 
   // 颜色设计 Colors & Design
-  Brush: {
-    name: '刷子',
-    englishName: 'Brush',
-    category: '颜色设计',
-    keywords: ['刷子', 'brush', '绘画', '涂抹'],
-    icon: LucideIcons.Paintbrush,
-  },
   Contrast: {
     name: '对比度',
     englishName: 'Contrast',
