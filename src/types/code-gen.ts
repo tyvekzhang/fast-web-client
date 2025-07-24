@@ -1,6 +1,6 @@
 export interface CodePreviewResponse {
   backend: string;
-  entity: string;
+  model: string;
   mapper: string;
   service: string;
   serviceImpl: string;
@@ -15,15 +15,15 @@ export interface CodePreviewResponse {
   converter: string;
   index: string;
   router: string;
-  iQuery: string;
-  iCreate: string;
-  iDetail: string;
-  iModify: string;
-  iBatchModify: string;
-  iImport: string;
+  query: string;
+  create: string;
+  detail: string;
+  update: string;
+  batchUpdate: string;
+  import: string;
   api: string;
   type: string;
-  entityPy: string;
+  modelPy: string;
   schemaPy: string;
   mapperPy: string;
   servicePy: string;

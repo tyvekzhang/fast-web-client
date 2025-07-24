@@ -1,7 +1,7 @@
 'use client';
 import { codePreview } from '@/service/code-gen';
 import { CodePreviewResponse } from '@/types/code-gen';
-import { CloseOutlined, CopyOutlined } from '@ant-design/icons';
+import { X, Copy } from 'lucide-react';
 import { Modal, Tabs, message } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -65,21 +65,9 @@ const CodePreview: React.FC<CodePreviewProps> = ({
 
     const python_tabs = [
       {
-        key: 'modelPy',
-        label: 'model.py',
-        children: processCodeString(data.modelPy),
-        language: 'python',
-      },
-      {
-        key: 'schemaPy',
-        label: 'schema.py',
-        children: processCodeString(data.schemaPy),
-        language: 'python',
-      },
-      {
-        key: 'mapperPy',
-        label: 'mapper.py',
-        children: processCodeString(data.mapperPy),
+        key: 'controllerPy',
+        label: 'controller.py',
+        children: processCodeString(data.controllerPy),
         language: 'python',
       },
       {
@@ -95,11 +83,27 @@ const CodePreview: React.FC<CodePreviewProps> = ({
         language: 'python',
       },
       {
-        key: 'controllerPy',
-        label: 'controller.py',
-        children: processCodeString(data.controllerPy),
+        key: 'mapperPy',
+        label: 'mapper.py',
+        children: processCodeString(data.mapperPy),
         language: 'python',
       },
+
+
+      {
+        key: 'modelPy',
+        label: 'model.py',
+        children: processCodeString(data.modelPy),
+        language: 'python',
+      },
+      {
+        key: 'schemaPy',
+        label: 'schema.py',
+        children: processCodeString(data.schemaPy),
+        language: 'python',
+      },
+
+
     ];
 
     const java_tabs = [
@@ -179,51 +183,45 @@ const CodePreview: React.FC<CodePreviewProps> = ({
 
     const react_tabs = [
       {
-        key: 'index',
-        label: 'index.tsx',
+        key: 'page.tsx',
+        label: 'page.tsx',
         children: processCodeString(data.index),
         language: 'js',
       },
       {
-        key: 'router',
-        label: 'router.tsx',
-        children: processCodeString(data.router),
+        key: 'query.tsx',
+        label: 'query.tsx',
+        children: processCodeString(data.query),
         language: 'js',
       },
       {
-        key: 'iQuery',
-        label: 'iQuery.tsx',
-        children: processCodeString(data.iQuery),
+        key: 'create.tsx',
+        label: 'create.tsx',
+        children: processCodeString(data.create),
         language: 'js',
       },
       {
-        key: 'iCreate',
-        label: 'iCreate.tsx',
-        children: processCodeString(data.iCreate),
+        key: 'detail.tsx',
+        label: 'detail.tsx',
+        children: processCodeString(data.detail),
         language: 'js',
       },
       {
-        key: 'iDetail',
-        label: 'iDetail.tsx',
-        children: processCodeString(data.iDetail),
+        key: 'update.tsx',
+        label: 'update.tsx',
+        children: processCodeString(data.update),
         language: 'js',
       },
       {
-        key: 'iModify',
-        label: 'iModify.tsx',
-        children: processCodeString(data.iModify),
+        key: 'batchUpdate.tsx',
+        label: 'batchUpdate.tsx',
+        children: processCodeString(data.batchUpdate),
         language: 'js',
       },
       {
-        key: 'iBatchModify',
-        label: 'iBatchModify.tsx',
-        children: processCodeString(data.iBatchModify),
-        language: 'js',
-      },
-      {
-        key: 'iImport',
-        label: 'iImport.tsx',
-        children: processCodeString(data.iImport),
+        key: 'import.tsx',
+        label: 'import.tsx',
+        children: processCodeString(data.import),
         language: 'js',
       },
       {
@@ -289,7 +287,7 @@ const CodePreview: React.FC<CodePreviewProps> = ({
         aria-label="复制代码"
         disabled={copying}
       >
-        <CopyOutlined className="text-gray-400" />
+        <Copy className="text-gray-100 w-4 h-4" />
       </button>
       <SyntaxHighlighter
         language={getLanguage(language)}
@@ -313,7 +311,7 @@ const CodePreview: React.FC<CodePreviewProps> = ({
       onCancel={onClose}
       width={'79%'}
       footer={null}
-      closeIcon={<CloseOutlined />}
+      closeIcon={<X />}
       destroyOnHidden
       bodyStyle={{ minHeight: 400 }}
     >
