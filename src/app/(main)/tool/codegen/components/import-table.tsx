@@ -147,13 +147,13 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
     {
       title: '表描述',
       dataIndex: 'comment',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '创建时间',
       dataIndex: 'create_time',
       render: (text) =>
-        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-',
+        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '--',
     },
   ];
 

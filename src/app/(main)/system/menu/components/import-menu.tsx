@@ -73,55 +73,55 @@ const ImportMenuComponent: React.FC<ImportMenuProps> = ({
       title: '名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '图标',
       dataIndex: 'icon',
       key: 'icon',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '权限标识',
       dataIndex: 'permission',
       key: 'permission',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '排序',
       dataIndex: 'sort',
       key: 'sort',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '路由地址',
       dataIndex: 'path',
       key: 'path',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '组件路径',
       dataIndex: 'component',
       key: 'component',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '创建时间',
       dataIndex: 'create_time',
       key: 'create_time',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '错误信息',
       dataIndex: 'errMsg',
       key: 'errMsg',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
   ];
 
@@ -192,7 +192,6 @@ const ImportMenuComponent: React.FC<ImportMenuProps> = ({
           <Table
             columns={MenuPageColumns}
             dataSource={MenuCreateList}
-            pagination={false}
             rowKey={'id'}
           />
         </div>

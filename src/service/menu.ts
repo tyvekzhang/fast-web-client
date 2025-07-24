@@ -83,7 +83,7 @@ export function batchUpdateMenus(req: BatchUpdateMenusRequest) {
  * @param req Request object containing delete info.
  */
 export function batchDeleteMenu(req: BatchDeleteMenusRequest) {
-  return httpClient.delete<void>('/menu:batchDelete', { data: req });
+  return httpClient.delete<void>('/menus:batchDelete', { data: req });
 }
 
 /**

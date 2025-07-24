@@ -102,7 +102,7 @@ const columns = (
       if (remark && remark.length > 0) {
         return remark;
       }
-      return '-';
+      return '--';
     },
   },
   {

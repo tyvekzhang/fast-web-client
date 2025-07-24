@@ -79,37 +79,37 @@ const DictTypeImportComponent: React.FC<DictTypeImportProps> = ({
       title: '字典名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '字典类型',
       dataIndex: 'type',
       key: 'type',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '备注',
       dataIndex: 'comment',
       key: 'comment',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '创建时间',
       dataIndex: 'create_time',
       key: 'create_time',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
     {
       title: '错误信息',
       dataIndex: 'errMsg',
       key: 'errMsg',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
     },
   ];
 

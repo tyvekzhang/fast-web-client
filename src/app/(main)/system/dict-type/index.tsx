@@ -121,7 +121,7 @@ const DictType: React.FC = () => {
       title: '字典名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       width: '12%',
       ellipsis: true,
     },
@@ -140,7 +140,7 @@ const DictType: React.FC = () => {
             </a>
           );
         }
-        return '-';
+        return '--';
       },
       width: '12%',
       ellipsis: true,
@@ -155,7 +155,7 @@ const DictType: React.FC = () => {
       title: '备注',
       dataIndex: 'comment',
       key: 'comment',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       width: '12%',
       ellipsis: true,
     },
@@ -164,7 +164,7 @@ const DictType: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text: string) =>
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
+        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '--',
       width: '14%',
       ellipsis: true,
     },

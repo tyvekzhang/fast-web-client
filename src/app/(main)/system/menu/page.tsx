@@ -106,13 +106,13 @@ const MenuPage: React.FC = () => {
       dataIndex: 'No',
       key: 'No',
       render: (_: number, _record: Menu, rowIndex: number) => rowIndex + 1,
-      width: '8%',
+      width: '6%',
     },
     {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       ellipsis: true,
       width: '8%',
     },
@@ -121,7 +121,7 @@ const MenuPage: React.FC = () => {
       dataIndex: 'icon',
       key: 'icon',
       render: (text) =>
-        text ? <SvgIcon name={text} strokeWidth={1.3} /> : '-',
+        text ? <SvgIcon name={text} strokeWidth={1.3} /> : '--',
       ellipsis: true,
       width: '6%',
     },
@@ -129,7 +129,7 @@ const MenuPage: React.FC = () => {
       title: '权限标识',
       dataIndex: 'permission',
       key: 'permission',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       ellipsis: true,
       width: '12%',
     },
@@ -137,14 +137,14 @@ const MenuPage: React.FC = () => {
       title: '排序',
       dataIndex: 'sort',
       key: 'sort',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       width: '6%',
     },
     {
       title: '路由地址',
       dataIndex: 'path',
       key: 'path',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       ellipsis: true,
       width: '12%',
     },
@@ -152,7 +152,7 @@ const MenuPage: React.FC = () => {
       title: '组件路径',
       dataIndex: 'component',
       key: 'component',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       ellipsis: true,
       width: '12%',
     },
@@ -160,7 +160,7 @@ const MenuPage: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       width: '4%',
     },
     {
@@ -168,7 +168,7 @@ const MenuPage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text) =>
-        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-',
+        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '--',
       ellipsis: true,
       width: '12%',
     },
@@ -197,7 +197,7 @@ const MenuPage: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-remove"
-            onClick={() => handleMenuDelete(record)}
+            onClick={() => handleDeleteMenu(record)}
           >
             <Trash2 size={12} />
             删除
@@ -240,7 +240,6 @@ const MenuPage: React.FC = () => {
     onMenuQueryFinish();
   };
   const onMenuQueryFinish = async () => {
-    debugger;
     const values = menuQueryForm.getFieldsValue();
     const { create_time } = values;
     if (create_time) {
@@ -251,7 +250,6 @@ const MenuPage: React.FC = () => {
       ];
     }
     const menuQuery = values as ListMenusRequest;
-    console.log(menuQuery);
     const filteredMenuQuery = Object.fromEntries(
       Object.entries(menuQuery).filter(
         ([, value]) => value !== undefined && value !== null && value !== '',
@@ -296,8 +294,9 @@ const MenuPage: React.FC = () => {
   };
 
   // 单个删除模块
-  const handleMenuDelete = async (menuPage: Menu) => {
+  const handleDeleteMenu = async (menuPage: Menu) => {
     await deleteMenu(menuPage.id);
+    message.success("删除成功")
     await onMenuQueryFinish();
   };
 
@@ -325,6 +324,7 @@ const MenuPage: React.FC = () => {
     try {
       setIsBatchRemoveLoading(true);
       await batchDeleteMenu({ ids: selectedRows.map((row) => row.id) });
+      message.success("删除成功")
       await onMenuQueryFinish();
       resetSelectedRows();
     } finally {
