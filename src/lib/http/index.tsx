@@ -32,7 +32,7 @@ class HttpClient {
 
   private isOriginalResponse(data: ApiResponse): boolean {
     if (data === null || data === undefined) {
-      return true
+      return true;
     }
     return (
       CONSTANTS.MAGIC_VALUE.ACCESS_TOKEN in data ||

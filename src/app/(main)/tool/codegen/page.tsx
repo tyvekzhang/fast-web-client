@@ -7,13 +7,13 @@ import {
   Form,
   FormInstance,
   Input,
+  message,
   Popconfirm,
   Space,
   Table,
   Tooltip,
-  message,
 } from 'antd';
-import { Code, Edit2, Eye, RefreshCw, Trash2 } from 'lucide-react';
+import { Code2, Edit2, Eye, RefreshCw, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ImportTable from './components/import-table';
 import CodePreview from './components/preview-code';
@@ -173,7 +173,7 @@ export default function CodeGen() {
                 type="link"
                 loading={loading.generate}
                 onClick={() => handleCodeGenerate(record)}
-                icon={<Code size={14} />}
+                icon={<Code2 size={14} />}
               />
             </Tooltip>
           </Space>
@@ -282,9 +282,9 @@ export default function CodeGen() {
     try {
       setCurrentTableId(record.id);
       await downloadCode(record.id);
-      message.success('代码生成成功');
+      message.success('生成成功');
     } catch (error) {
-      message.error('代码生成失败');
+      message.error('生成失败');
     } finally {
       setLoading((prev) => ({ ...prev, generate: false }));
     }

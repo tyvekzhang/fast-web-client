@@ -47,7 +47,9 @@ export const downloadCode = async (
       responseType: 'blob',
     },
   );
-  downloadBlob(response, fileName);
+  if (typeof window !== 'undefined') {
+    downloadBlob(response, fileName);
+  }
 };
 
 export const syncTable = (tableId: number) => {

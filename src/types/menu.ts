@@ -150,7 +150,7 @@ export interface UpdateMenuRequest {
 }
 
 export interface BatchGetMenusResponse {
-  menus: MenuDetail;
+  menus: MenuDetail[];
 }
 
 export interface BatchCreateMenusRequest {

@@ -1,8 +1,8 @@
 'use client';
 import { codePreview } from '@/service/code-gen';
 import { CodePreviewResponse } from '@/types/code-gen';
-import { X, Copy } from 'lucide-react';
-import { Modal, Tabs, message } from 'antd';
+import { message, Modal, Tabs } from 'antd';
+import { Copy, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -102,137 +102,61 @@ const CodePreview: React.FC<CodePreviewProps> = ({
         children: processCodeString(data.modelPy),
         language: 'python',
       },
-
-    ];
-
-    const java_tabs = [
-      {
-        key: 'controller',
-        label: 'controller.java',
-        children: processCodeString(data.controller),
-        language: 'java',
-      },
-      {
-        key: 'service',
-        label: 'service.java',
-        children: processCodeString(data.service),
-        language: 'java',
-      },
-      {
-        key: 'serviceImpl',
-        label: 'serviceImpl.java',
-        children: processCodeString(data.serviceImpl),
-        language: 'java',
-      },
-      {
-        key: 'mapper',
-        label: 'mapper.java',
-        children: processCodeString(data.mapper),
-        language: 'java',
-      },
-      {
-        key: 'model',
-        label: 'model.java',
-        children: processCodeString(data.model),
-        language: 'java',
-      },
-      {
-        key: 'converter',
-        label: 'converter.java',
-        children: processCodeString(data.converter),
-        language: 'java',
-      },
-      {
-        key: 'create',
-        label: 'create.java',
-        children: processCodeString(data.create),
-        language: 'java',
-      },
-      {
-        key: 'modify',
-        label: 'modify.java',
-        children: processCodeString(data.modify),
-        language: 'java',
-      },
-      {
-        key: 'batchModify',
-        label: 'batchModify.java',
-        children: processCodeString(data.batchModify),
-        language: 'java',
-      },
-      {
-        key: 'query',
-        label: 'query.java',
-        children: processCodeString(data.query),
-        language: 'java',
-      },
-      {
-        key: 'detail',
-        label: 'detail.java',
-        children: processCodeString(data.detail),
-        language: 'java',
-      },
-      {
-        key: 'page',
-        label: 'page.java',
-        children: processCodeString(data.page),
-        language: 'java',
-      },
     ];
 
     const react_tabs = [
       {
-        key: 'page.tsx',
+        key: 'pageTs',
         label: 'page.tsx',
-        children: processCodeString(data.index),
+        children: processCodeString(data.pageTs),
         language: 'js',
       },
       {
-        key: 'query.tsx',
+        key: 'queryTs',
         label: 'query.tsx',
-        children: processCodeString(data.query),
+        children: processCodeString(data.queryTs),
         language: 'js',
       },
       {
-        key: 'create.tsx',
+        key: 'createTs',
         label: 'create.tsx',
-        children: processCodeString(data.create),
+        children: processCodeString(data.createTs),
         language: 'js',
       },
       {
-        key: 'detail.tsx',
+        key: 'detailTs',
         label: 'detail.tsx',
-        children: processCodeString(data.detail),
+        children: processCodeString(data.detailTs),
         language: 'js',
       },
       {
-        key: 'update.tsx',
+        key: 'updateTs',
         label: 'update.tsx',
-        children: processCodeString(data.update),
+        children: processCodeString(data.updateTs),
         language: 'js',
       },
       {
-        key: 'batchUpdate.tsx',
+        key: 'batchUpdateTs',
         label: 'batchUpdate.tsx',
-        children: processCodeString(data.batchUpdate),
+        children: processCodeString(data.batchUpdateTs),
         language: 'js',
       },
       {
-        key: 'import.tsx',
+        key: 'importTs',
         label: 'import.tsx',
-        children: processCodeString(data.import),
+        children: processCodeString(data.importTs),
         language: 'js',
       },
       {
-        key: 'api',
-        label: 'api.ts',
-        children: processCodeString(data.api),
+        key: 'serviceTs',
+        label: 'service.ts',
+        children: processCodeString(data.serviceTs),
         language: 'js',
       },
       {
-        key: 'type',
+        key: 'typeTs',
         label: 'type.ts',
-        children: processCodeString(data.type),
+        children: processCodeString(data.typeTs),
         language: 'js',
       },
     ];
@@ -240,10 +164,7 @@ const CodePreview: React.FC<CodePreviewProps> = ({
     let displayTabs: TabItem[] = [];
     if (codePreviewData?.backend === 'python') {
       displayTabs = python_tabs.concat(react_tabs);
-    } else if (codePreviewData?.backend === 'java') {
-      displayTabs = java_tabs.concat(react_tabs);
     }
-
     return displayTabs;
   };
 

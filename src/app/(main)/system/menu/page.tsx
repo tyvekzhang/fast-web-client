@@ -296,7 +296,7 @@ const MenuPage: React.FC = () => {
   // 单个删除模块
   const handleDeleteMenu = async (menuPage: Menu) => {
     await deleteMenu(menuPage.id);
-    message.success("删除成功")
+    message.success('删除成功');
     await onMenuQueryFinish();
   };
 
@@ -324,7 +324,7 @@ const MenuPage: React.FC = () => {
     try {
       setIsBatchRemoveLoading(true);
       await batchDeleteMenu({ ids: selectedRows.map((row) => row.id) });
-      message.success("删除成功")
+      message.success('删除成功');
       await onMenuQueryFinish();
       resetSelectedRows();
     } finally {
