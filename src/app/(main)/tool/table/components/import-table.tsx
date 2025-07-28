@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { exportNewWordTemplate } from '@/service/new-word';
-import { CreateNewWord, ImportNewWordsResponse } from '@/types/new-word';
+import { exportTableTemplate } from '@/service/table';
+import { CreateTable, ImportTablesResponse } from '@/types/table';
 import { InboxOutlined } from '@ant-design/icons';
 import { Button, Modal, Table, Upload, UploadFile, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -20,90 +20,74 @@ import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 
-interface ImportNewWordProps {
-  isImportNewWordModalVisible: boolean;
-  isImportNewWordLoading: boolean;
-  onImportNewWordCancel: () => void;
-  onImportNewWordFinish: (
-    fileList: RcFile[],
-  ) => Promise<ImportNewWordsResponse>;
-  handleImportNewWord: () => void;
+interface ImportTableProps {
+  isImportTableModalVisible: boolean;
+  isImportTableLoading: boolean;
+  onImportTableCancel: () => void;
+  onImportTableFinish: (fileList: RcFile[]) => Promise<ImportTablesResponse>;
+  handleImportTable: () => void;
 }
 
-const ImportNewWordComponent: React.FC<ImportNewWordProps> = ({
-  isImportNewWordModalVisible,
-  onImportNewWordCancel,
-  onImportNewWordFinish,
-  isImportNewWordLoading,
-  handleImportNewWord,
+const ImportTableComponent: React.FC<ImportTableProps> = ({
+  isImportTableModalVisible,
+  onImportTableCancel,
+  onImportTableFinish,
+  isImportTableLoading,
+  handleImportTable,
 }) => {
-  const [newWordImportFileList, setImportNewWordFileList] = useState<RcFile[]>(
-    [],
-  );
-  const [CreateNewWordList, setCreateNewWordList] = useState<CreateNewWord[]>(
-    [],
-  );
+  const [tableImportFileList, setImportTableFileList] = useState<RcFile[]>([]);
+  const [CreateTableList, setCreateTableList] = useState<CreateTable[]>([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
-    <Button key="back" onClick={handleImportNewWordCancel}>
+    <Button key="back" onClick={handleImportTableCancel}>
       取消
     </Button>,
-    <Button
-      key="submit"
-      type="primary"
-      loading={isImportNewWordLoading}
-      onClick={handleImportNewWordConfirm}
-    >
+    <Button key="submit" type="primary" loading={isImportTableLoading} onClick={handleImportTableConfirm}>
       确定
     </Button>,
   ];
 
-  const handleImportNewWordConfirm = async () => {
+  const handleImportTableConfirm = async () => {
     if (isUploadShow) {
-      if (newWordImportFileList.length === 0) {
+      if (tableImportFileList.length === 0) {
         message.warning('请先选择文件');
         return;
       }
       try {
-        const importNewWordResponse = await onImportNewWordFinish(
-          newWordImportFileList,
-        );
+        const importTableResponse = await onImportTableFinish(tableImportFileList);
         setIsUploadShow(false);
-        setCreateNewWordList(importNewWordResponse.newWords);
+        setCreateTableList(importTableResponse.tables);
       } finally {
-        setImportNewWordFileList([]);
+        setImportTableFileList([]);
       }
     } else {
-      handleImportNewWord();
+      handleImportTable();
       setIsUploadShow(true);
     }
   };
   // 表格列信息
-  const NewWordColumns: ColumnsType<CreateNewWord> = [
+  const TableColumns: ColumnsType<CreateTable> = [
     {
-      title: '序号',
-      dataIndex: 'No',
-      key: 'No',
-      render: (_: number, _record: CreateNewWord, rowIndex: number) =>
-        rowIndex + 1,
-      width: '8%',
+      title: "序号",
+      dataIndex: "No",
+      key: "No",
+      render: (_: number, _record: CreateTable, rowIndex: number) => rowIndex + 1,
+      width: "8%",
     },
     {
-      title: '错误信息',
-      dataIndex: 'errMsg',
-      key: 'errMsg',
-      render: (text) => (text ? text : '-'),
+      title: "错误信息",
+      dataIndex: "errMsg",
+      key: "errMsg",
+      render: (text) => (text ? text : "-"),
     },
   ];
 
-  const handleNewWordExportTemplate = async () => {
-    await exportNewWordTemplate();
+  const handleTableExportTemplate = async () => {
+    await exportTableTemplate();
   };
 
-  const customUploadRequest = async (
-    options: UploadRequestOption,
-  ): Promise<void | undefined> => {
+  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -111,26 +95,26 @@ const ImportNewWordComponent: React.FC<ImportNewWordProps> = ({
       onError?.(new Error('仅支持xls、xlsx格式文件'));
       return;
     }
-    setImportNewWordFileList((prev) => [...prev, rcFile]);
+    setImportTableFileList((prev) => [...prev, rcFile]);
     setTimeout(() => {
       onSuccess?.(rcFile);
     }, 200);
   };
 
   const handleRemove = (file: UploadFile) => {
-    setImportNewWordFileList((prev) => prev.filter((f) => f.uid !== file.uid));
+    setImportTableFileList((prev) => prev.filter((f) => f.uid !== file.uid));
   };
 
-  const handleImportNewWordCancel = () => {
-    onImportNewWordCancel();
+  const handleImportTableCancel = () => {
+    onImportTableCancel();
     setIsUploadShow(true);
   };
 
   return (
     <Modal
       title="[请填写功能名]导入"
-      open={isImportNewWordModalVisible}
-      onCancel={handleImportNewWordCancel}
+      open={isImportTableModalVisible}
+      onCancel={handleImportTableCancel}
       footer={footerButtons}
       width={'70%'}
     >
@@ -142,7 +126,7 @@ const ImportNewWordComponent: React.FC<ImportNewWordProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={newWordImportFileList}
+              fileList={ tableImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="sc-upload-drag-icon">
@@ -152,18 +136,15 @@ const ImportNewWordComponent: React.FC<ImportNewWordProps> = ({
               <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div
-            onClick={handleNewWordExportTemplate}
-            className="cursor-pointer mt-4 text-blue-600"
-          >
+          <div onClick={handleTableExportTemplate} className="cursor-pointer mt-4 text-blue-600">
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={NewWordColumns}
-            dataSource={CreateNewWordList}
+            columns={ TableColumns}
+            dataSource={ CreateTableList}
             pagination={false}
             bordered={false}
             rowKey={'id'}
@@ -174,4 +155,4 @@ const ImportNewWordComponent: React.FC<ImportNewWordProps> = ({
   );
 };
 
-export default ImportNewWordComponent;
+export default ImportTableComponent;
