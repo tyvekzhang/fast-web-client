@@ -19,7 +19,7 @@ export interface CodePreviewResponse {
   controllerPy: string;
 }
 
-export interface GenTableQueryResponse {
+export interface TableResponse {
   id: number;
   connectionName: string;
   databaseName: string;
@@ -31,7 +31,7 @@ export interface GenTableQueryResponse {
 }
 
 export interface TableDataResponse {
-  records: GenTableQueryResponse[];
+  records: TableResponse[];
   total_count: number;
 }
 

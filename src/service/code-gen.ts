@@ -3,9 +3,14 @@ import { downloadBlob } from '@/service/util';
 import {
   CodePreviewResponse,
   GenTableDetail,
-  TableDataResponse,
+  TableResponse,
 } from '@/types/code-gen';
+import { PageResult } from '@/types';
 import { AxiosResponse } from 'axios';
+
+export const listTables = () => {
+  return httpClient.get<PageResult<TableResponse>>(`/tables`);
+};
 
 export const codeModify = (genTableDetail: GenTableDetail) => {
   return httpClient.put<void>(`/gen-table/modify`, genTableDetail);
@@ -19,9 +24,7 @@ export const codePreview = (tableId: number) => {
   return httpClient.get<CodePreviewResponse>(`/gen-table/preview/${tableId}`);
 };
 
-export const codeList = () => {
-  return httpClient.get<TableDataResponse>(`/gen-table/list`);
-};
+
 
 export const importTables = (
   database_id: number,
@@ -59,3 +62,4 @@ export const syncTable = (tableId: number) => {
 export const deleteTable = (tableId: number) => {
   return httpClient.delete(`/gen-table/remove/${tableId}`);
 };
+

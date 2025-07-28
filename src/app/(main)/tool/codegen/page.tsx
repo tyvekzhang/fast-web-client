@@ -20,12 +20,12 @@ import CodePreview from './components/preview-code';
 import CodeModify from './components/update-code';
 
 import {
-  codeList,
+  listTables,
   deleteTable,
   downloadCode,
   syncTable,
 } from '@/service/code-gen';
-import { GenTableQueryResponse } from '@/types/code-gen';
+import { TableResponse } from '@/types/code-gen';
 import dayjs from 'dayjs';
 
 interface QueryParams {
@@ -66,7 +66,7 @@ export default function CodeGen() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [currentTableId, setCurrentTableId] = useState<number>(0);
-  const [tableData, setTableData] = useState<GenTableQueryResponse[]>([]);
+  const [tableData, setTableData] = useState<Table[]>([]);
   const [loading, setLoading] = useState<LoadingState>({
     table: false,
     delete: false,
@@ -76,13 +76,13 @@ export default function CodeGen() {
   });
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
 
-  const columns: TableProps<GenTableQueryResponse>['columns'] = useMemo(
+  const columns: TableProps<Table>['columns'] = useMemo(
     () => [
       {
         title: '序号',
         dataIndex: 'No',
         key: 'No',
-        render: (_: number, _record: GenTableQueryResponse, rowIndex: number) =>
+        render: (_: number, _record: Table, rowIndex: number) =>
           rowIndex + 1,
         width: '6%',
       },
@@ -121,7 +121,7 @@ export default function CodeGen() {
       {
         title: '操作',
         key: 'action',
-        render: (record: GenTableQueryResponse) => (
+        render: (record: Table) => (
           <Space size="small">
             <Tooltip title="预览">
               <Button
@@ -187,7 +187,7 @@ export default function CodeGen() {
   const fetchCodeList = async (params?: QueryParams) => {
     setLoading((prev) => ({ ...prev, table: true }));
     try {
-      const res = await codeList(params);
+      const res = await listTables(params);
       setTableData(res.records);
     } finally {
       setLoading((prev) => ({ ...prev, table: false }));
@@ -229,7 +229,7 @@ export default function CodeGen() {
   };
 
   // 单个删除
-  const handleDelete = async (record: GenTableQueryResponse) => {
+  const handleDelete = async (record: Table) => {
     setLoading((prev) => ({ ...prev, delete: true }));
     try {
       await deleteTable(record.id);
@@ -263,7 +263,7 @@ export default function CodeGen() {
   };
 
   // 同步
-  const handleSync = async (record: GenTableQueryResponse) => {
+  const handleSync = async (record: Table) => {
     setLoading((prev) => ({ ...prev, sync: true }));
     try {
       await syncTable(record.id);
@@ -277,7 +277,7 @@ export default function CodeGen() {
   };
 
   // 生成代码
-  const handleCodeGenerate = async (record: GenTableQueryResponse) => {
+  const handleCodeGenerate = async (record: Table) => {
     setLoading((prev) => ({ ...prev, generate: true }));
     try {
       setCurrentTableId(record.id);
