@@ -1,11 +1,14 @@
 import httpClient from '@/lib/http';
+import { PageResult } from '@/types';
 import { PageData } from '@/types/common';
 import {
+  Connection,
   ConnectionCreate,
   ConnectionQueryResponse,
   Database,
   DatabaseConnection,
   GenTableExecute,
+  ListConnectionRequest,
   SQLSchema,
   TableAdd,
   TableColumn,
@@ -13,6 +16,20 @@ import {
   TableInfo,
   TableMetadata,
 } from '@/types/db-manage';
+
+
+/**
+ * List connections with pagination.
+ *
+ * @param req Request object containing pagination, filter and sort parameters.
+ * @returns Paginated list of connections and total count.
+ */
+export function listConnections(req?: Partial<ListConnectionRequest>) {
+  return httpClient.get<PageResult<Connection>>('/connections', req);
+}
+
+
+
 
 export const executeSQL = (genTableExecute: GenTableExecute) => {
   return httpClient.post<any>('/gen-table/execute', genTableExecute);
@@ -44,7 +61,7 @@ export const fetchDatabases = async (
 ): Promise<Database[]> => {
   const params = {
     current: 1,
-    pageSize: 200,
+    page_size: 200,
     connection_id: connectionId,
   };
   return httpClient
@@ -57,7 +74,7 @@ export const fetchDatabases = async (
 export const fetchTables = async (databaseId: number): Promise<TableInfo[]> => {
   const params = {
     currentPage: 1,
-    pageSize: 1000,
+    page_size: 1000,
     database_id: databaseId,
   };
   return httpClient
@@ -74,19 +91,19 @@ export const listTables = async (params: Record<string, string>) => {
 export const fetchDynamicTableData = async (tableId: number) => {
   const params = {
     currentPage: 1,
-    pageSize: 10,
+    page_size: 10,
     table_id: tableId,
   };
 
   return httpClient.get<PageData<any>>(
-    `/gen-table/data/${params.table_id}/${params.currentPage}/${params.pageSize}`,
+    `/gen-table/data/${params.table_id}/${params.currentPage}/${params.page_size}`,
   );
 };
 
 export const fetchTableStructure = async (tableId: number) => {
   const params = {
     currentPage: 1,
-    pageSize: 1000,
+    page_size: 1000,
     table_id: tableId,
   };
 
@@ -108,7 +125,7 @@ export const fetchIndexStructure = async (
 ): Promise<TableIndex[]> => {
   const params = {
     currentPage: 1,
-    pageSize: 1000,
+    page_size: 1000,
     table_id: tableId,
   };
   return httpClient

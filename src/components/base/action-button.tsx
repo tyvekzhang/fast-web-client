@@ -25,6 +25,8 @@ interface ActionButtonsConfig {
   modifyText?: string;
   showRemove?: boolean;
   removeText?: string;
+  showEye?: boolean;
+  showConfig?: boolean;
 }
 
 interface ActionButtonsProps {
@@ -143,13 +145,15 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
         )}
       </Space>
       <Space className="pr-2">
-        <Tooltip title={isQueryShow ? '隐藏搜索框' : '显示搜索框'}>
-          <Button
-            className="rounded-full"
-            icon={isQueryShow ? <EyeOff size={14} /> : <Eye size={14} />}
-            onClick={onQueryShow}
-          />
-        </Tooltip>
+        {config.showEye && (
+          <Tooltip title={isQueryShow ? '隐藏搜索框' : '显示搜索框'}>
+            <Button
+              className="rounded-full"
+              icon={isQueryShow ? <EyeOff size={14} /> : <Eye size={14} />}
+              onClick={onQueryShow}
+            />
+          </Tooltip>
+        )}
 
         <Tooltip title="刷新页面">
           <Button
@@ -158,22 +162,24 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             onClick={() => window.location.reload()}
           />
         </Tooltip>
+        {config.showConfig && (
+          <Popover
+            content={
+              <ColumnVisibilityControl
+                columns={rawColumns}
+                visibleColumns={visibleColumns}
+                onToggleColumnVisibility={onToggleColumnVisibility}
+              />
+            }
+            trigger="click"
+            placement="bottomRight"
+          >
+            <Tooltip title="设置列">
+              <Button className="rounded-full" icon={<Settings size={14} />} />
+            </Tooltip>
+          </Popover>
+        )}
 
-        <Popover
-          content={
-            <ColumnVisibilityControl
-              columns={rawColumns}
-              visibleColumns={visibleColumns}
-              onToggleColumnVisibility={onToggleColumnVisibility}
-            />
-          }
-          trigger="click"
-          placement="bottomRight"
-        >
-          <Tooltip title="设置列">
-            <Button className="rounded-full" icon={<Settings size={14} />} />
-          </Tooltip>
-        </Popover>
       </Space>
     </div>
   );

@@ -1,3 +1,14 @@
+export interface ListConnectionRequest {
+  
+}
+
+
+export interface Connection {
+  id: number;
+  connection_name: string;
+}
+
+
 export interface DatabaseConnection {
   id: number;
   connection_name: string;

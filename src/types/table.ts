@@ -15,41 +15,9 @@ import {PaginationRequest} from '.';
 
 export interface ListTablesRequest extends PaginationRequest {
     
-    id: string;
-    
     table_name: string;
     
-    sub_table_name: string;
-    
-    sub_table_fk_name: string;
-    
-    class_name: string;
-    
-    backend: string;
-    
-    tpl_category: string;
-    
-    tpl_web_type: string;
-    
-    tpl_backend_type: string;
-    
-    package_name: string;
-    
-    module_name: string;
-    
-    business_name: string;
-    
-    function_name: string;
-    
-    function_author: string;
-    
-    gen_type: string;
-    
-    gen_path: string;
-    
-    options: string;
-    
-    create_time: string;
+    comment: string;
     
 }
 

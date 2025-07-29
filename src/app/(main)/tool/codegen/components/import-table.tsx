@@ -3,6 +3,7 @@ import { importTables } from '@/service/code-gen';
 import {
   fetchConnections as getConnections,
   fetchDatabases as getDatabases,
+  listConnections,
   listTables,
 } from '@/service/db-manage';
 import { Database, DatabaseConnection, TableInfo } from '@/types/db-manage';
@@ -38,7 +39,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const [databases, setDatabases] = useState<Database[]>([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(100);
+  const [page_size, setPageSize] = useState(100);
   const [backend, setBackend] = useState<string>('python');
 
   // 关闭时重置表单和选中项
@@ -56,7 +57,9 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   // 获取数据库连接配置
   useEffect(() => {
     if (open) {
-      getConnections().then(setDatabaseConnections);
+      listConnections().then(res => {
+        setDatabaseConnections(res.records)
+      });
     }
   }, [open]);
 
@@ -72,7 +75,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   };
 
   // 获取表信息
-  const getTables = async (values: any, page = 1, size = pageSize) => {
+  const getTables = async (values: any, page = 1, size = page_size) => {
     try {
       setLoading(true);
       const params = {
@@ -92,7 +95,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const handleSearch = async (values: any) => {
     setCurrentPage(1);
     setBackend(values.backend);
-    await getTables(form.getFieldsValue(), 1, pageSize);
+    await getTables(form.getFieldsValue(), 1, page_size);
   };
 
   // 导入
@@ -273,7 +276,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
         }}
         pagination={{
           current: currentPage,
-          pageSize: pageSize,
+          pageSize: page_size,
           total: total,
           showTotal: (total) => `共 ${total} 条`,
           showSizeChanger: true,

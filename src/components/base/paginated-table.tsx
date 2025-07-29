@@ -51,10 +51,10 @@ export function PaginatedTable<T extends object>({
       <div className="mt-4">
         <Pagination
           current={current}
-          pageSize={page_size}
+          page_size={page_size}
           total={total}
           showTotal={(total) => `共${total}条`}
-          pageSizeOptions={[5, 10, 20, 50, 100]}
+          page_sizeOptions={[5, 10, 20, 50, 100]}
           showSizeChanger
           showQuickJumper
           onChange={handlePaginationChange}

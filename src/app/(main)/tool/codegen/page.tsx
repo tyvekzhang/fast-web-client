@@ -27,15 +27,7 @@ import {
 } from '@/service/code-gen';
 import { TableResponse } from '@/types/code-gen';
 import dayjs from 'dayjs';
-
-interface QueryParams {
-  connection?: string;
-  db_name?: string;
-  table_name?: string;
-  table_remark?: string;
-  current?: number;
-  pageSize?: number;
-}
+import { ListTablesRequest } from '@/types/table';
 
 interface LoadingState {
   table: boolean;
@@ -56,6 +48,8 @@ const actionConfig = {
   showExport: false,
   showModify: false,
   showRemove: true,
+  showEye: false,
+  showConfig: false
 };
 
 export default function CodeGen() {
@@ -66,7 +60,7 @@ export default function CodeGen() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [currentTableId, setCurrentTableId] = useState<number>(0);
-  const [tableData, setTableData] = useState<Table[]>([]);
+  const [tableData, setTableData] = useState<TableResponse[]>([]);
   const [loading, setLoading] = useState<LoadingState>({
     table: false,
     delete: false,
@@ -74,15 +68,15 @@ export default function CodeGen() {
     generate: false,
     batchDelete: false,
   });
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+  const [pagination, setPagination] = useState({ current: 1, page_size: 10 });
 
-  const columns: TableProps<Table>['columns'] = useMemo(
+  const columns: TableProps<TableResponse>['columns'] = useMemo(
     () => [
       {
         title: '序号',
         dataIndex: 'No',
         key: 'No',
-        render: (_: number, _record: Table, rowIndex: number) =>
+        render: (_: number, _record: TableResponse, rowIndex: number) =>
           rowIndex + 1,
         width: '6%',
       },
@@ -102,8 +96,8 @@ export default function CodeGen() {
         width: '10%',
       },
       {
-        title: '备注',
-        dataIndex: 'table_comment',
+        title: '表描述',
+        dataIndex: 'comment',
         render: (text) => text || '--',
         width: '15%',
       },
@@ -121,7 +115,7 @@ export default function CodeGen() {
       {
         title: '操作',
         key: 'action',
-        render: (record: Table) => (
+        render: (record: TableResponse) => (
           <Space size="small">
             <Tooltip title="预览">
               <Button
@@ -183,24 +177,27 @@ export default function CodeGen() {
     [loading],
   );
 
-  // 查询表格数据
-  const fetchCodeList = async (params?: QueryParams) => {
+  const fetchCodeList = async (params?: ListTablesRequest) => {
     setLoading((prev) => ({ ...prev, table: true }));
+    const requestParams = {
+      ...params,
+      ...(!params?.current && { current: 1 }),
+      ...(!params?.page_size && { page_size: 10 }),
+    };
     try {
-      const res = await listTables(params);
+      const res = await listTables(requestParams);
       setTableData(res.records);
     } finally {
       setLoading((prev) => ({ ...prev, table: false }));
     }
   };
 
-  // 查询表单提交
   const handleSearch = async () => {
     try {
       await fetchCodeList({
         ...form.getFieldsValue(),
         current: 1,
-        pageSize: pagination.pageSize,
+        page_size: pagination.page_size,
       });
       setPagination((prev) => ({ ...prev, current: 1 }));
     } catch (error) {
@@ -208,28 +205,13 @@ export default function CodeGen() {
     }
   };
 
-  // 查询表单重置
   const handleReset = async () => {
     form.resetFields();
-    setPagination({ current: 1, pageSize: 10 });
-    await fetchCodeList({ current: 1, pageSize: 10 });
+    setPagination({ current: 1, page_size: 10 });
+    await fetchCodeList();
   };
 
-  // 表格分页变化
-  const handleTableChange = (pagination: any) => {
-    setPagination({
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    });
-    fetchCodeList({
-      ...form.getFieldsValue(),
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    });
-  };
-
-  // 单个删除
-  const handleDelete = async (record: Table) => {
+  const handleDelete = async (record: TableResponse) => {
     setLoading((prev) => ({ ...prev, delete: true }));
     try {
       await deleteTable(record.id);
@@ -242,7 +224,6 @@ export default function CodeGen() {
     }
   };
 
-  // 批量删除
   const handleBatchDelete = async () => {
     if (selectedRowKeys.length === 0) {
       message.warning('请先选择要删除的表');
@@ -262,8 +243,7 @@ export default function CodeGen() {
     }
   };
 
-  // 同步
-  const handleSync = async (record: Table) => {
+  const handleSync = async (record: TableResponse) => {
     setLoading((prev) => ({ ...prev, sync: true }));
     try {
       await syncTable(record.id);
@@ -276,8 +256,7 @@ export default function CodeGen() {
     }
   };
 
-  // 生成代码
-  const handleCodeGenerate = async (record: Table) => {
+  const handleCodeGenerate = async (record: TableResponse) => {
     setLoading((prev) => ({ ...prev, generate: true }));
     try {
       setCurrentTableId(record.id);
@@ -320,35 +299,32 @@ export default function CodeGen() {
       <Card bordered={false}>
         <Form
           form={form}
-          {...formItemLayout}
           onFinish={handleSearch}
           ref={formRef}
         >
-          <Space wrap>
-            <Form.Item name="connection" label="连接名">
-              <Input placeholder="请输入连接名" />
-            </Form.Item>
-            <Form.Item name="db_name" label="数据库名">
-              <Input placeholder="请输入数据库名" />
-            </Form.Item>
-            <Form.Item name="table_name" label="表名">
-              <Input placeholder="请输入表名" />
-            </Form.Item>
-            <Form.Item name="table_remark" label="表描述">
-              <Input placeholder="请输入表描述" />
-            </Form.Item>
-            <Form.Item wrapperCol={{ span: 24 }}>
+          <div className='grid grid-cols-2 px-2'>
+            <div className='flex gap-4'>
+              <Form.Item name="table_name" label="表名">
+                <Input placeholder="请输入表名" />
+              </Form.Item>
+              <Form.Item name="comment" label="表描述">
+                <Input placeholder="请输入表描述" />
+              </Form.Item>
+            </div>
+            <div className='flex justify-end'>
+               <Form.Item wrapperCol={{ span: 24 }}>
               <Button
                 type="primary"
                 htmlType="submit"
-                style={{ marginRight: 8 }}
+                style={{ marginRight: 6 }}
                 loading={loading.table}
               >
                 搜索
               </Button>
               <Button onClick={handleReset}>重置</Button>
             </Form.Item>
-          </Space>
+            </div>
+          </div>
         </Form>
 
         <ActionButtonComponent
@@ -385,19 +361,18 @@ export default function CodeGen() {
           }}
           pagination={{
             current: pagination.current,
-            pageSize: pagination.pageSize,
+            pageSize: pagination.page_size,
             showSizeChanger: true,
             showQuickJumper: true,
-            onChange: (page, pageSize) => {
-              setPagination({ current: page, pageSize });
+            onChange: (page, page_size) => {
+              setPagination({ current: page, page_size });
               fetchCodeList({
                 ...form.getFieldsValue(),
                 current: page,
-                pageSize,
+                page_size,
               });
             },
           }}
-          onChange={handleTableChange}
         />
       </Card>
 

@@ -7,10 +7,25 @@ import {
 } from '@/types/code-gen';
 import { PageResult } from '@/types';
 import { AxiosResponse } from 'axios';
+import { ListTablesRequest } from '@/types/table';
 
-export const listTables = () => {
-  return httpClient.get<PageResult<TableResponse>>(`/tables`);
-};
+
+
+/**
+ * List tables with pagination.
+ *
+ * @param req Request object containing pagination, filter and sort parameters.
+ * @returns Paginated list of tables and total count.
+ */
+export function listTables(req: Partial<ListTablesRequest>) {
+  return httpClient.get<PageResult<TableResponse>>('/tables', req);
+}
+
+
+
+
+
+
 
 export const codeModify = (genTableDetail: GenTableDetail) => {
   return httpClient.put<void>(`/gen-table/modify`, genTableDetail);
