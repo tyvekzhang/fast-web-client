@@ -42,8 +42,8 @@ export const codePreview = (tableId: number) => {
 
 
 export const importTables = (
-  database_id: number,
-  tableIds: number[],
+  database_id: string,
+  tableIds: string[],
   backend: string,
 ) => {
   const data = {
@@ -51,7 +51,7 @@ export const importTables = (
     table_ids: tableIds,
     backend: backend,
   };
-  return httpClient.post('/gen-table/import', data);
+  return httpClient.post('/tables:import', data);
 };
 
 export const downloadCode = async (

@@ -1,11 +1,12 @@
 'use client';
 import { importTables } from '@/service/code-gen';
 import {
-  fetchDatabases as getDatabases, listAvailableTables,
+  listAvailableTables,
   listConnections, listDatabases,
   listTables,
 } from '@/service/db-manage';
-import { Database, DatabaseConnection, TableInfo } from '@/types/db-manage';
+import { TableResponse } from '@/types/code-gen';
+import { Database, DatabaseConnection } from '@/types/db-manage';
 import type { TableProps } from 'antd';
 import {
   Button,
@@ -19,7 +20,6 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { TableResponse } from '@/types/code-gen';
 
 const { Option } = Select;
 
@@ -31,7 +31,7 @@ interface ImportTableProps {
 const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [tableData, setTableData] = useState<TableResponse[]>([]);
   const [databaseConnections, setDatabaseConnections] = useState<
     DatabaseConnection[]
@@ -39,7 +39,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const [databases, setDatabases] = useState<Database[]>([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [page_size, setPageSize] = useState(100);
+  const [page_size, setPageSize] = useState(10);
   const [backend, setBackend] = useState<string>('python');
 
   // 关闭时重置表单和选中项
@@ -123,7 +123,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
     }
     // 校验必填项
     const values = form.getFieldsValue();
-    if (!values.dataSource || !values.database_id || !values.backend) {
+    if (!values.connection_id || !values.database_id || !values.backend) {
       message.warning('请完善表单信息');
       return;
     }
@@ -134,6 +134,9 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
       );
       const tableIds = selectedTables.map((item) => item.id);
       const database_id = selectedTables[0].database_id;
+      if ((database_id === null || database_id === undefined) || (tableIds===null || tableIds === undefined)) {
+        return
+      }
       await importTables(database_id, tableIds, backend);
       message.success('导入成功');
       handleReset();
@@ -143,17 +146,21 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   };
 
   // 重置
-  const handleReset = () => {
+  const handleReset = async() => {
     form.resetFields();
     setSelectedRowKeys([]);
     setTableData([]);
     setCurrentPage(1);
     setBackend('python');
     setDatabases([]);
-    onClose();
+    setTotal(0)
+    setPageSize(10)
+    setCurrentPage(1)
+    onClose()
+    await handleSearch(null)
   };
 
-  const columns: TableProps<TableInfo>['columns'] = [
+  const columns: TableProps<TableResponse>['columns'] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -209,12 +216,13 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
         layout="inline"
         initialValues={{ backend: 'python' }}
         onFinish={handleSearch}
-        className={'grid grid-cols-3 gap-y-4'}
+        className={'grid grid-cols-3'}
       >
         <Form.Item
-          name="dataSource"
+          name="connection_id"
           label="数据源"
           rules={[{ required: true }]}
+          className='mb-8'
         >
           <Select
             placeholder="请选择数据源"
@@ -255,7 +263,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
             </Option>
           </Select>
         </Form.Item>
-        <Form.Item name="tableName" label="表名称">
+        <Form.Item name="table_name" label="表名称">
           <Input
             placeholder="请输入表名称"
             style={{ width: 128 }}
@@ -290,7 +298,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
         rowSelection={{
           selectedRowKeys,
           onChange: (newSelectedRowKeys) => {
-            setSelectedRowKeys(newSelectedRowKeys as number[]);
+            setSelectedRowKeys(newSelectedRowKeys as string[]);
           },
         }}
         pagination={{
@@ -303,7 +311,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
           onChange: async (page, size) => {
             setCurrentPage(page);
             setPageSize(size);
-            await getTables(form.getFieldsValue(), page, size);
+            await fetchAvailableMetaTables(form.getFieldsValue(), page, size);
           },
         }}
       />

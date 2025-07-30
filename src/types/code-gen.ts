@@ -20,11 +20,11 @@ export interface CodePreviewResponse {
 }
 
 export interface TableResponse {
-  id: number;
+  id: string;
   connectionName: string;
   databaseName: string;
   database_id?: string;
-  tableId: number;
+  tableId: string;
   tableName: string;
   entity: string;
   tableComment?: string;
