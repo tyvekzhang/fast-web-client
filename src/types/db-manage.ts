@@ -1,5 +1,7 @@
-export interface ListConnectionRequest {
-  
+import { PaginationRequest } from '@/types/index';
+
+export interface ListConnectionsRequest {
+
 }
 
 
@@ -12,6 +14,11 @@ export interface Connection {
 export interface DatabaseConnection {
   id: number;
   connection_name: string;
+}
+
+export interface ListDatabasesRequest extends PaginationRequest{
+  database_name?: string;
+  connection_id?: number;
 }
 
 export interface Database {

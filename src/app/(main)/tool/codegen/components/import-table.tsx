@@ -1,9 +1,8 @@
 'use client';
 import { importTables } from '@/service/code-gen';
 import {
-  fetchConnections as getConnections,
-  fetchDatabases as getDatabases,
-  listConnections,
+  fetchDatabases as getDatabases, listAvailableTables,
+  listConnections, listDatabases,
   listTables,
 } from '@/service/db-manage';
 import { Database, DatabaseConnection, TableInfo } from '@/types/db-manage';
@@ -20,6 +19,7 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
+import { TableResponse } from '@/types/code-gen';
 
 const { Option } = Select;
 
@@ -32,7 +32,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
-  const [tableData, setTableData] = useState<TableInfo[]>([]);
+  const [tableData, setTableData] = useState<TableResponse[]>([]);
   const [databaseConnections, setDatabaseConnections] = useState<
     DatabaseConnection[]
   >([]);
@@ -67,8 +67,8 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const handleConnectionChange = async (connectionId: number) => {
     try {
       setLoading(true);
-      const response = await getDatabases(connectionId);
-      setDatabases(response);
+      const response = await listDatabases({"connection_id": connectionId, "current": 1, "page_size": 100});
+      setDatabases(response.records);
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,24 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
       };
       const response = await listTables(params);
       setTableData(response.records);
-      setTotal(response.total_count);
+      setTotal(response.total);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 获取表信息
+  const fetchAvailableMetaTables = async (values: any, page = 1, size = page_size) => {
+    try {
+      setLoading(true);
+      const params = {
+        ...values,
+        current: page,
+        page_size: size,
+      };
+      const response = await listAvailableTables(params);
+      setTableData(response.records);
+      setTotal(response.total);
     } finally {
       setLoading(false);
     }
@@ -95,7 +112,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const handleSearch = async (values: any) => {
     setCurrentPage(1);
     setBackend(values.backend);
-    await getTables(form.getFieldsValue(), 1, page_size);
+    await fetchAvailableMetaTables(form.getFieldsValue(), 1, page_size);
   };
 
   // 导入
@@ -203,6 +220,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
             placeholder="请选择数据源"
             onChange={handleConnectionChange}
             disabled={loading}
+            allowClear
           >
             {databaseConnections.map((config) => (
               <Option key={config.id} value={config.id}>
@@ -216,7 +234,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
           label="数据库"
           rules={[{ required: true }]}
         >
-          <Select placeholder="请选择数据库" disabled={loading}>
+          <Select placeholder="请选择数据库" disabled={loading} allowClear>
             {databases.map((db) => (
               <Option key={db.id} value={db.id}>
                 {db.database_name}
@@ -230,6 +248,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
             value={backend}
             onChange={setBackend}
             disabled={loading}
+            allowClear
           >
             <Option key="python" value="python">
               Python

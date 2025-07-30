@@ -23,6 +23,7 @@ export interface TableResponse {
   id: number;
   connectionName: string;
   databaseName: string;
+  database_id?: string;
   tableId: number;
   tableName: string;
   entity: string;

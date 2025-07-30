@@ -8,7 +8,7 @@ import {
   Database,
   DatabaseConnection,
   GenTableExecute,
-  ListConnectionRequest,
+  ListConnectionsRequest, ListDatabasesRequest,
   SQLSchema,
   TableAdd,
   TableColumn,
@@ -16,6 +16,8 @@ import {
   TableInfo,
   TableMetadata,
 } from '@/types/db-manage';
+import { ListTablesRequest } from '@/types/table';
+import { TableResponse } from '@/types/code-gen';
 
 
 /**
@@ -24,12 +26,40 @@ import {
  * @param req Request object containing pagination, filter and sort parameters.
  * @returns Paginated list of connections and total count.
  */
-export function listConnections(req?: Partial<ListConnectionRequest>) {
+export function listConnections(req?: Partial<ListConnectionsRequest>) {
   return httpClient.get<PageResult<Connection>>('/connections', req);
 }
 
+/**
+ * List databases with pagination.
+ *
+ * @param req Request object containing pagination, filter and sort parameters.
+ * @returns Paginated list of databases and total count.
+ */
+export function listDatabases(req?: Partial<ListDatabasesRequest>) {
+  return httpClient.get<PageResult<Database>>('/databases', req);
+}
+
+/**
+ * List tables with pagination.
+ *
+ * @param req Request object containing pagination, filter and sort parameters.
+ * @returns Paginated list of tables and total count.
+ */
+export function listTables(req?: Partial<ListTablesRequest>) {
+  return httpClient.get<PageResult<TableResponse>>('/tables', req);
+}
 
 
+/**
+ * List available tables with pagination.
+ *
+ * @param req Request object containing pagination, filter and sort parameters.
+ * @returns Paginated list of available tables and total count.
+ */
+export function listAvailableTables(req?: Partial<ListTablesRequest>) {
+  return httpClient.get<PageResult<TableResponse>>('metaTables:available', req);
+}
 
 export const executeSQL = (genTableExecute: GenTableExecute) => {
   return httpClient.post<any>('/gen-table/execute', genTableExecute);
@@ -37,17 +67,6 @@ export const executeSQL = (genTableExecute: GenTableExecute) => {
 
 export const fetchDynamicColumns = (id: number) => {
   return httpClient.get(`/field/antd/${id}`);
-};
-export const fetchConnections = async (): Promise<DatabaseConnection[]> => {
-  const params = {
-    currentPage: 1,
-    size: 100,
-  };
-  return httpClient
-    .get<PageData<DatabaseConnection>>('/connection/connections', params)
-    .then((res) => {
-      return res.records;
-    });
 };
 
 export const fetchConnection = async (connectionId: number) => {
@@ -71,22 +90,7 @@ export const fetchDatabases = async (
     });
 };
 
-export const fetchTables = async (databaseId: number): Promise<TableInfo[]> => {
-  const params = {
-    currentPage: 1,
-    page_size: 1000,
-    database_id: databaseId,
-  };
-  return httpClient
-    .get<PageData<TableInfo>>('/table/tables', params)
-    .then((res) => {
-      return res.records;
-    });
-};
 
-export const listTables = async (params: Record<string, string>) => {
-  return httpClient.get<PageData<TableInfo>>('/table/tables', params);
-};
 
 export const fetchDynamicTableData = async (tableId: number) => {
   const params = {
