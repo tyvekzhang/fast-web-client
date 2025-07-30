@@ -21,6 +21,11 @@ export function listTables(req: Partial<ListTablesRequest>) {
   return httpClient.get<PageResult<TableResponse>>('/tables', req);
 }
 
+export const codePreview = (id: number) => {
+  return httpClient.get<CodePreviewResponse>(`/tables:preview/${id}`);
+};
+
+
 
 
 
@@ -35,9 +40,6 @@ export const getTableDetail = (tableId: number) => {
   return httpClient.get<GenTableDetail>(`/gen-table/detail/${tableId}`);
 };
 
-export const codePreview = (tableId: number) => {
-  return httpClient.get<CodePreviewResponse>(`/gen-table/preview/${tableId}`);
-};
 
 
 
