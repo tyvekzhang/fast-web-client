@@ -47,11 +47,11 @@ const actionConfig = {
   showCreate: false,
   showImport: true,
   showExport: false,
-  showModify: false,
+  showModify: true,
   showRemove: true,
   showEye: false,
   showConfig: false,
-  showGenerate: true
+  modifyText: "生成"
 };
 
 export default function CodeGen() {
@@ -247,23 +247,14 @@ export default function CodeGen() {
   };
 
   const handleBatchCodeGenerate = async () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning('请先选择要生成代码的表');
-      return;
-    }
-
-    const MAX_BATCH_SIZE = 20;
-    if (selectedRowKeys.length > MAX_BATCH_SIZE) {
-      message.warning(`一次最多只能生成 ${MAX_BATCH_SIZE} 个表`);
-      return;
-    }
 
     setLoading((prev) => ({ ...prev, batchGenerate: true }));
     try {
       await downloadCode(selectedRowKeys, `tables_${dayjs().format('YYYYMMDD')}.zip`);
-      message.success(`成功生成 ${selectedRowKeys.length} 个表的代码`);
+      message.success(`生成成功`);
+      setSelectedRowKeys([])
     } catch (error) {
-      message.error('批量生成失败');
+      message.error('生成失败');
     } finally {
       setLoading((prev) => ({ ...prev, batchGenerate: false }));
     }
@@ -357,16 +348,13 @@ export default function CodeGen() {
           onCreate={() => {}}
           onImport={() => setImportOpen(true)}
           onExport={() => {}}
-          onBatchModify={() => {}}
-          onBatchGenerate={handleBatchCodeGenerate}
+          onBatchModify={handleBatchCodeGenerate}
           onConfirmBatchRemove={handleBatchDelete}
           onConfirmBatchRemoveCancel={() => {}}
           isQueryShow={true}
           onQueryShow={() => {}}
           isExportDisabled={true}
-          isBatchModifyDisabled={true}
-          isBatchGenerateDisabled={selectedRowKeys.length === 0}
-          isBatchGenerateLoading={loading.batchGenerate}
+          isBatchModifyDisabled={selectedRowKeys.length === 0}
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={loading.batchDelete}
           isExportLoading={false}

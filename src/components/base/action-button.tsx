@@ -25,7 +25,7 @@ interface ActionButtonsConfig {
   modifyText?: string;
   showRemove?: boolean;
   removeText?: string;
-  showEye?: boolean;
+  showEye?: boolean ;
   showConfig?: boolean;
 }
 
@@ -72,15 +72,17 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
 }) => {
   const defaultConfig = {
     showCreate: true,
-    createText: '新增', // 默认值
+    createText: '新增',
     showImport: false,
-    importText: '导入', // 默认值
+    importText: '导入',
     showExport: false,
-    exportText: '导出', // 默认值
+    exportText: '导出',
     showModify: false,
-    modifyText: '编辑', // 默认值
+    modifyText: '编辑', 
     showRemove: true,
-    removeText: '删除', // 默认值
+    removeText: '删除', 
+    showEye: true,
+    showConfig: true,
   };
   const config = { ...defaultConfig, ...actionConfig };
 
