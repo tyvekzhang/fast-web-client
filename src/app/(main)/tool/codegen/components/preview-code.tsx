@@ -10,7 +10,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 interface CodePreviewProps {
   open: boolean;
   onClose: () => void;
-  tableId: number;
+  tableId: string;
 }
 
 interface TabItem {

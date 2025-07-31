@@ -21,14 +21,14 @@ export interface CodePreviewResponse {
 
 export interface TableResponse {
   id: string;
-  connectionName: string;
-  databaseName: string;
+  connection_name: string;
+  database_name: string;
   database_id?: string;
-  tableId: string;
-  tableName: string;
+  table_id: string;
+  table_name: string;
   entity: string;
-  tableComment?: string;
-  createTime: number;
+  table_comment?: string;
+  create_time: number;
 }
 
 export interface TableDataResponse {
@@ -91,6 +91,6 @@ export interface GenField {
 }
 
 export interface GenTableDetail {
-  gen_table: GenTable;
-  gen_field: GenField[];
+  table: GenTable;
+  fields: GenField[];
 }

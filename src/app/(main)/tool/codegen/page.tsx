@@ -35,6 +35,7 @@ interface LoadingState {
   sync: boolean;
   generate: boolean;
   batchDelete: boolean;
+  batchGenerate: boolean;
 }
 
 const formItemLayout = {
@@ -49,7 +50,8 @@ const actionConfig = {
   showModify: false,
   showRemove: true,
   showEye: false,
-  showConfig: false
+  showConfig: false,
+  showGenerate: true
 };
 
 export default function CodeGen() {
@@ -58,8 +60,8 @@ export default function CodeGen() {
   const [editOpen, setEditOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
-  const [currentTableId, setCurrentTableId] = useState<number>(0);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [currentTableId, setCurrentTableId] = useState<string>("0");
   const [tableData, setTableData] = useState<TableResponse[]>([]);
   const [loading, setLoading] = useState<LoadingState>({
     table: false,
@@ -67,6 +69,7 @@ export default function CodeGen() {
     sync: false,
     generate: false,
     batchDelete: false,
+    batchGenerate: false,
   });
   const [pagination, setPagination] = useState({ current: 1, page_size: 10 });
 
@@ -243,6 +246,29 @@ export default function CodeGen() {
     }
   };
 
+  const handleBatchCodeGenerate = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning('请先选择要生成代码的表');
+      return;
+    }
+
+    const MAX_BATCH_SIZE = 20;
+    if (selectedRowKeys.length > MAX_BATCH_SIZE) {
+      message.warning(`一次最多只能生成 ${MAX_BATCH_SIZE} 个表`);
+      return;
+    }
+
+    setLoading((prev) => ({ ...prev, batchGenerate: true }));
+    try {
+      await downloadCode(selectedRowKeys, `tables_${dayjs().format('YYYYMMDD')}.zip`);
+      message.success(`成功生成 ${selectedRowKeys.length} 个表的代码`);
+    } catch (error) {
+      message.error('批量生成失败');
+    } finally {
+      setLoading((prev) => ({ ...prev, batchGenerate: false }));
+    }
+  };
+
   const handleSync = async (record: TableResponse) => {
     setLoading((prev) => ({ ...prev, sync: true }));
     try {
@@ -260,7 +286,7 @@ export default function CodeGen() {
     setLoading((prev) => ({ ...prev, generate: true }));
     try {
       setCurrentTableId(record.id);
-      await downloadCode(record.id);
+      await downloadCode(record.id, `${record.table_name}_code.zip`);
       message.success('生成成功');
     } catch (error) {
       message.error('生成失败');
@@ -332,12 +358,15 @@ export default function CodeGen() {
           onImport={() => setImportOpen(true)}
           onExport={() => {}}
           onBatchModify={() => {}}
+          onBatchGenerate={handleBatchCodeGenerate}
           onConfirmBatchRemove={handleBatchDelete}
           onConfirmBatchRemoveCancel={() => {}}
           isQueryShow={true}
           onQueryShow={() => {}}
           isExportDisabled={true}
           isBatchModifyDisabled={true}
+          isBatchGenerateDisabled={selectedRowKeys.length === 0}
+          isBatchGenerateLoading={loading.batchGenerate}
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={loading.batchDelete}
           isExportLoading={false}
@@ -356,7 +385,7 @@ export default function CodeGen() {
           rowSelection={{
             selectedRowKeys,
             onChange: (newSelectedRowKeys) => {
-              setSelectedRowKeys(newSelectedRowKeys as number[]);
+              setSelectedRowKeys(newSelectedRowKeys as string[]);
             },
           }}
           pagination={{

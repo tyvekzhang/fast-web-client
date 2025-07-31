@@ -20,7 +20,7 @@ const { Option } = Select;
 interface CodeEditProps {
   open: boolean;
   onClose: () => void;
-  tableId: number;
+  tableId: string;
 }
 
 const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
@@ -38,9 +38,9 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
   useEffect(() => {
     const fetchTableDetail = async () => {
       const res = await getTableDetail(tableId);
-      const { gen_table, gen_field } = res;
-      setTableInfo(gen_table);
-      setFieldInfo(gen_field);
+      const { table, fields } = res;
+      setTableInfo(table);
+      setFieldInfo(fields);
     };
 
     if (open && tableId) {
@@ -306,8 +306,8 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
     });
     const gen_table = { ...tableForm.getFieldsValue() };
     const genTableDetail = {
-      gen_table: gen_table,
-      gen_field: updatedFieldInfo,
+      table: gen_table,
+      fields: updatedFieldInfo,
     };
     setIsCodeModifyLoading(true);
     try {
@@ -352,7 +352,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
               <Input value={tableInfo?.function_author} />
             </Form.Item>
           </div>
-          <div className={'border-b mb-4'} />
+          <div className={'border-b border-gray-200 mb-4'} />
           <div className={'grid grid-cols-2 gap-4'}>
             <Form.Item label="生成模板" name="tpl_category">
               <Select value={tableInfo?.tpl_category}>

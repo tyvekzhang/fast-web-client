@@ -21,25 +21,22 @@ export function listTables(req: Partial<ListTablesRequest>) {
   return httpClient.get<PageResult<TableResponse>>('/tables', req);
 }
 
-export const codePreview = (id: number) => {
+
+export const codePreview = (id: string) => {
   return httpClient.get<CodePreviewResponse>(`/tables:preview/${id}`);
 };
 
 
 
-
-
+export const getTableDetail = (tableId: string) => {
+  return httpClient.get<GenTableDetail>(`/tables/${tableId}`);
+};
 
 
 
 export const codeModify = (genTableDetail: GenTableDetail) => {
-  return httpClient.put<void>(`/gen-table/modify`, genTableDetail);
+  return httpClient.put<void>(`/tables`, genTableDetail);
 };
-
-export const getTableDetail = (tableId: number) => {
-  return httpClient.get<GenTableDetail>(`/gen-table/detail/${tableId}`);
-};
-
 
 
 
@@ -57,26 +54,42 @@ export const importTables = (
 };
 
 export const downloadCode = async (
-  tableId: number,
-  fileName: string = 'code.zip',
+  tableIds: string | string[], // Accept single ID or array of IDs
+  fileName?: string, // Make optional
 ) => {
+  // Handle both single ID and array cases
+  const ids = Array.isArray(tableIds) ? tableIds : [tableIds];
+
+  // Build URL with multiple IDs if needed
+  const url = ids.length === 1
+    ? `/tables:download?table_id=${ids[0]}`
+    : `/tables:download?table_id=${ids.join('&table_id=')}`;
+
   const response = await httpClient.get<AxiosResponse>(
-    `/gen-table/download/${tableId}`,
+    url,
     {},
     {
       responseType: 'blob',
     },
   );
+
   if (typeof window !== 'undefined') {
-    downloadBlob(response, fileName);
+    // Generate filename if not provided
+    const finalFileName = fileName || (
+      ids.length === 1
+        ? `table_${ids[0]}_code.zip`
+        : `tables_bundle_${new Date().toISOString().slice(0, 10)}.zip`
+    );
+
+    downloadBlob(response, finalFileName);
   }
 };
 
-export const syncTable = (tableId: number) => {
-  return httpClient.post(`/gen-table/sync/${tableId}`);
+export const syncTable = (tableId: string) => {
+  return httpClient.post(`/tables:sync/${tableId}`);
 };
 
-export const deleteTable = (tableId: number) => {
-  return httpClient.delete(`/gen-table/remove/${tableId}`);
+export const deleteTable = (tableId: string) => {
+  return httpClient.delete(`/tables/${tableId}`);
 };
 
