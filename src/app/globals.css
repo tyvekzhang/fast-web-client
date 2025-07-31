@@ -32,7 +32,7 @@
 
   /* 按钮基础样式 */
   .btn {
-    @apply border-0 cursor-pointer transition-colors duration-200;
+    @apply border-0 cursor-pointer transition-colors duration-300;
     @apply disabled:cursor-not-allowed;
   }
 
@@ -45,8 +45,8 @@
 
   /* 导出按钮 - 灰色系 */
   .btn-export {
-    @apply bg-gray-100 text-gray-500;
-    @apply hover:bg-gray-500 hover:text-white hover:opacity-70;
+    @apply bg-gray-200 text-gray-500;
+    @apply hover:bg-gray-500 hover:text-white hover:opacity-70 ;
     @apply disabled:bg-gray-100 disabled:text-gray-500;
   }
 

@@ -12,6 +12,7 @@ import {
   Space,
   Table,
   Tooltip,
+  Select,
 } from 'antd';
 import { Code2, Edit2, Eye, RefreshCw, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -28,15 +29,10 @@ import {
 import { TableResponse } from '@/types/code-gen';
 import dayjs from 'dayjs';
 import { ListTablesRequest } from '@/types/table';
+import { listConnections, listDatabases } from '@/service/db-manage';
+import { Database, DatabaseConnection } from '@/types/db-manage';
 
-interface LoadingState {
-  table: boolean;
-  delete: boolean;
-  sync: boolean;
-  generate: boolean;
-  batchDelete: boolean;
-  batchGenerate: boolean;
-}
+const { Option } = Select;
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -46,17 +42,16 @@ const formItemLayout = {
 const actionConfig = {
   showCreate: false,
   showImport: true,
-  showExport: false,
-  showModify: true,
+  showExport: true,
+  showModify: false,
   showRemove: true,
   showEye: false,
   showConfig: false,
-  modifyText: "生成"
+  exportText: "生成"
 };
 
 export default function CodeGen() {
   const [form] = Form.useForm();
-  const formRef = useRef<FormInstance>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -72,6 +67,29 @@ export default function CodeGen() {
     batchGenerate: false,
   });
   const [pagination, setPagination] = useState({ current: 1, page_size: 10 });
+  const [databaseConnections, setDatabaseConnections] = useState<DatabaseConnection[]>([]);
+  const [databases, setDatabases] = useState<Database[]>([]);
+
+  // 获取数据库连接配置
+  useEffect(() => {
+    listConnections().then(res => {
+      setDatabaseConnections(res.records)
+    });
+  }, []);
+
+  // 获取数据库列表
+  const handleConnectionChange = async (connectionId: number) => {
+    try {
+      if (connectionId === null || connectionId === undefined) {
+        return
+      }
+      setLoading(prev => ({ ...prev, table: true }));
+      const response = await listDatabases({ "connection_id": connectionId, "current": 1, "page_size": 100 });
+      setDatabases(response.records);
+    } finally {
+      setLoading(prev => ({ ...prev, table: false }));
+    }
+  };
 
   const columns: TableProps<TableResponse>['columns'] = useMemo(
     () => [
@@ -151,7 +169,6 @@ export default function CodeGen() {
                   size="small"
                   type="link"
                   icon={<Trash2 size={14} />}
-                  loading={loading.delete}
                 />
               </Popconfirm>
             </Tooltip>
@@ -160,7 +177,6 @@ export default function CodeGen() {
                 size="small"
                 type="link"
                 icon={<RefreshCw size={14} />}
-                loading={loading.sync}
                 onClick={() => handleSync(record)}
               />
             </Tooltip>
@@ -168,7 +184,6 @@ export default function CodeGen() {
               <Button
                 size="small"
                 type="link"
-                loading={loading.generate}
                 onClick={() => handleCodeGenerate(record)}
                 icon={<Code2 size={14} />}
               />
@@ -211,6 +226,7 @@ export default function CodeGen() {
   const handleReset = async () => {
     form.resetFields();
     setPagination({ current: 1, page_size: 10 });
+    setDatabases([]);
     await fetchCodeList();
   };
 
@@ -247,7 +263,6 @@ export default function CodeGen() {
   };
 
   const handleBatchCodeGenerate = async () => {
-
     setLoading((prev) => ({ ...prev, batchGenerate: true }));
     try {
       await downloadCode(selectedRowKeys, `tables_${dayjs().format('YYYYMMDD')}.zip`);
@@ -313,48 +328,94 @@ export default function CodeGen() {
 
   return (
     <>
-      <Card bordered={false}>
+      <Card variant="borderless">
         <Form
           form={form}
           onFinish={handleSearch}
-          ref={formRef}
         >
-          <div className='grid grid-cols-2 px-2'>
-            <div className='flex gap-4'>
-              <Form.Item name="table_name" label="表名">
-                <Input placeholder="请输入表名" />
+          <div className="flex px-2 justify-between">
+            <div className="flex flex-wrap gap-6 items-center">
+              <Form.Item
+                name="connection_id"
+                label="数据源"
+                 rules={[{ required: true, message: '请选择数据源!' }]}
+              >
+                <Select
+                  placeholder="请选择数据源"
+                  onChange={handleConnectionChange}
+                  allowClear
+                  className="min-w-50"
+                >
+                  {databaseConnections.map((config) => (
+                    <Option key={config.id} value={config.id}>
+                      {config.connection_name}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
-              <Form.Item name="comment" label="表描述">
-                <Input placeholder="请输入表描述" />
+
+              <Form.Item
+                name="database_id"
+                label="数据库"
+              >
+                <Select
+                  placeholder="请选择数据库"
+                  allowClear
+                  className="min-w-50"
+                >
+                  {databases.map((db) => (
+                    <Option key={db.id} value={db.id}>
+                      {db.database_name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                name="table_name"
+                label="表名"
+              >
+                <Input
+                  placeholder="请输入表名"
+                  className="min-w-50"
+
+                />
               </Form.Item>
             </div>
-            <div className='flex justify-end'>
-               <Form.Item wrapperCol={{ span: 24 }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: 6 }}
-                loading={loading.table}
-              >
-                搜索
-              </Button>
-              <Button onClick={handleReset}>重置</Button>
-            </Form.Item>
+
+            <div className="flex justify-start md:justify-end items-center">
+              <Form.Item wrapperCol={{ span: 24 }}>
+                <div className="flex gap-2">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="px-6"
+                  >
+                    搜索
+                  </Button>
+                  <Button
+                    onClick={handleReset}
+                    className="px-6"
+                  >
+                    重置
+                  </Button>
+                </div>
+              </Form.Item>
             </div>
           </div>
         </Form>
 
         <ActionButtonComponent
-          onCreate={() => {}}
+          onCreate={() => { }}
           onImport={() => setImportOpen(true)}
-          onExport={() => {}}
-          onBatchModify={handleBatchCodeGenerate}
+          onExport={handleBatchCodeGenerate}
+          onBatchModify={() => { }}
           onConfirmBatchRemove={handleBatchDelete}
-          onConfirmBatchRemoveCancel={() => {}}
+          onConfirmBatchRemoveCancel={() => { }}
           isQueryShow={true}
-          onQueryShow={() => {}}
-          isExportDisabled={true}
-          isBatchModifyDisabled={selectedRowKeys.length === 0}
+          onQueryShow={() => { }}
+          isExportDisabled={selectedRowKeys.length === 0}
+          isBatchModifyDisabled={true}
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={loading.batchDelete}
           isExportLoading={false}
@@ -408,4 +469,13 @@ export default function CodeGen() {
       <ImportTable open={importOpen} onClose={() => setImportOpen(false)} />
     </>
   );
+}
+
+interface LoadingState {
+  table: boolean;
+  delete: boolean;
+  sync: boolean;
+  generate: boolean;
+  batchDelete: boolean;
+  batchGenerate: boolean;
 }

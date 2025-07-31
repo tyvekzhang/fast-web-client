@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev --port 7000 --turbopack",
+    "dev": "open-cli http://localhost:7000 && next dev --port 7000 --turbopack",
     "format": "prettier --write .",
     "lint": "next lint",
     "start": "next start"
@@ -51,6 +51,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "open-cli": "^8.0.0",
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-packagejson": "^2.5.15",

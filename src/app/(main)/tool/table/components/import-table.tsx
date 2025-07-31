@@ -146,7 +146,7 @@ const ImportTableComponent: React.FC<ImportTableProps> = ({
             columns={ TableColumns}
             dataSource={ CreateTableList}
             pagination={false}
-            bordered={false}
+            variant="borderless"
             rowKey={'id'}
           />
         </div>
