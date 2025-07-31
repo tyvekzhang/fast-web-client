@@ -1,6 +1,5 @@
 'use client';
 import { message } from '@/components/global-toast';
-import UndoComp from '@/components/undo';
 import { fetchRoleByPage } from '@/service/role';
 import {
   userAdd,
@@ -47,6 +46,7 @@ import Import from './components/Import';
 import Modify from './components/Modify';
 import Search from './components/Search';
 import useStyles from './style';
+import UndoComp from 'src/components/undo';
 const CheckCircleOutlined = CheckCircle2;
 const DeleteOutlined = Trash2;
 const EditOutlined = PenLine;

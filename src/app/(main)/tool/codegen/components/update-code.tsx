@@ -352,7 +352,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
               <Input value={tableInfo?.function_author} />
             </Form.Item>
           </div>
-          <div className={'border-b mb-4'} />
+          <div className={'border-b border-gray-200 mb-4'} />
           <div className={'grid grid-cols-2 gap-4'}>
             <Form.Item label="生成模板" name="tpl_category">
               <Select value={tableInfo?.tpl_category}>
