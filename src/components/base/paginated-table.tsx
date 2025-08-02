@@ -10,6 +10,7 @@ interface PaginatedTableProps<T> extends Omit<TableProps<T>, 'pagination'> {
   onSelectionChange?: (selectedRowKeys: React.Key[], selectedRows: T[]) => void;
   rowSelectionType?: 'checkbox' | 'radio';
   selectedRowKeys?: React.Key[];
+  loading: boolean;
 }
 
 export function PaginatedTable<T extends object>({
@@ -21,6 +22,7 @@ export function PaginatedTable<T extends object>({
   rowSelectionType = 'checkbox',
   rowSelection: propRowSelection,
   selectedRowKeys,
+  loading,
   ...tableProps
 }: PaginatedTableProps<T>) {
   const rowSelection: TableProps<T>['rowSelection'] = {
@@ -47,14 +49,15 @@ export function PaginatedTable<T extends object>({
         rowKey={tableProps.rowKey || 'id'}
         rowSelection={rowSelection}
         className={`${tableProps.className || ''}`}
+        loading={loading}
       />
       <div className="mt-4">
         <Pagination
           current={current}
-          page_size={page_size}
+          pageSize={page_size}
           total={total}
           showTotal={(total) => `共${total}条`}
-          page_sizeOptions={[5, 10, 20, 50, 100]}
+          pageSizeOptions={[5, 10, 20, 50, 100]}
           showSizeChanger
           showQuickJumper
           onChange={handlePaginationChange}

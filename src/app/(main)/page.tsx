@@ -1,5 +1,6 @@
 'use client';
 
+import { useGlobalToast } from '@/components/assist/global-toast';
 import {
   BellOutlined,
   CheckCircleOutlined,
@@ -9,15 +10,23 @@ import {
   ThunderboltOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Card, List, message, Statistic } from 'antd';
+import { Badge, Button, Card, List, Statistic } from 'antd';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+const { message, notification } = useGlobalToast();
 
 const Home = () => {
   const { t } = useTranslation('common');
 
   const showToast = () => {
     message.success('操作成功');
+  };
+
+  const showNotifaction = () => {
+    notification.error({
+      message: '出错了',
+      description: '网络请求失败，请重试。',
+    });
   };
 
   useEffect(() => {
@@ -55,7 +64,9 @@ const Home = () => {
           <Button type="primary" icon={<PlusOutlined />} onClick={showToast}>
             创建项目
           </Button>
-          <Button icon={<UploadOutlined />}>导入数据</Button>
+          <Button icon={<UploadOutlined />} onClick={showNotifaction}>
+            导入数据
+          </Button>
           <Button danger icon={<DeleteOutlined />}>
             清空缓存
           </Button>

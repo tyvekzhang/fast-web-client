@@ -25,7 +25,7 @@ interface ActionButtonsConfig {
   modifyText?: string;
   showRemove?: boolean;
   removeText?: string;
-  showEye?: boolean ;
+  showEye?: boolean;
   showConfig?: boolean;
 }
 
@@ -78,9 +78,9 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
     showExport: false,
     exportText: '导出',
     showModify: false,
-    modifyText: '编辑', 
+    modifyText: '编辑',
     showRemove: true,
-    removeText: '删除', 
+    removeText: '删除',
     showEye: true,
     showConfig: true,
   };
@@ -127,7 +127,7 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
         {config.showRemove && (
           <Popconfirm
             title="删除所选的内容"
-            description="你确定删除吗? 删除后将无法找回"
+            description="确定删除吗? 删除后将无法找回"
             onConfirm={onConfirmBatchRemove}
             onCancel={onConfirmBatchRemoveCancel}
             okText="是"
@@ -181,7 +181,6 @@ const ActionButtonComponent: React.FC<ActionButtonsProps> = ({
             </Tooltip>
           </Popover>
         )}
-
       </Space>
     </div>
   );

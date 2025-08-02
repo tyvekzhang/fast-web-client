@@ -1,4 +1,4 @@
-import IconPicker from '@/components/base/icon-picker';
+import IconPicker from '@/components/assist/icon-picker';
 import { UpdateMenu } from '@/types/menu';
 import { TreeSelectUtil } from '@/utils/select-util';
 import { Button, Form, Input, Modal, Radio, Select, TreeSelect } from 'antd';
@@ -30,7 +30,7 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
   const optionDataTransform = [
     { name: '根目录', id: 0, children: optionDataSource },
   ];
-  const menuTreeData = TreeSelectUtil.transform(optionDataTransform);
+  const menuTreeData = TreeSelectUtil.convert(optionDataTransform);
 
   const footerButtons = useMemo(
     () => [
@@ -41,13 +41,15 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
         key="submit"
         type="primary"
         loading={isUpdateMenuLoading}
-        onClick={() => updateMenuForm.submit()} // 调整为表单提交方式
+        onClick={() => updateMenuForm.submit()}
       >
         确定
       </Button>,
     ],
-    [isUpdateMenuLoading, updateMenuForm, onUpdateMenuCancel], // 依赖项添加表单实例
+    [isUpdateMenuLoading, updateMenuForm, onUpdateMenuCancel],
   );
+
+  console.log('updateMenuForm', updateMenuForm.getFieldsValue());
 
   // 处理图标选择
   const handleIconChange = async (iconName: string) => {
@@ -61,16 +63,15 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
       onCancel={onUpdateMenuCancel}
       footer={footerButtons}
       destroyOnHidden
-      width={'60%'} // 调整宽度与创建菜单一致
+      width={'60%'}
     >
       <Form
         {...updateMenuFormItemLayout}
         form={updateMenuForm}
         name="updateMenu"
         onFinish={onUpdateMenuFinish}
-        layout="horizontal" // 调整布局为水平
+        layout="horizontal"
       >
-        {/* 上级菜单 - 改为树形选择 */}
         <Form.Item label="上级菜单" name="parent_id">
           <TreeSelect
             placeholder="请选择上级菜单"
@@ -79,21 +80,18 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           ></TreeSelect>
         </Form.Item>
 
-        {/* 菜单类型 - 改为单选按钮组 */}
         <Form.Item label="菜单类型" name="type">
           <Radio.Group>
-            <Radio value="1">目录</Radio>
-            <Radio value="2">菜单</Radio>
-            <Radio value="3">按钮</Radio>
+            <Radio value={1}>目录</Radio>
+            <Radio value={2}>菜单</Radio>
+            <Radio value={3}>按钮</Radio>
           </Radio.Group>
         </Form.Item>
 
-        {/* 菜单图标 - 改为图标选择器 */}
         <Form.Item label="菜单图标" name="icon">
           <IconPicker onChange={handleIconChange} />
         </Form.Item>
 
-        {/* 名称 - 增加必填验证 */}
         <Form.Item
           name="name"
           label="名称"
@@ -103,7 +101,6 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
 
-        {/* 排序 - 增加必填验证 */}
         <Form.Item
           name="sort"
           label="排序"
@@ -113,15 +110,13 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
 
-        {/* 增加是否外链选项 */}
-        <Form.Item label="是否外链" name="isExternal">
+        <Form.Item label="是否外链" name="is_external">
           <Radio.Group>
             <Radio value={1}>是</Radio>
             <Radio value={0}>否</Radio>
           </Radio.Group>
         </Form.Item>
 
-        {/* 路由地址 - 增加必填验证 */}
         <Form.Item
           name="path"
           label="路由地址"
@@ -131,7 +126,6 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
 
-        {/* 组件路径 */}
         <Form.Item
           name="component"
           label="组件路径"
@@ -140,7 +134,6 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
 
-        {/* 是否显示 - 改为单选按钮组 */}
         <Form.Item label="是否显示" name="visible">
           <Radio.Group>
             <Radio value={1}>显示</Radio>
@@ -148,7 +141,6 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           </Radio.Group>
         </Form.Item>
 
-        {/* 权限标识 */}
         <Form.Item
           name="permission"
           label="权限标识"
@@ -157,7 +149,6 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
 
-        {/* 是否缓存 - 改为单选按钮组 */}
         <Form.Item label="是否缓存" name="cacheable">
           <Radio.Group>
             <Radio value={1}>是</Radio>
@@ -165,7 +156,6 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           </Radio.Group>
         </Form.Item>
 
-        {/* 状态 - 保持下拉选择（与创建菜单一致） */}
         <Form.Item
           name="status"
           label="状态"
@@ -189,7 +179,6 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           />
         </Form.Item>
 
-        {/* 备注信息 */}
         <Form.Item
           name="comment"
           label="备注信息"

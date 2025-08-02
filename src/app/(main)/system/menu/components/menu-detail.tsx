@@ -5,13 +5,15 @@ import React from 'react';
 interface MenuDetailDrawerProps {
   isMenuDetailDrawerVisible: boolean;
   onMenuDetailClose: () => void;
-  menuDetail: MenuDetail | null;
+  menuDetail: MenuDetail | undefined;
+  loading: boolean;
 }
 
 const MenuDetailComponent: React.FC<MenuDetailDrawerProps> = ({
   isMenuDetailDrawerVisible,
   onMenuDetailClose,
   menuDetail,
+  loading,
 }) => {
   return (
     <Drawer
@@ -20,6 +22,7 @@ const MenuDetailComponent: React.FC<MenuDetailDrawerProps> = ({
       onClose={onMenuDetailClose}
       destroyOnHidden
       width={600}
+      loading={loading}
     >
       {menuDetail && (
         <Descriptions column={1} bordered>

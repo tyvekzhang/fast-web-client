@@ -1,15 +1,16 @@
+import NProgress from '@/components/assist/n-progress';
 import { APP_CONFIG, CONSTANTS } from '@/config';
-import { API_RESPONSE_FORMAT, HTTP_CONFIG } from '@/config/api';
+import { HTTP_CONFIG } from '@/config/api';
 import { isDebugEnabled } from '@/config/env';
-import NProgress from '@/lib/http/n-progress';
 import { UserCredential } from '@/types/auth';
+import { message } from 'antd';
 import axios, {
   type AxiosInstance,
   AxiosRequestConfig,
   type AxiosResponse,
 } from 'axios';
 import qs from 'qs';
-import type { ApiResponse, HttpError, StandardResponse } from './types';
+import type { ApiError, ApiResponse, HttpError } from './types';
 
 class HttpClient {
   private readonly instance: AxiosInstance;
@@ -33,6 +34,9 @@ class HttpClient {
   private isOriginalResponse(data: ApiResponse): boolean {
     if (data === null || data === undefined) {
       return true;
+    }
+    if (CONSTANTS.MAGIC_VALUE.ERROR in data) {
+      return false;
     }
     return (
       CONSTANTS.MAGIC_VALUE.ACCESS_TOKEN in data ||
@@ -75,24 +79,16 @@ class HttpClient {
       (response) => {
         NProgress.done();
         const { data } = response;
-
         if (this.isFileAttachment(response)) {
           return response;
         } else if (this.isOriginalResponse(data)) {
           return data;
         }
 
-        const standardResponse = data as StandardResponse;
-        const code = standardResponse.code;
-        const resData = standardResponse.data;
-        if (code === API_RESPONSE_FORMAT.SUCCESS_CODE) {
-          if (resData) {
-            return resData;
-          }
-          return standardResponse.msg;
-        }
+        const errResp = data as ApiError;
+        const errorData = errResp.error;
 
-        switch (code) {
+        switch (errorData.code) {
           case HTTP_CONFIG.STATUS_CODES.UNAUTHORIZED:
             // Unauthorized, clear token and redirect to login page
             this.handleUnauthorized();
@@ -100,24 +96,23 @@ class HttpClient {
           case HTTP_CONFIG.STATUS_CODES.TOKEN_EXPIRED:
           // Refresh token
           default:
-            const defaultError = new Error(
-              data?.msg || `Request failed (${code})`,
-            ) as HttpError;
-            defaultError.code = code;
-            return Promise.reject(defaultError);
+            const errorMsg =
+              errorData?.message || `Request failed (${errorData.code})`;
+            message.error(errorMsg);
+            return Promise.reject(new Error(errorMsg));
         }
 
         return response;
       },
       (error) => {
         console.error('❌ Response Error:', error);
-
         // Handle network errors
-        if (!error.response) {
-          const networkError = new Error(
-            'Network connection failed, please check your network settings',
-          ) as HttpError;
-          networkError.code = 0;
+        if (!error.response || error.response.status === 500) {
+          NProgress.done();
+          const networkErrorMsg =
+            'Network connection failed, please check your network settings';
+          message.error(networkErrorMsg);
+          const networkError = new Error(networkErrorMsg) as HttpError;
           return Promise.reject(networkError);
         }
 
@@ -264,3 +259,6 @@ class HttpClient {
 const httpClient = new HttpClient();
 
 export default httpClient;
+
+export const fetcher = (url: string, params?: any) =>
+  httpClient.get(url, params).then((res) => res);

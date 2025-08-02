@@ -1,4 +1,4 @@
-import httpClient from '@/lib/http';
+import httpClient, { fetcher } from '@/lib/http';
 import { downloadBlob } from '@/service/util';
 import { PageResult } from '@/types';
 import {
@@ -16,25 +16,50 @@ import {
   UpdateMenuRequest,
 } from '@/types/menu';
 import { AxiosResponse } from 'axios';
+import useSWR from 'swr';
 
 /**
- * Retrieve menu details.
+ * Retrieve menu details with SWR.
  *
- * @param Unique ID of the menu resource.
- * @returns The menu object containing all its details.
+ * @param id Unique ID of the menu resource.
+ * @returns SWR response containing the menu object and loading/error states.
  */
-export function getMenu(id: string) {
-  return httpClient.get<MenuDetail>(`/menus/${id}`);
+export function useMenu(id: string) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<MenuDetail>(
+    id ? `/menus/${id}` : null,
+    fetcher,
+  );
+
+  return {
+    menu: data,
+    isLoading,
+    isError: error,
+    isValidating,
+    mutateMenu: mutate,
+  };
 }
+
 /**
- * List menus with pagination.
+ * List menus with pagination using SWR.
  *
  * @param req Request object containing pagination, filter and sort parameters.
- * @returns Paginated list of menus and total count.
+ * @returns SWR response containing paginated list of menus and loading/error states.
  */
-export function listMenus(req: Partial<ListMenusRequest>) {
-  return httpClient.get<PageResult<Menu>>('/menus', req);
+export function useMenus(req: Partial<ListMenusRequest>) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<
+    PageResult<Menu>
+  >(['/menus', req], ([url, params]) => fetcher(url, params));
+
+  return {
+    menus: data?.records,
+    total: data?.total,
+    isLoading,
+    isError: error,
+    isValidating,
+    mutateMenus: mutate,
+  };
 }
+
 /**
  * Create a new menu.
  *

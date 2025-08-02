@@ -31,11 +31,12 @@ export interface PaginationResponse<T> {
 
 // 错误类型定义
 export interface ApiError {
-  code: number;
-  message: string;
-  details?: any;
+  error: {
+    code: number;
+    message: string;
+    details?: unknown;
+  };
 }
-
 export class HttpError extends Error {
   public code: number;
   public details?: any;

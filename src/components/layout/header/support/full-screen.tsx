@@ -1,4 +1,4 @@
-import SvgIcon from '@/components/svg-icon';
+import SvgIcon from '@/components/assist/svg-icon';
 import { useFullscreen } from 'ahooks';
 import { Tooltip } from 'antd';
 

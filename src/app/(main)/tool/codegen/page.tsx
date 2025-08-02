@@ -5,32 +5,31 @@ import {
   Button,
   Card,
   Form,
-  FormInstance,
   Input,
   message,
   Popconfirm,
+  Select,
   Space,
   Table,
   Tooltip,
-  Select,
 } from 'antd';
 import { Code2, Edit2, Eye, RefreshCw, Trash2 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ImportTable from './components/import-table';
 import CodePreview from './components/preview-code';
 import CodeModify from './components/update-code';
 
 import {
-  listTables,
   deleteTable,
   downloadCode,
+  listTables,
   syncTable,
 } from '@/service/code-gen';
-import { TableResponse } from '@/types/code-gen';
-import dayjs from 'dayjs';
-import { ListTablesRequest } from '@/types/table';
 import { listConnections, listDatabases } from '@/service/db-manage';
+import { TableResponse } from '@/types/code-gen';
 import { Database, DatabaseConnection } from '@/types/db-manage';
+import { ListTablesRequest } from '@/types/table';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -47,7 +46,7 @@ const actionConfig = {
   showRemove: true,
   showEye: false,
   showConfig: false,
-  exportText: "生成"
+  exportText: '生成',
 };
 
 export default function CodeGen() {
@@ -56,7 +55,7 @@ export default function CodeGen() {
   const [importOpen, setImportOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [currentTableId, setCurrentTableId] = useState<string>("0");
+  const [currentTableId, setCurrentTableId] = useState<string>('0');
   const [tableData, setTableData] = useState<TableResponse[]>([]);
   const [loading, setLoading] = useState<LoadingState>({
     table: false,
@@ -67,13 +66,15 @@ export default function CodeGen() {
     batchGenerate: false,
   });
   const [pagination, setPagination] = useState({ current: 1, page_size: 10 });
-  const [databaseConnections, setDatabaseConnections] = useState<DatabaseConnection[]>([]);
+  const [databaseConnections, setDatabaseConnections] = useState<
+    DatabaseConnection[]
+  >([]);
   const [databases, setDatabases] = useState<Database[]>([]);
 
   // 获取数据库连接配置
   useEffect(() => {
-    listConnections().then(res => {
-      setDatabaseConnections(res.records)
+    listConnections().then((res) => {
+      setDatabaseConnections(res.records);
     });
   }, []);
 
@@ -81,13 +82,17 @@ export default function CodeGen() {
   const handleConnectionChange = async (connectionId: number) => {
     try {
       if (connectionId === null || connectionId === undefined) {
-        return
+        return;
       }
-      setLoading(prev => ({ ...prev, table: true }));
-      const response = await listDatabases({ "connection_id": connectionId, "current": 1, "page_size": 100 });
+      setLoading((prev) => ({ ...prev, table: true }));
+      const response = await listDatabases({
+        connection_id: connectionId,
+        current: 1,
+        page_size: 100,
+      });
       setDatabases(response.records);
     } finally {
-      setLoading(prev => ({ ...prev, table: false }));
+      setLoading((prev) => ({ ...prev, table: false }));
     }
   };
 
@@ -165,11 +170,7 @@ export default function CodeGen() {
                 title="确定要删除吗？"
                 onConfirm={() => handleDelete(record)}
               >
-                <Button
-                  size="small"
-                  type="link"
-                  icon={<Trash2 size={14} />}
-                />
+                <Button size="small" type="link" icon={<Trash2 size={14} />} />
               </Popconfirm>
             </Tooltip>
             <Tooltip title="同步">
@@ -265,9 +266,12 @@ export default function CodeGen() {
   const handleBatchCodeGenerate = async () => {
     setLoading((prev) => ({ ...prev, batchGenerate: true }));
     try {
-      await downloadCode(selectedRowKeys, `tables_${dayjs().format('YYYYMMDD')}.zip`);
+      await downloadCode(
+        selectedRowKeys,
+        `tables_${dayjs().format('YYYYMMDD')}.zip`,
+      );
       message.success(`生成成功`);
-      setSelectedRowKeys([])
+      setSelectedRowKeys([]);
     } catch (error) {
       message.error('生成失败');
     } finally {
@@ -329,16 +333,13 @@ export default function CodeGen() {
   return (
     <>
       <Card variant="borderless">
-        <Form
-          form={form}
-          onFinish={handleSearch}
-        >
+        <Form form={form} onFinish={handleSearch}>
           <div className="flex px-2 justify-between">
             <div className="flex flex-wrap gap-6 items-center">
               <Form.Item
                 name="connection_id"
                 label="数据源"
-                 rules={[{ required: true, message: '请选择数据源!' }]}
+                rules={[{ required: true, message: '请选择数据源!' }]}
               >
                 <Select
                   placeholder="请选择数据源"
@@ -354,10 +355,7 @@ export default function CodeGen() {
                 </Select>
               </Form.Item>
 
-              <Form.Item
-                name="database_id"
-                label="数据库"
-              >
+              <Form.Item name="database_id" label="数据库">
                 <Select
                   placeholder="请选择数据库"
                   allowClear
@@ -371,32 +369,18 @@ export default function CodeGen() {
                 </Select>
               </Form.Item>
 
-              <Form.Item
-                name="table_name"
-                label="表名"
-              >
-                <Input
-                  placeholder="请输入表名"
-                  className="min-w-50"
-
-                />
+              <Form.Item name="table_name" label="表名">
+                <Input placeholder="请输入表名" className="min-w-50" />
               </Form.Item>
             </div>
 
             <div className="flex justify-start md:justify-end items-center">
               <Form.Item wrapperCol={{ span: 24 }}>
                 <div className="flex gap-2">
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="px-6"
-                  >
+                  <Button type="primary" htmlType="submit" className="px-6">
                     搜索
                   </Button>
-                  <Button
-                    onClick={handleReset}
-                    className="px-6"
-                  >
+                  <Button onClick={handleReset} className="px-6">
                     重置
                   </Button>
                 </div>
@@ -406,14 +390,14 @@ export default function CodeGen() {
         </Form>
 
         <ActionButtonComponent
-          onCreate={() => { }}
+          onCreate={() => {}}
           onImport={() => setImportOpen(true)}
           onExport={handleBatchCodeGenerate}
-          onBatchModify={() => { }}
+          onBatchModify={() => {}}
           onConfirmBatchRemove={handleBatchDelete}
-          onConfirmBatchRemoveCancel={() => { }}
+          onConfirmBatchRemoveCancel={() => {}}
           isQueryShow={true}
-          onQueryShow={() => { }}
+          onQueryShow={() => {}}
           isExportDisabled={selectedRowKeys.length === 0}
           isBatchModifyDisabled={true}
           isBatchRemoveDisabled={selectedRowKeys.length === 0}

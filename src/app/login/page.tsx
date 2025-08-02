@@ -288,21 +288,21 @@ export default function LoginPage() {
               icon={<GitHubIcon />}
               shape="circle"
               size="large"
-              className="w-10 h-10 border-gray-600 text-gray-600 hover:bg-gray-50 hover:border-gray-900"
+              className="w-10 h-10 border-gray-600 text-gray-600 hover:bg-gray-100 hover:border-gray-900"
               onClick={() => handleThirdPartyLogin('GitHub')}
             />
             <Button
               icon={<WeChatIcon size={24} />}
               shape="circle"
               size="large"
-              className="w-10 h-10 border-gray-800 text-gray-800 hover:bg-gray-50 hover:border-gray-900"
+              className="w-10 h-10 border-gray-600 text-gray-600 hover:bg-gray-100 hover:border-gray-900"
               onClick={() => handleThirdPartyLogin('微信')}
             />
             <Button
               icon={<GoogleIcon size={24} />}
               shape="circle"
               size="large"
-              className="w-10 h-10 border-gray-800 text-gray-800 hover:bg-gray-50 hover:border-gray-900"
+              className="w-10 h-10 border-gray-600 text-gray-600 hover:bg-gray-100 hover:border-gray-900"
               onClick={() => handleThirdPartyLogin('Google')}
             />
           </Space>

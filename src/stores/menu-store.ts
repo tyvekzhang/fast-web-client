@@ -1,7 +1,7 @@
 import { getMenus } from '@/service/menu-service';
 import type { MenuItem, MenuRecord } from '@/types/menu';
 import { RouteObject } from '@/types/route';
-import { convertToMenuItems } from '@/utils/menu-util';
+import { convertToMenuItems } from '@/utils/navigation-util';
 import { create } from 'zustand';
 
 interface MenuState {

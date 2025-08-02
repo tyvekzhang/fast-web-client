@@ -4,6 +4,7 @@ export const CONSTANTS = {
   MAGIC_VALUE: {
     ACCESS_TOKEN: 'access_token',
     DATA: 'data',
+    ERROR: 'error',
   } as const,
 
   // User status

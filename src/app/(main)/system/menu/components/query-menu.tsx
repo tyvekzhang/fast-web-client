@@ -3,56 +3,50 @@ import { FormInstance } from 'antd/es/form';
 import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
-interface MenuQueryProps {
-  onMenuQueryFinish: (values: any) => void;
-  onMenuQueryReset: () => void;
-  menuQueryForm: FormInstance;
+interface QueryMenuProps {
+  onQueryMenuFinish: (values: any) => void;
+  onQueryMenuReset: () => void;
+  onQueryMenuForm: FormInstance;
 }
 
-const menuQueryFormItemLayout = {
+const queryMenuFormItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 18 },
 };
 
-const MenuQueryComponent: React.FC<MenuQueryProps> = ({
-  onMenuQueryFinish,
-  onMenuQueryReset,
-  menuQueryForm,
+const QueryMenuComponent: React.FC<QueryMenuProps> = ({
+  onQueryMenuFinish,
+  onQueryMenuReset,
+  onQueryMenuForm,
 }) => {
-  const handleMenuQueryReset = () => {
-    onMenuQueryReset();
-    menuQueryForm.resetFields();
+  const handleQueryMenuReset = () => {
+    onQueryMenuReset();
+    onQueryMenuForm.resetFields();
   };
 
-  const handleMenuQuerySubmit = async () => {
-    try {
-      const values = await menuQueryForm.validateFields();
+  const handleQueryMenuSubmit = async () => {
+    const values = await onQueryMenuForm.validateFields();
 
-      // 格式化 create_time
-      const { create_time } = values;
-      if (create_time?.length === 2) {
-        const [startDate, endDate] = create_time;
-        values.create_time = [
-          startDate.format('YYYY-MM-DD'),
-          endDate.format('YYYY-MM-DD'),
-        ];
-      }
-
-      onMenuQueryFinish(values);
-    } catch (error) {
-      // validateFields 失败时自动提示，无需额外处理
+    const { create_time } = values;
+    if (create_time?.length === 2) {
+      const [startDate, endDate] = create_time;
+      values.create_time = [
+        startDate.format('YYYY-MM-DD'),
+        endDate.format('YYYY-MM-DD'),
+      ];
     }
+
+    onQueryMenuFinish(values);
   };
 
   return (
-    <div className="flex justify-between">
-      <Form
-        {...menuQueryFormItemLayout}
-        form={menuQueryForm}
-        name="menuQuery"
-        layout="horizontal"
-        className="flex flex-wrap gap-y-0 gap-x-4 pt-4"
-      >
+    <Form
+      {...queryMenuFormItemLayout}
+      form={onQueryMenuForm}
+      name="queryMenu"
+      layout="horizontal"
+    >
+      <div className="flex justify-between flex-wrap pt-4">
         <Form.Item
           name="name"
           label="名称"
@@ -60,6 +54,7 @@ const MenuQueryComponent: React.FC<MenuQueryProps> = ({
         >
           <Input placeholder="请输入名称" />
         </Form.Item>
+
         <Form.Item
           name="create_time"
           label="创建时间"
@@ -67,26 +62,27 @@ const MenuQueryComponent: React.FC<MenuQueryProps> = ({
         >
           <DatePicker.RangePicker format="YYYY-MM-DD" />
         </Form.Item>
-      </Form>
-
-      <Space className="inline-flex">
-        <Button
-          onClick={handleMenuQueryReset}
-          className="bg-gray-50"
-          icon={<RotateCcw size={14} />}
-        >
-          重置
-        </Button>
-        <Button
-          type="primary"
-          icon={<Search size={14} />}
-          onClick={handleMenuQuerySubmit}
-        >
-          查询
-        </Button>
-      </Space>
-    </div>
+        <div className="ml-auto">
+          <Space>
+            <Button
+              onClick={handleQueryMenuReset}
+              className="bg-gray-50"
+              icon={<RotateCcw size={14} />}
+            >
+              重置
+            </Button>
+            <Button
+              type="primary"
+              icon={<Search size={14} />}
+              onClick={handleQueryMenuSubmit}
+            >
+              查询
+            </Button>
+          </Space>
+        </div>
+      </div>
+    </Form>
   );
 };
 
-export default MenuQueryComponent;
+export default QueryMenuComponent;

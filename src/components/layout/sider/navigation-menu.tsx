@@ -2,7 +2,7 @@
 
 import { useDictStore } from '@/stores/dict-store';
 import { useMenuStore } from '@/stores/menu-store';
-import { calculateOpenKeys } from '@/utils/menu-util';
+import { getExpandedMenuPaths } from '@/utils/navigation-util';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
@@ -27,7 +27,11 @@ const LayoutMenu = memo(() => {
 
   useEffect(() => {
     const loadData = async () => {
-      if (Object.keys(dictData).length === 0) {
+      if (
+        dictData === undefined ||
+        dictData === null ||
+        Object.keys(dictData).length === 0
+      ) {
         await fetchDictData();
       }
     };
@@ -37,7 +41,7 @@ const LayoutMenu = memo(() => {
   useEffect(() => {
     setSelectedKeys([pathname]);
     if (menuItems.length > 0) {
-      setOpenKeys(calculateOpenKeys(pathname, menuList));
+      setOpenKeys(getExpandedMenuPaths(pathname, menuList));
     }
   }, [pathname, menuItems]);
 

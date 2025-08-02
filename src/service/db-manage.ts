@@ -1,24 +1,22 @@
 import httpClient from '@/lib/http';
 import { PageResult } from '@/types';
+import { TableResponse } from '@/types/code-gen';
 import { PageData } from '@/types/common';
 import {
   Connection,
   ConnectionCreate,
   ConnectionQueryResponse,
   Database,
-  DatabaseConnection,
   GenTableExecute,
-  ListConnectionsRequest, ListDatabasesRequest,
+  ListConnectionsRequest,
+  ListDatabasesRequest,
   SQLSchema,
   TableAdd,
   TableColumn,
   TableIndex,
-  TableInfo,
   TableMetadata,
 } from '@/types/db-manage';
 import { ListTablesRequest } from '@/types/table';
-import { TableResponse } from '@/types/code-gen';
-
 
 /**
  * List connections with pagination.
@@ -49,7 +47,6 @@ export function listDatabases(req?: Partial<ListDatabasesRequest>) {
 export function listTables(req?: Partial<ListTablesRequest>) {
   return httpClient.get<PageResult<TableResponse>>('/tables', req);
 }
-
 
 /**
  * List available tables with pagination.
@@ -89,8 +86,6 @@ export const fetchDatabases = async (
       return res.records;
     });
 };
-
-
 
 export const fetchDynamicTableData = async (tableId: number) => {
   const params = {

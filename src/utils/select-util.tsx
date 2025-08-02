@@ -1,27 +1,24 @@
-export class TreeSelectUtil {
-  static transform<
-    T extends { name: string; id: string | number; children?: T[] },
-  >(items: T[]): { title: string; value: string | number; children?: any[] }[] {
-    return items.map(({ name, id, children }) => ({
-      title: name,
-      value: id,
-      ...(children?.length
-        ? { children: TreeSelectUtil.transform(children) }
-        : {}),
-    }));
-  }
+// Tree node interface
+interface TreeNode {
+  name: string; // Display text
+  id: string | number; // Value
+  children?: TreeNode[]; // Optional children
 }
 
-export class SelectUtil {
-  static transform<
-    T extends { name: string; id: string | number; children?: T[] },
-  >(items: T[]): { title: string; value: string | number; children?: any[] }[] {
+// Selector option format
+interface SelectOption {
+  title: string;
+  value: string | number;
+  children?: SelectOption[];
+}
+
+// Converts tree to selector options
+export class TreeSelectUtil {
+  static convert(items: TreeNode[]): SelectOption[] {
     return items.map(({ name, id, children }) => ({
       title: name,
       value: id,
-      ...(children?.length
-        ? { children: TreeSelectUtil.transform(children) }
-        : {}),
+      ...(children?.length && { children: this.convert(children) }),
     }));
   }
 }

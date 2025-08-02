@@ -2,7 +2,8 @@
 import { importTables } from '@/service/code-gen';
 import {
   listAvailableTables,
-  listConnections, listDatabases,
+  listConnections,
+  listDatabases,
   listTables,
 } from '@/service/db-manage';
 import { TableResponse } from '@/types/code-gen';
@@ -57,8 +58,8 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   // 获取数据库连接配置
   useEffect(() => {
     if (open) {
-      listConnections().then(res => {
-        setDatabaseConnections(res.records)
+      listConnections().then((res) => {
+        setDatabaseConnections(res.records);
       });
     }
   }, [open]);
@@ -67,7 +68,11 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   const handleConnectionChange = async (connectionId: number) => {
     try {
       setLoading(true);
-      const response = await listDatabases({"connection_id": connectionId, "current": 1, "page_size": 100});
+      const response = await listDatabases({
+        connection_id: connectionId,
+        current: 1,
+        page_size: 100,
+      });
       setDatabases(response.records);
     } finally {
       setLoading(false);
@@ -92,7 +97,11 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   };
 
   // 获取表信息
-  const fetchAvailableMetaTables = async (values: any, page = 1, size = page_size) => {
+  const fetchAvailableMetaTables = async (
+    values: any,
+    page = 1,
+    size = page_size,
+  ) => {
     try {
       setLoading(true);
       const params = {
@@ -134,8 +143,13 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
       );
       const tableIds = selectedTables.map((item) => item.id);
       const database_id = selectedTables[0].database_id;
-      if ((database_id === null || database_id === undefined) || (tableIds===null || tableIds === undefined)) {
-        return
+      if (
+        database_id === null ||
+        database_id === undefined ||
+        tableIds === null ||
+        tableIds === undefined
+      ) {
+        return;
       }
       await importTables(database_id, tableIds, backend);
       message.success('导入成功');
@@ -146,18 +160,18 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
   };
 
   // 重置
-  const handleReset = async() => {
+  const handleReset = async () => {
     form.resetFields();
     setSelectedRowKeys([]);
     setTableData([]);
     setCurrentPage(1);
     setBackend('python');
     setDatabases([]);
-    setTotal(0)
-    setPageSize(10)
-    setCurrentPage(1)
-    onClose()
-    await handleSearch(null)
+    setTotal(0);
+    setPageSize(10);
+    setCurrentPage(1);
+    onClose();
+    await handleSearch(null);
   };
 
   const columns: TableProps<TableResponse>['columns'] = [
@@ -222,7 +236,7 @@ const ImportTable: React.FC<ImportTableProps> = ({ open, onClose }) => {
           name="connection_id"
           label="数据源"
           rules={[{ required: true }]}
-          className='mb-8'
+          className="mb-8"
         >
           <Select
             placeholder="请选择数据源"

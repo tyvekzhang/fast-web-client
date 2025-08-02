@@ -30,7 +30,6 @@ import {
 } from '@/types/table';
 import { AxiosResponse } from 'axios';
 
-
 /**
  * Retrieve table details.
  *
@@ -40,7 +39,6 @@ import { AxiosResponse } from 'axios';
 export function getTable(id: string) {
   return httpClient.get<TableDetail>(`/tables/${id}`);
 }
-
 
 /**
  * List tables with pagination.
@@ -52,7 +50,6 @@ export function listTables(req: Partial<ListTablesRequest>) {
   return httpClient.get<PageResult<Table>>('/tables', req);
 }
 
-
 /**
  * Create a new table.
  *
@@ -63,7 +60,6 @@ export function createTable(req: CreateTableRequest) {
   return httpClient.post<number>('/tables', req);
 }
 
-
 /**
  * Update an existing table.
  *
@@ -73,7 +69,6 @@ export function updateTable(req: UpdateTableRequest) {
   return httpClient.put<Table>('/tables', req);
 }
 
-
 /**
  * Delete table by ID
  *
@@ -82,7 +77,6 @@ export function updateTable(req: UpdateTableRequest) {
 export function deleteTable(id: string) {
   return httpClient.delete<void>(`/tables/${id}`);
 }
-
 
 /**
  *  Batch create tables.
@@ -94,7 +88,6 @@ export function batchCreateTables(req: BatchCreateTablesRequest) {
   return httpClient.post<number[]>('/tables:batchCreate', req);
 }
 
-
 /**
  * Batch updates multiple tables in a single operation.
  *
@@ -104,7 +97,6 @@ export function batchUpdateTables(req: BatchUpdateTablesRequest) {
   return httpClient.put<BatchUpdateTablesResponse>('/table:batchUpdate', req);
 }
 
-
 /**
  * Batch delete tables.
  *
@@ -113,7 +105,6 @@ export function batchUpdateTables(req: BatchUpdateTablesRequest) {
 export function batchDeleteTable(req: BatchDeleteTablesRequest) {
   return httpClient.delete<void>('/tables:batchDelete', { data: req });
 }
-
 
 /**
  *  Export the Excel template for table import.
@@ -129,7 +120,6 @@ export async function exportTableTemplate() {
   );
   downloadBlob(response, 'table_import_tpl.xlsx');
 }
-
 
 /**
  * Export table data based on the provided table IDs.
@@ -149,7 +139,6 @@ export async function exportTable(req: ExportTablesRequest) {
   );
   downloadBlob(response, 'table_data_export.xlsx');
 }
-
 
 /**
  * Import tables from an uploaded Excel file.

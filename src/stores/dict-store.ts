@@ -1,4 +1,3 @@
-import { fetchAllDictData } from '@/service/dict-data-service';
 import { create } from 'zustand';
 
 interface DictState {
@@ -13,7 +12,7 @@ export const useDictStore = create<DictState>((set) => ({
   fetchDictData: async () => {
     set({ loading: true });
     try {
-      const data = await fetchAllDictData();
+      const data = undefined;
       set({ dictData: data, loading: false });
     } catch (error) {
       console.error('Failed to fetch dict data:', error);

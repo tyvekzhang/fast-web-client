@@ -2,8 +2,7 @@
 
 import { useMenuStore } from '@/stores/menu-store';
 import { useTagsStore } from '@/stores/tag-store';
-import type { RouteObject } from '@/types/route';
-import { searchRoute } from '@/utils/route';
+import { RouteObject, searchRoute } from '@/utils/navigation-util';
 import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
