@@ -377,11 +377,11 @@ export default function CodeGen() {
             <div className="flex justify-start md:justify-end items-center">
               <Form.Item wrapperCol={{ span: 24 }}>
                 <div className="flex gap-2">
-                  <Button type="primary" htmlType="submit" className="px-6">
-                    搜索
-                  </Button>
                   <Button onClick={handleReset} className="px-6">
                     重置
+                  </Button>
+                  <Button type="primary" htmlType="submit" className="px-6">
+                    搜索
                   </Button>
                 </div>
               </Form.Item>

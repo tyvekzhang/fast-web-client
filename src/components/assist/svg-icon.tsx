@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'; // Assuming cn is imported from here
+import { Tooltip } from 'antd';
 import * as LucideIcons from 'lucide-react';
 import type React from 'react';
 import { memo, type ReactElement } from 'react';
@@ -51,16 +52,18 @@ const SvgIcon: React.FC<SvgIconProps> = memo((props) => {
   }
 
   return (
-    <LucideIcon
-      className={cn(
-        'inline-block align-middle text-inherit',
-        sizeClassMap[size],
-        enableHover &&
-          'transition-all duration-200 ease-in-out hover:opacity-75 hover:scale-105 cursor-pointer',
-        className,
-      )}
-      strokeWidth={strokeWidth}
-    />
+    <Tooltip title={name}>
+      <LucideIcon
+        className={cn(
+          'inline-block align-middle text-inherit',
+          sizeClassMap[size],
+          enableHover &&
+            'transition-all duration-200 ease-in-out hover:opacity-75 hover:scale-105',
+          className,
+        )}
+        strokeWidth={strokeWidth}
+      />
+    </Tooltip>
   );
 });
 

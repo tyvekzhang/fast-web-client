@@ -128,7 +128,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       render: (value: number) => (value === 1 ? '是' : '否'),
     },
     {
-      title: '可创建',
+      title: '创建',
       dataIndex: 'creatable',
       key: 'creatable',
       render: (value: number, record: GenField) => (
@@ -141,20 +141,20 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       ),
     },
     {
-      title: '可修改',
-      dataIndex: 'modifiable',
-      key: 'modifiable',
+      title: '修改',
+      dataIndex: 'updatable',
+      key: 'updatable',
       render: (value: number, record: GenField) => (
         <Checkbox
-          checked={changedFields[record.id]?.modifiable ?? value === 1}
+          checked={changedFields[record.id]?.updatable ?? value === 1}
           onChange={(e) =>
-            handleFieldChange(record.id, 'modifiable', e.target.checked ? 1 : 0)
+            handleFieldChange(record.id, 'updatable', e.target.checked ? 1 : 0)
           }
         />
       ),
     },
     {
-      title: '可查询',
+      title: '查询',
       dataIndex: 'queryable',
       key: 'queryable',
       render: (value: number, record: GenField) => (
@@ -167,7 +167,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       ),
     },
     {
-      title: '可分页',
+      title: '列表',
       dataIndex: 'pageable',
       key: 'pageable',
       render: (value: number, record: GenField) => (
@@ -180,7 +180,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       ),
     },
     {
-      title: '可详情',
+      title: '详情',
       dataIndex: 'detailable',
       key: 'detailable',
       render: (value: number, record: GenField) => (
@@ -194,15 +194,15 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
     },
     {
       title: '批量修改',
-      dataIndex: 'batch_modifiable',
-      key: 'batch_modifiable',
+      dataIndex: 'batch_updatable',
+      key: 'batch_updatable',
       render: (value: number, record: GenField) => (
         <Checkbox
-          checked={changedFields[record.id]?.batch_modifiable ?? value === 1}
+          checked={changedFields[record.id]?.batch_updatable ?? value === 1}
           onChange={(e) =>
             handleFieldChange(
               record.id,
-              'batch_modifiable',
+              'batch_updatable',
               e.target.checked ? 1 : 0,
             )
           }

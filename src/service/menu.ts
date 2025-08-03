@@ -1,3 +1,16 @@
+// Copyright (c) 2025 FastWeb and/or its affiliates. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 import httpClient, { fetcher } from '@/lib/http';
 import { downloadBlob } from '@/service/util';
 import { PageResult } from '@/types';
@@ -19,10 +32,10 @@ import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 
 /**
- * Retrieve menu details with SWR.
+ * Retrieve menu details.
  *
- * @param id Unique ID of the menu resource.
- * @returns SWR response containing the menu object and loading/error states.
+ * @param ID of the menu resource.
+ * @returns The menu object containing all its details.
  */
 export function useMenu(id: string) {
   const { data, error, isLoading, isValidating, mutate } = useSWR<MenuDetail>(
@@ -40,10 +53,10 @@ export function useMenu(id: string) {
 }
 
 /**
- * List menus with pagination using SWR.
+ * List menus with pagination.
  *
  * @param req Request object containing pagination, filter and sort parameters.
- * @returns SWR response containing paginated list of menus and loading/error states.
+ * @returns Paginated list of menus and total count.
  */
 export function useMenus(req: Partial<ListMenusRequest>) {
   const { data, error, isLoading, isValidating, mutate } = useSWR<
@@ -69,6 +82,7 @@ export function useMenus(req: Partial<ListMenusRequest>) {
 export function createMenu(req: CreateMenuRequest) {
   return httpClient.post<number>('/menus', req);
 }
+
 /**
  * Update an existing menu.
  *
@@ -77,6 +91,7 @@ export function createMenu(req: CreateMenuRequest) {
 export function updateMenu(req: UpdateMenuRequest) {
   return httpClient.put<Menu>('/menus', req);
 }
+
 /**
  * Delete menu by ID
  *
@@ -85,6 +100,7 @@ export function updateMenu(req: UpdateMenuRequest) {
 export function deleteMenu(id: string) {
   return httpClient.delete<void>(`/menus/${id}`);
 }
+
 /**
  *  Batch create menus.
  *
@@ -94,6 +110,7 @@ export function deleteMenu(id: string) {
 export function batchCreateMenus(req: BatchCreateMenusRequest) {
   return httpClient.post<number[]>('/menus:batchCreate', req);
 }
+
 /**
  * Batch updates multiple menus in a single operation.
  *
@@ -102,6 +119,7 @@ export function batchCreateMenus(req: BatchCreateMenusRequest) {
 export function batchUpdateMenus(req: BatchUpdateMenusRequest) {
   return httpClient.put<BatchUpdateMenusResponse>('/menu:batchUpdate', req);
 }
+
 /**
  * Batch delete menus.
  *
@@ -131,7 +149,7 @@ export async function exportMenuTemplate() {
  *
  * @param req Query parameters specifying the menus to export.
  */
-export async function exportMenuPage(req: ExportMenusRequest) {
+export async function exportMenu(req: ExportMenusRequest) {
   const params = {
     ids: req.ids,
   };
@@ -148,7 +166,7 @@ export async function exportMenuPage(req: ExportMenusRequest) {
 /**
  * Import menus from an uploaded Excel file.
  *
- * @param req The request with excel file to import.
+ * @param req The request with file to import.
  * @returns  List of successfully parsed menu data.
  */
 export function importMenu(req: ImportMenusRequest) {

@@ -9,7 +9,7 @@ import {
   batchUpdateMenus,
   createMenu,
   deleteMenu,
-  exportMenuPage,
+  exportMenu,
   importMenu,
   updateMenu,
   useMenu,
@@ -50,20 +50,20 @@ const MenuPage: React.FC = () => {
   // 查询模块
   const [isQueryMenuShow, setIsQueryMenuShow] = useState<boolean>(true);
   const [current, setCurrent] = useState(1);
-  const [page_size, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(10);
 
   const [queryMenuForm] = Form.useForm();
   const [menuQueryParams, setMenuQueryParams] = useState<ListMenusRequest>();
 
   // 用 useMenus 获取菜单列表数据
   const {
-    menus: menuPageDataSource,
+    menus: menuListDataSource,
     total,
     isLoading: isMenuListLoading,
     mutateMenus,
   } = useMenus({
     ...menuQueryParams,
-    ...createPaginationRequest(current, page_size),
+    ...createPaginationRequest(current, pageSize),
   });
 
   const onQueryMenuShow = () => {
@@ -115,8 +115,8 @@ const MenuPage: React.FC = () => {
     selectedMenuId || '',
   );
 
-  const onMenuDetail = (menuPage: Menu) => {
-    setSelectedMenuId(menuPage.id);
+  const onMenuDetail = (menu: Menu) => {
+    setSelectedMenuId(menu.id);
     setIsMenuDetailDrawerVisible(true);
   };
 
@@ -126,7 +126,7 @@ const MenuPage: React.FC = () => {
   };
 
   // 表格列信息
-  const menuPageColumns: ColumnsType<Menu> = [
+  const menuColumns: ColumnsType<Menu> = [
     {
       title: 'Id',
       dataIndex: 'id',
@@ -144,7 +144,7 @@ const MenuPage: React.FC = () => {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => (text ? text : '--'),
+      render: (text) => (text ? text : '-'),
       ellipsis: true,
       width: '8%',
     },
@@ -153,7 +153,7 @@ const MenuPage: React.FC = () => {
       dataIndex: 'icon',
       key: 'icon',
       render: (text) =>
-        text ? <SvgIcon name={text} strokeWidth={1.3} /> : '--',
+        text ? <SvgIcon name={text} strokeWidth={1.3} /> : '-',
       ellipsis: true,
       width: '6%',
     },
@@ -161,7 +161,7 @@ const MenuPage: React.FC = () => {
       title: '权限标识',
       dataIndex: 'permission',
       key: 'permission',
-      render: (text) => (text ? text : '--'),
+      render: (text) => (text ? text : '-'),
       ellipsis: true,
       width: '15%',
     },
@@ -169,14 +169,14 @@ const MenuPage: React.FC = () => {
       title: '排序',
       dataIndex: 'sort',
       key: 'sort',
-      render: (text) => (text ? text : '--'),
+      render: (text) => (text ? text : '-'),
       width: '6%',
     },
     {
       title: '路由地址',
       dataIndex: 'path',
       key: 'path',
-      render: (text) => (text ? text : '--'),
+      render: (text) => (text ? text : '-'),
       ellipsis: true,
       width: '15%',
     },
@@ -185,7 +185,7 @@ const MenuPage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text) =>
-        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '--',
+        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-',
       ellipsis: true,
       width: '14%',
     },
@@ -242,7 +242,7 @@ const MenuPage: React.FC = () => {
   ];
 
   const [visibleColumns, setVisibleColumns] = useState(
-    menuPageColumns.map((col) => col.key),
+    menuColumns.map((col) => col.key),
   );
   const onToggleColumnVisibility = (columnKey: string) => {
     setVisibleColumns((prevVisibleColumns) => {
@@ -253,7 +253,7 @@ const MenuPage: React.FC = () => {
       }
     });
   };
-  const filteredMenuColumns = menuPageColumns.filter((col) =>
+  const filteredMenuColumns = menuColumns.filter((col) =>
     visibleColumns.includes(col.key),
   );
 
@@ -284,8 +284,8 @@ const MenuPage: React.FC = () => {
   };
 
   // 单个删除模块
-  const handleDeleteMenu = async (menuPage: Menu) => {
-    await deleteMenu(menuPage.id);
+  const handleDeleteMenu = async (menu: Menu) => {
+    await deleteMenu(menu.id);
     message.success('删除成功');
     mutateMenus();
   };
@@ -337,11 +337,11 @@ const MenuPage: React.FC = () => {
     useState<boolean>(false);
   const [updateMenuForm] = Form.useForm();
 
-  const onUpdateMenu = (menuPage: Menu) => {
+  const onUpdateMenu = (menu: Menu) => {
     setIsUpdateMenuModalVisible(true);
-    setSelectedRowKeys([menuPage.id]);
-    setSelectedRows([menuPage]);
-    updateMenuForm.setFieldsValue({ ...menuPage });
+    setSelectedRowKeys([menu.id]);
+    setSelectedRows([menu]);
+    updateMenuForm.setFieldsValue({ ...menu });
   };
 
   const handleUpdateMenuCancel = () => {
@@ -459,7 +459,7 @@ const MenuPage: React.FC = () => {
     }
     try {
       setIsExportLoading(true);
-      await exportMenuPage({ ids: selectedRows.map((row) => row.id) });
+      await exportMenu({ ids: selectedRows.map((row) => row.id) });
       resetSelectedRows();
     } finally {
       setIsExportLoading(false);
@@ -490,7 +490,7 @@ const MenuPage: React.FC = () => {
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={isBatchRemoveLoading}
           isExportLoading={isExportLoading}
-          rawColumns={menuPageColumns as any[]}
+          rawColumns={menuColumns as any[]}
           visibleColumns={visibleColumns as any[]}
           onToggleColumnVisibility={onToggleColumnVisibility}
           actionConfig={actionConfig}
@@ -500,10 +500,10 @@ const MenuPage: React.FC = () => {
       <div>
         <PaginatedTable<Menu>
           columns={filteredMenuColumns}
-          dataSource={menuPageDataSource || []}
+          dataSource={menuListDataSource || []}
           total={total || 0}
           current={current}
-          page_size={page_size}
+          page_size={pageSize}
           onPaginationChange={handlePaginationChange}
           onSelectionChange={handleSelectionChange}
           selectedRowKeys={selectedRowKeys}
@@ -519,7 +519,7 @@ const MenuPage: React.FC = () => {
             onCreateMenuFinish={handleCreateMenuFinish}
             isCreateMenuLoading={isCreateMenuLoading}
             createMenuForm={createMenuForm}
-            optionDataSource={menuPageDataSource || []}
+            optionDataSource={menuListDataSource || []}
           />
         </div>
         <div>
@@ -537,7 +537,7 @@ const MenuPage: React.FC = () => {
             onUpdateMenuFinish={handleUpdateMenuFinish}
             isUpdateMenuLoading={isUpdateMenuLoading}
             updateMenuForm={updateMenuForm}
-            optionDataSource={menuPageDataSource || []}
+            optionDataSource={menuListDataSource || []}
           />
         </div>
         <div>
