@@ -20,6 +20,8 @@ import {
   BatchUpdateDictDataRequest,
   BatchUpdateDictDataResponse,
   CreateDictDatumRequest,
+  DictDataOption,
+  DictDataOptionItem,
   DictDatum,
   DictDatumDetail,
   ExportDictDataRequest,
@@ -30,6 +32,14 @@ import {
 } from '@/types/dict-datum';
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
+
+function getLabelByValue(dictData: Record<string, DictDataOptionItem[]>, key: string, value: any) {
+  if (dictData === null || dictData === undefined) {
+    return "-"
+  }
+  const item = dictData[key].find(item => item.value === value);
+  return item ? item.label : "-";
+}
 
 /**
  * Retrieve dictDatum details.
@@ -68,6 +78,46 @@ export function useDictData(req: Partial<ListDictDataRequest>) {
     isError: error,
     isValidating,
     mutateDictData: mutate,
+  };
+}
+
+
+/**
+ * Fetch all dictionary data grouped by type.
+ * @returns Dictionary options for the requested types.
+ */
+export function useAllDictData() {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<DictDataOption>(
+    ['/dictData:all'],
+    ([url]) => fetcher(url)
+  );
+
+  return {
+    dictData: data?.options,
+    isLoading,
+    isError: error,
+    isValidating,
+    refresh: mutate,
+  };
+}
+
+/**
+ * Fetch dictionary options for specific types.
+ * @param types Array of dictionary types to fetch (e.g., ['gender', 'status']).
+ * @returns Dictionary options for the requested types.
+ */
+export function useDictDataOptions(req: string[]) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<DictDataOption>(
+    ['/dictData:options', { req: req }],
+    ([url, params]) => fetcher(url, params)
+  );
+
+  return {
+    dictData: data?.options || {},
+    isLoading,
+    isError: error,
+    isValidating,
+    refresh: mutate,
   };
 }
 

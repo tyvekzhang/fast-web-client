@@ -1,5 +1,6 @@
 'use client';
 import { codeModify, getTableDetail } from '@/service/code-gen';
+import { useAllDictData } from '@/service/dict-datum';
 import { GenField, GenTable } from '@/types/code-gen';
 import {
   Button,
@@ -28,9 +29,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
   const [tableInfo, setTableInfo] = useState<GenTable>(); // 基本信息
   const [fieldInfo, setFieldInfo] = useState<GenField[]>([]); // 表格数据
   const [tableForm] = Form.useForm();
-  // const { dictData } = useAppSelector((state) => state.dict);
-  const dictData = {};
-
+  const { dictData } = useAllDictData()
   useEffect(() => {
     tableForm.setFieldsValue(tableInfo);
   }, [tableForm, tableInfo]);
@@ -259,19 +258,17 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       title: '字典类型',
       dataIndex: 'dict_type',
       key: 'dict_type',
-      width: '8%',
+      width: '10%',
       render: (value: string, record: GenField) => {
         const options = [];
         for (const key in dictData) {
           const items = dictData[key];
-          const labels = items.map((item: { label: string }) => item.label);
+          const labels = items.map(item => item.label);
           const displayLabel = labels.join(',');
-          // 构建正确的 option 对象
           const option = {
             value: key,
             label: displayLabel,
           };
-          // 正确更新 options 数组
           options.push(option);
         }
         return (

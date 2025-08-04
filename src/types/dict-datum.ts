@@ -21,6 +21,15 @@ export interface ListDictDataRequest extends PaginationRequest {
   type: string;
 }
 
+export interface DictDataOptionItem {
+  label?: string;
+  value?: string;
+}
+
+export interface DictDataOption {
+  options: Record<string, DictDataOptionItem[]>;
+}
+
 export interface DictDatum {
   id: string;
 
