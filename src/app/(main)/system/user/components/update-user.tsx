@@ -13,7 +13,7 @@
 // limitations under the License.import { Input } from 'antd';
 import { UpdateUser, User } from '@/types/user';
 import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Modal, Radio } from 'antd';
+import { Button, Form, Input, Modal, Radio } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 

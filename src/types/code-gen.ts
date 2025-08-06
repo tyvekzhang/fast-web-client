@@ -31,12 +31,18 @@ export interface TableResponse {
   create_time: number;
 }
 
+export interface FieldResponse {
+  id: number;
+  field_name: string;
+  comment?: string | null;
+}
+
 export interface TableDataResponse {
   records: TableResponse[];
   total_count: number;
 }
 
-export interface GenTable {
+export interface TableResult {
   class_name: string;
   function_name: string;
   backend: string;
@@ -60,7 +66,7 @@ export interface GenTable {
   comment: string;
 }
 
-export interface DbTable {
+export interface MetaTable {
   database_id: number;
   comment: string;
   update_time: string;
@@ -69,7 +75,7 @@ export interface DbTable {
   id: number;
 }
 
-export interface GenField {
+export interface Field {
   id: number;
   field_name: string;
   js_type: string;
@@ -91,6 +97,6 @@ export interface GenField {
 }
 
 export interface GenTableDetail {
-  table: GenTable;
-  fields: GenField[];
+  table: TableResult;
+  fields: Field[];
 }
