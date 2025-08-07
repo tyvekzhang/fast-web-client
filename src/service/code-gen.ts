@@ -93,6 +93,6 @@ export const getAllTables = () => {
 
 };
 
-export const getTableFieldsByName = (tableId: string) => {
+export const getTableFieldsById = (tableId: string) => {
   return httpClient.get<FieldResponse[]>(`/tables:fields/${tableId}`);
 };

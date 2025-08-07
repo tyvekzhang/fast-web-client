@@ -1,10 +1,9 @@
 'use client';
-import { cn } from '@/lib/utils';
 import {
   codeModify,
-  getTableDetail,
   getAllTables,
-  getTableFieldsByName,
+  getTableDetail,
+  getTableFieldsById,
 } from '@/service/code-gen';
 import { useAllDictData } from '@/service/dict-datum';
 import { Field, TableResult } from '@/types/code-gen';
@@ -59,15 +58,16 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
 
   // 监听关联表变化，加载字段
   const watchTplCategory = Form.useWatch('tpl_category', tableForm);
-  const watchSubTables = Form.useWatch('subTables', tableForm);
+  const watchSubTables = Form.useWatch('relationTables', tableForm);
 
   useEffect(() => {
-    if (watchTplCategory === 'sub' && Array.isArray(watchSubTables)) {
+    if (watchTplCategory === '2' && Array.isArray(watchSubTables)) {
       watchSubTables.forEach(async (item, idx) => {
-        const { tableName } = item || {};
-        if (tableName && !subTableFields[tableName]) {
-          const res = await getTableFieldsByName(tableName);
-          setSubTableFields(prev => ({ ...prev, [tableName]: res }));
+        debugger
+        const { tableId } = item || {};
+        if (tableId && !subTableFields[tableId]) {
+          const res = await getTableFieldsById(tableId);
+          setSubTableFields(prev => ({ ...prev, [tableId]: res }));
         }
       });
     }
@@ -242,161 +242,174 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
     [allTables],
   );
 
-  const items: TabsProps['items'] = [
-    {
-      key: 'tableInfo',
-      label: '表信息',
-      children: (
-        <Form layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={tableForm}>
-          <div className="grid grid-cols-2 gap-2">
-            <Form.Item label="编号" name="id" hidden>
-              <Input />
-            </Form.Item>
-            <Form.Item label="表名称" name="table_name" required>
-              <Input />
-            </Form.Item>
+ const items: TabsProps['items'] = [
+  {
+    key: 'tableInfo',
+    label: '表信息',
+    children: (
+      <Form layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={tableForm}>
+        <div className="grid grid-cols-2 gap-2">
+          <Form.Item label="编号" name="id" hidden>
+            <Input />
+          </Form.Item>
+          <Form.Item label="表名称" name="table_name" required>
+            <Input />
+          </Form.Item>
 
-            <Form.Item label="实体类名称" name="class_name">
-              <Input />
-            </Form.Item>
-            <Form.Item label="作者" name="function_author">
-              <Input />
-            </Form.Item>
-            <Form.Item label="表描述" name="comment">
-              <Input />
-            </Form.Item>
+          <Form.Item label="实体类名称" name="class_name">
+            <Input />
+          </Form.Item>
+          <Form.Item label="作者" name="function_author">
+            <Input />
+          </Form.Item>
+          <Form.Item label="表描述" name="comment">
+            <Input />
+          </Form.Item>
+        </div>
+      </Form>
+    ),
+  },
+  {
+    key: 'fieldInfo',
+    label: '字段信息',
+    children: (
+      <Table
+        columns={fieldColumns}
+        dataSource={fieldInfo}
+        pagination={false}
+        rowKey="id"
+        scroll={{ x: 1500 }}
+        size="small"
+      />
+    ),
+  },
+  {
+    key: 'genInfo',
+    label: '生成信息',
+    children: (
+      <Form layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={tableForm}>
+        <div className="grid grid-cols-2 gap-2">
+          <Form.Item label="生成模板" name="tpl_category" initialValue="2">
+            <Select>
+              <Option value="1">单表操作</Option>
+              <Option value="2">关联表操作</Option>
+              <Option value="3">树形表操作</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item label="模块名" name="module_name">
+            <Input />
+          </Form.Item>
+          <Form.Item label="业务名" name="business_name">
+            <Input />
+          </Form.Item>
+          <Form.Item label="功能名" name="function_name">
+            <Input />
+          </Form.Item>
+          <Form.Item label="生成包路径" name="package_name">
+            <Input />
+          </Form.Item>
+        </div>
 
-          </div>
-        </Form>
-      ),
-    },
-    {
-      key: 'fieldInfo',
-      label: '字段信息',
-      children: (
-        <Table
-          columns={fieldColumns}
-          dataSource={fieldInfo}
-          pagination={false}
-          rowKey="id"
-          scroll={{ x: 1500 }}
-          size="small"
-        />
-      ),
-    },
-    {
-      key: 'genInfo',
-      label: '生成信息',
-      children: (
-        <Form layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={tableForm}>
-          <div className="grid grid-cols-2 gap-2">
-            <Form.Item label="生成模板" name="tpl_category" initialValue="crud">
-              <Select>
-                <Option value="crud">单表</Option>
-                <Option value="sub">关联表</Option>
-                <Option value="tree">树形表</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item label="模块名" name="module_name">
-              <Input />
-            </Form.Item>
-            <Form.Item label="业务名" name="business_name">
-              <Input />
-            </Form.Item>
-            <Form.Item label="功能名" name="function_name">
-              <Input />
-            </Form.Item>
-            <Form.Item label="生成包路径" name="package_name">
-              <Input />
-            </Form.Item>
-          </div>
+        {watchTplCategory === '2' && (
+          <Form.List name="relationTables" initialValue={[{}]}>
+            {(fields, { add, remove }) => (
+              <>
+                <h4 className="mt-4 mb-4 font-semibold border-b border-gray-200 px-4">关联表配置</h4>
+                {fields.map((field, idx) => {
+                  const selectedTableName = tableForm.getFieldValue(['relationTables', field.name, 'tableId']);
+                  const relationOptions = (subTableFields[selectedTableName] || []).map(f => ({
+                    value: f.field_name,
+                    label: `${f.field_name} (${f.comment})`,
+                  }));
 
-          {watchTplCategory === 'sub' && (
-            <Form.List name="subTables" initialValue={[{}]}>
-              {(fields, { add, remove }) => (
-                <>
-                  <h4 className="mt-4 mb-4 font-semibold border-b border-gray-200 px-4">关联表配置</h4>
-                  {fields.map((field, idx) => {
-                    const selectedTableName = tableForm.getFieldValue(['subTables', field.name, 'tableName']);
-                    const relationOptions = (subTableFields[selectedTableName] || []).map(f => ({
-                      value: f.field_name,
-                      label: `${f.field_name} (${f.comment})`,
-                    }));
-
-                    return (
-                      <div key={field.key} className="flex items-center gap-4 mb-3 px-4">
-                        <Form.Item
-                          label="关联表名"
-                          name={[field.name, 'tableName']}
-                          rules={[{ required: true, message: '请选择关联表' }]}
-                          style={{ flex: 1, marginBottom: 0 }}
-                        >
-                          <Select
-                            placeholder="请选择表"
-                            options={tableOptions}
-                            onChange={() => {
-                              tableForm.setFieldValue(['subTables', field.name, 'relationField'], undefined);
-                            }}
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          label="关联字段"
-                          name={[field.name, 'relationField']}
-                          rules={[{ required: true, message: '请选择字段' }]}
-                          style={{ flex: 1, marginBottom: 0 }}
-                        >
-                          <Select
-                            placeholder="请选择字段"
-                            options={relationOptions}
-                          />
-                        </Form.Item>
-                        <div className="flex gap-2 mt-1 min-w-24">
-                          {fields.length > 1 && (
-                            <Button size='small' type="link" onClick={() => remove(field.name)}>
-                              删除
-                            </Button>
-                          )}
-                          {idx === fields.length - 1 && (
-                            <Button type="link" size='small' onClick={() => add()}>
-                              新增
-                            </Button>
-                          )}
-                        </div>
+                  return (
+                    <div key={field.key} className="flex items-center gap-4 mb-3 px-4">
+                      <Form.Item
+                        label="关联表名"
+                        name={[field.name, 'tableId']}
+                        rules={[{ required: true, message: '请选择关联表' }]}
+                        style={{ flex: 1, marginBottom: 0 }}
+                      >
+                        <Select
+                          placeholder="请选择表"
+                          options={tableOptions}
+                          allowClear
+                          onChange={() => {
+                            tableForm.setFieldValue(['relationTables', field.name, 'relationField'], undefined);
+                          }}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        label="关联字段"
+                        name={[field.name, 'relationField']}
+                        rules={[{ required: true, message: '请选择字段' }]}
+                        style={{ flex: 1, marginBottom: 0 }}
+                      >
+                        <Select
+                          placeholder="请选择字段"
+                          options={relationOptions}
+                        />
+                      </Form.Item>
+                      <div className="flex gap-2 mt-1 min-w-24">
+                        {fields.length > 1 && (
+                          <Button size='small' type="link" onClick={() => remove(field.name)}>
+                            删除
+                          </Button>
+                        )}
+                        {idx === fields.length - 1 && (
+                          <Button type="link" size='small' onClick={() => add()}>
+                            新增
+                          </Button>
+                        )}
                       </div>
-                    );
-                  })}
-                </>
-              )}
-            </Form.List>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </Form.List>
+        )}
 
-          )}
-
-          {watchTplCategory === 'tree' && (
-            <>
-              <h4 className="mt-4 mb-4 font-semibold border-b border-gray-200 px-4">树表配置</h4>
+        {watchTplCategory === '3' && (
+          <>
+            <h4 className="mt-4 mb-4 font-semibold border-b border-gray-200 px-4">树表配置</h4>
+            <Form.Item name="treeTable" initialValue={{}}>
               <div className="grid grid-cols-3 gap-2">
-                <Form.Item label="树字段" name="tree_code">
+                <Form.Item
+                  label="树字段"
+                  name={['treeTable', 'tree_code']}
+                  rules={[{ required: true, message: '请选择树字段' }]}
+                >
                   <Select
                     options={fieldInfo.map(f => ({ value: f.field_name, label: `${f.field_name} (${f.comment})` }))}
                   />
                 </Form.Item>
-                <Form.Item label="树父字段" name="tree_parent_code">
+                <Form.Item
+                  label="树父字段"
+                  name={['treeTable', 'tree_parent_code']}
+                  rules={[{ required: true, message: '请选择树父字段' }]}
+                >
                   <Select
                     options={fieldInfo.map(f => ({ value: f.field_name, label: `${f.field_name} (${f.comment})` }))}
                   />
                 </Form.Item>
-                <Form.Item label="显示名称" name="tree_name">
+                <Form.Item
+                  label="显示名称"
+                  name={['treeTable', 'tree_name']}
+                  rules={[{ required: true, message: '请选择显示名称字段' }]}
+                >
                   <Select
                     options={fieldInfo.map(f => ({ value: f.field_name, label: `${f.field_name} (${f.comment})` }))}
                   />
                 </Form.Item>
               </div>
-            </>
-          )}
-        </Form>
-      ),
-    },
-  ];
+            </Form.Item>
+          </>
+        )}
+      </Form>
+    ),
+  },
+];
 
   const footerButtons = () => [
     <Button key="cancel" onClick={onClose}>
