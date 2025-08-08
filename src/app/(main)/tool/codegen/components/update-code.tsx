@@ -217,7 +217,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
   // 保存配置
   const handleCodeModifyFinish = async () => {
     const updatedFieldInfo = fieldInfo.map(f => (changedFields[f.id] ? { ...f, ...changedFields[f.id] } : f));
-    const gen_table = { ...tableForm.getFieldsValue() };
+    const gen_table = { ...tableForm.getFieldsValue(), "id": tableInfo?.id };
 
     const genTableDetail = {
       table: gen_table,
