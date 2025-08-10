@@ -14,6 +14,7 @@
 import httpClient, { fetcher } from '@/lib/http';
 import { downloadBlob } from '@/service/util';
 import { PageResult } from '@/types';
+import { AssignUserRoles } from '@/types/auth';
 import {
   BatchCreateUserRolesRequest,
   BatchDeleteUserRolesRequest,
@@ -30,6 +31,11 @@ import {
 } from '@/types/user-role';
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
+
+
+export function assignUserRoles(req: AssignUserRoles) {
+  return httpClient.post<void>('/userRoles:assign', req);
+}
 
 /**
  * Retrieve userRole details.

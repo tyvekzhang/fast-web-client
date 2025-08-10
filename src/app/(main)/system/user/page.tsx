@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 'use client';
+
 import ActionButtonComponent from '@/components/base/action-button';
 import { PaginatedTable } from '@/components/base/paginated-table';
 import TransitionWrapper from '@/components/base/transition-wrapper';
+import { useDictDataOptions } from '@/service/dict-datum';
+import { useRoles } from '@/service/role';
 import {
   batchCreateUsers,
   batchDeleteUser,
@@ -24,9 +27,9 @@ import {
   exportUser,
   importUser,
   updateUser,
-  useUser,
-  useUsers,
+  useUsers
 } from '@/service/user';
+import { assignUserRoles } from '@/service/user-role';
 import { createPaginationRequest } from '@/types';
 import {
   BatchUpdateUser,
@@ -35,10 +38,11 @@ import {
   UpdateUser,
   User,
 } from '@/types/user';
-import { Form, message, Popconfirm } from 'antd';
+import { ListUserRolesRequest } from '@/types/user-role';
+import { Button, Form, Input, message, Modal, Popconfirm, Select } from 'antd'; // 添加 Modal, Select, Button
 import { ColumnsType } from 'antd/lib/table';
 import dayjs from 'dayjs';
-import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
+import { CheckCircle2, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 import BatchUpdateUserComponent from './components/batch-update-user';
@@ -46,7 +50,11 @@ import CreateUserComponent from './components/create-user';
 import ImportUserComponent from './components/import-user';
 import QueryUserComponent from './components/query-user';
 import UpdateUserComponent from './components/update-user';
-import UserDetailComponent from './components/user-detail';
+
+const formItemLayout = {
+  labelCol: { span: 4 },
+  wrapperCol: { span: 18 },
+};
 
 const UserPage: React.FC = () => {
   // 配置模块
@@ -58,6 +66,8 @@ const UserPage: React.FC = () => {
     showRemove: true,
   };
   const showMore = false;
+
+  const { dictData } = useDictDataOptions("user_status".split(","))
 
   // 查询模块
   const [isQueryUserShow, setIsQueryUserShow] = useState<boolean>(true);
@@ -95,6 +105,7 @@ const UserPage: React.FC = () => {
   const handleQueryUserReset = () => {
     resetPagination();
     queryUserForm.resetFields();
+    setUserQueryParams(undefined)
     mutateUsers();
   };
 
@@ -118,152 +129,177 @@ const UserPage: React.FC = () => {
     setUserQueryParams(filteredQueryUser as ListUsersRequest);
   };
 
-  // 详情模块
-  const [isUserDetailDrawerVisible, setIsUserDetailDrawerVisible] =
-    useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  // 分配角色模块
+  const [isAssignRoleModalVisible, setIsAssignRoleModalVisible] = useState(false);
+  const [isAssignRoleLoading, setIsAssignRoleLoading] = useState(false);
+  const [assignRoleForm] = Form.useForm();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const initRequestData: ListUserRolesRequest = {
+    current: 1,
+    page_size: 1000,
+  };
+  const { roles: availableRoles } = useRoles(initRequestData);
 
-  const { user: userDetail, isLoading: isUserDetailLoading } = useUser(
-    selectedUserId || '',
-  );
-
-  const onUserDetail = (user: User) => {
-    setSelectedUserId(user.id);
-    setIsUserDetailDrawerVisible(true);
+  const onAssignRole = (user: User) => {
+    setCurrentUser(user);
+    setIsAssignRoleModalVisible(true);
   };
 
-  const onUserDetailClose = () => {
-    setSelectedUserId(null);
-    setIsUserDetailDrawerVisible(false);
+  const handleAssignRoleCancel = () => {
+    assignRoleForm.resetFields();
+    setIsAssignRoleModalVisible(false);
+    setCurrentUser(null);
+  };
+
+  const handleAssignRoleFinish = async (values: { roles: string[] }) => {
+    if (!currentUser) return;
+
+    setIsAssignRoleLoading(true);
+    try {
+
+      await assignUserRoles({ user_id: currentUser.id, role_ids: values.roles });
+      message.success('角色分配成功');
+      mutateUsers();
+      handleAssignRoleCancel();
+    } finally {
+      setIsAssignRoleLoading(false);
+    }
   };
 
   // 表格列信息
   const userColumns: ColumnsType<User> = [
     {
-      title: 'Id',
-      dataIndex: '',
-      key: '',
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
       hidden: true,
     },
     {
-      title: '序号',
-      dataIndex: 'No',
-      key: 'No',
+      title: "序号",
+      dataIndex: "No",
+      key: "No",
       render: (_: number, _record: User, rowIndex: number) => rowIndex + 1,
-      width: '8%',
+      width: "8%",
     },
     {
-      title: '主键',
-      dataIndex: 'id',
-      key: 'id',
-      width: '6%',
-    },
-    {
-      title: '用户名',
-      dataIndex: 'username',
-      key: 'username',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "用户名",
+      dataIndex: "username",
+      key: "username",
+      render: (text) => (text ? text : "-"),
+      width: "12%",
       ellipsis: true,
     },
     {
-      title: '密码',
-      dataIndex: 'password',
-      key: 'password',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "昵称",
+      dataIndex: "nickname",
+      key: "nickname",
+      render: (text) => (text ? text : "-"),
+      width: "12%",
       ellipsis: true,
     },
     {
-      title: '昵称',
-      dataIndex: 'nickname',
-      key: 'nickname',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "头像地址",
+      dataIndex: "avatar_url",
+      key: "avatar_url",
+      render: (text) => (text ? text : "-"),
+      width: "12%",
       ellipsis: true,
     },
     {
-      title: '头像地址',
-      dataIndex: 'avatar_url',
-      key: 'avatar_url',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "状态",
+      dataIndex: "status",
+      key: "status",
+      render: (text) => {
+        const values = (text !== undefined && text !== null) ? String(text).split(',') : [];
+        return values.map((value, index) => {
+          const item = dictData["user_status"].find((d) => d.value === value);
+          if (item) {
+            const content = <span key={item.value}>{item.label}</span>;
+            return index < values.length - 1 ? (
+              <React.Fragment key={`${item.value}-with-comma`}>
+                {content},&nbsp;
+              </React.Fragment>
+            ) : content;
+          }
+          return null;
+        });
+      },
+      width: "6%",
+    },
+    {
+      title: "备注",
+      dataIndex: "remark",
+      key: "remark",
+      render: (text) => (text ? text : "-"),
+      width: "12%",
       ellipsis: true,
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      width: '6%',
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "创建时间",
+      dataIndex: "create_time",
+      key: "create_time",
+      render: (text: string) => (
+        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : "-"
+      ),
+      width: "14%",
       ellipsis: true,
     },
     {
-      title: '创建时间',
-      dataIndex: 'create_time',
-      key: 'create_time',
-      render: (text: string) =>
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
-      width: '14%',
-      ellipsis: true,
-    },
-    {
-      title: '操作',
-      key: 'action',
-      align: 'center',
-      render: (_, record) => (
-        <div className="flex gap-2 items-center justify-center">
-          <button
-            type="button"
-            className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onUserDetail(record)}
-          >
-            <Eye className="w-3 h-3" />
-            详情
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onUpdateUser(record)}
-          >
-            <PenLine className="w-3 h-3" />
-            编辑
-          </button>
-          <Popconfirm
-            title="确认删除"
-            description="确定删除吗? 删除后将无法找回"
-            onConfirm={() => handleDeleteUser(record)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <button
-              type="button"
-              className="flex items-center gap-0.5 text-xs btn-remove"
-            >
-              <Trash2 className="w-3 h-3" />
-              删除
-            </button>
-          </Popconfirm>
+      title: "操作",
+      key: "action",
+      align: "center",
+      render: (_, record) => {
+        if (record.id.toString() === "9") {
+          return null;
+        }
 
-          {showMore && (
+        return (
+          <div className="flex gap-2 items-center justify-center">
+
             <button
               type="button"
               className="flex items-center gap-0.5 text-xs btn-operation"
+              onClick={() => onUpdateUser(record)}
             >
-              <span>更多</span>
-              <MoreHorizontal className="w-3 h-3" />
+              <PenLine className="w-3 h-3" />
+              编辑
             </button>
-          )}
-        </div>
-      ),
-    },
-  ];
+            <Popconfirm
+              title="确认删除"
+              description="确定删除吗? 删除后将无法找回"
+              onConfirm={() => handleDeleteUser(record)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <button
+                type="button"
+                className="flex items-center gap-0.5 text-xs btn-remove"
+              >
+                <Trash2 className="w-3 h-3" />
+                删除
+              </button>
+
+            </Popconfirm>
+            <button
+              type="button"
+              className="flex items-center gap-0.5 text-xs btn-operation"
+              onClick={() => onAssignRole(record)}
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              分配角色
+            </button>
+
+            {showMore && (
+              <button type="button" className="flex items-center gap-0.5 text-xs btn-operation">
+                <span>更多</span>
+                <MoreHorizontal className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        );
+      },
+    }
+  ]
 
   const [visibleColumns, setVisibleColumns] = useState(
     userColumns.map((col) => col.key),
@@ -543,15 +579,6 @@ const UserPage: React.FC = () => {
             onCreateUserFinish={handleCreateUserFinish}
             isCreateUserLoading={isCreateUserLoading}
             createUserForm={createUserForm}
-            treeSelectDataSource={userListDataSource}
-          />
-        </div>
-        <div>
-          <UserDetailComponent
-            isUserDetailDrawerVisible={isUserDetailDrawerVisible}
-            onUserDetailClose={onUserDetailClose}
-            userDetail={userDetail}
-            loading={isUserDetailLoading}
           />
         </div>
         <div>
@@ -561,7 +588,6 @@ const UserPage: React.FC = () => {
             onUpdateUserFinish={handleUpdateUserFinish}
             isUpdateUserLoading={isUpdateUserLoading}
             updateUserForm={updateUserForm}
-            treeSelectDataSource={userListDataSource}
           />
         </div>
         <div>
@@ -583,6 +609,70 @@ const UserPage: React.FC = () => {
             handleImportUser={handleImportUser}
           />
         </div>
+
+        {/* 分配角色模态框 */}
+        <Modal
+          title="分配角色"
+          open={isAssignRoleModalVisible}
+          onCancel={handleAssignRoleCancel}
+          footer={null}
+        >
+          <Form
+            form={assignRoleForm}
+            name="assign_role_form"
+            onFinish={handleAssignRoleFinish}
+            {...formItemLayout}
+          >
+            <Form.Item
+              name="username"
+              label="用户名"
+              rules={[{ required: true, message: '请输入用户名' }]}
+            >
+              <Input
+                disabled
+                value={currentUser?.username || ''}
+                placeholder="用户名"
+              />
+            </Form.Item>
+            <Form.Item
+              name="nickname"
+              label="昵称"
+              rules={[{ required: true, message: '请输入昵称' }]}
+            >
+              <Input
+                disabled
+                value={currentUser?.nickname || ''}
+                placeholder="昵称"
+              />
+            </Form.Item>
+            <Form.Item
+              name="roles"
+              label="角色"
+              rules={[{ required: true, message: "请选择至少一个角色" }]}
+            >
+              <Select
+                mode="multiple"
+                style={{ width: "100%" }}
+                placeholder="请选择角色"
+                optionFilterProp="label"
+              >
+                {availableRoles?.map((role) => (
+                  <Select.Option key={role.id} value={role.id} label={role.name}>
+                    {role.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 4, span: 18 }}>
+              <Button type="primary" htmlType="submit" loading={isAssignRoleLoading}>
+                确定
+              </Button>
+              <Button onClick={handleAssignRoleCancel} style={{ marginLeft: 8 }}>
+                取消
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     </div>
   );

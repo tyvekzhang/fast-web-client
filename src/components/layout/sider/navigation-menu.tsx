@@ -51,7 +51,11 @@ const LayoutMenu = memo(() => {
   };
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
-    router.push(key);
+    if (key === '/chat') {
+      window.open(key, '_blank');
+    } else {
+      router.push(key);
+    }
   };
 
   return (

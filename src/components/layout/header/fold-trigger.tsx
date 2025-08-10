@@ -1,4 +1,4 @@
-import { UnfoldIcon } from '@/assets/icons';
+import { Sidebar } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { useLayoutStore } from '@/stores/layout-store';
 
@@ -9,11 +9,11 @@ export default function FoldTrigger() {
     <span
       className={cn(
         'flex h-12 cursor-pointer align-middle items-center justify-start',
-        !collapsed && 'rotate-180',
+        collapsed && 'rotate-180',
       )}
       onClick={toggleCollapsed}
     >
-      <UnfoldIcon></UnfoldIcon>
+      <Sidebar size={22} className="text-gray-600"></Sidebar>
     </span>
   );
 }

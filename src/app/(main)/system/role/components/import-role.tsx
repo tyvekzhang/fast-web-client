@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { exportRoleTemplate } from '@/service/role';
-import { CreateRole, ImportRolesResponse } from '@/types/role';
+import { CreateRole, ImportRolesResponse} from '@/types/role';
 import { InboxOutlined } from '@ant-design/icons';
 import { Button, Modal, Table, Upload, UploadFile, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -43,12 +43,7 @@ const ImportRoleComponent: React.FC<ImportRoleProps> = ({
     <Button key="back" onClick={handleImportRoleCancel}>
       取消
     </Button>,
-    <Button
-      key="submit"
-      type="primary"
-      loading={isImportRoleLoading}
-      onClick={handleImportRoleConfirm}
-    >
+    <Button key="submit" type="primary" loading={isImportRoleLoading} onClick={handleImportRoleConfirm}>
       确定
     </Button>,
   ];
@@ -74,18 +69,17 @@ const ImportRoleComponent: React.FC<ImportRoleProps> = ({
   // 表格列信息
   const RoleColumns: ColumnsType<CreateRole> = [
     {
-      title: '序号',
-      dataIndex: 'No',
-      key: 'No',
-      render: (_: number, _record: CreateRole, rowIndex: number) =>
-        rowIndex + 1,
-      width: '8%',
+      title: "序号",
+      dataIndex: "No",
+      key: "No",
+      render: (_: number, _record: CreateRole, rowIndex: number) => rowIndex + 1,
+      width: "8%",
     },
     {
-      title: '错误信息',
-      dataIndex: 'errMsg',
-      key: 'errMsg',
-      render: (text) => (text ? text : '-'),
+      title: "错误信息",
+      dataIndex: "errMsg",
+      key: "errMsg",
+      render: (text) => (text ? text : "-"),
     },
   ];
 
@@ -93,9 +87,7 @@ const ImportRoleComponent: React.FC<ImportRoleProps> = ({
     await exportRoleTemplate();
   };
 
-  const customUploadRequest = async (
-    options: UploadRequestOption,
-  ): Promise<void | undefined> => {
+  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -134,7 +126,7 @@ const ImportRoleComponent: React.FC<ImportRoleProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={roleImportFileList}
+              fileList={ roleImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="sc-upload-drag-icon">
@@ -144,18 +136,15 @@ const ImportRoleComponent: React.FC<ImportRoleProps> = ({
               <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div
-            onClick={handleRoleExportTemplate}
-            className="cursor-pointer mt-4 text-blue-600"
-          >
+          <div onClick={handleRoleExportTemplate} className="cursor-pointer mt-4 text-blue-600">
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={RoleColumns}
-            dataSource={CreateRoleList}
+            columns={ RoleColumns}
+            dataSource={ CreateRoleList}
             pagination={false}
             bordered={false}
             rowKey={'id'}

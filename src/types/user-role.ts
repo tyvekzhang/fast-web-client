@@ -14,9 +14,9 @@
 import { PaginationRequest } from '.';
 
 export interface ListUserRolesRequest extends PaginationRequest {
-  id: string;
+  id?: string;
 
-  create_time: string;
+  create_time?: string;
 }
 
 export interface UserRole {

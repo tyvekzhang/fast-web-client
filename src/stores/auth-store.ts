@@ -24,8 +24,8 @@ export const useAuthStore = create<AuthStore>()(
       token: null,
       loading: false,
       user: {
-        name: 'John Doe',
-        avatar: '',
+        name: 'Admin',
+        avatar: '/admin.png',
       },
       login: async (loginRequest: OAuth2PasswordRequestForm) => {
         set({ loading: true });

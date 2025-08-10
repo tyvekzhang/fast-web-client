@@ -14,9 +14,9 @@
 import { PaginationRequest } from '.';
 
 export interface ListDictDataRequest extends PaginationRequest {
-  label: string;
+  label?: string;
 
-  value: string;
+  value?: string;
 
   type: string;
 }

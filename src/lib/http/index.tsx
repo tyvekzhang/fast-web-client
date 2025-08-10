@@ -49,6 +49,16 @@ class HttpClient {
     return !!contentDisposition && contentDisposition.includes('attachment');
   }
 
+  private isStreamingResponse(response: AxiosResponse): boolean {
+    const contentType = response.headers?.['content-type'];
+    const transferEncoding = response.headers?.['transfer-encoding'];
+    
+    return (
+        contentType?.includes('application/octet-stream') ||
+        (response.data instanceof ReadableStream)
+    );
+}
+
   private setupInterceptors() {
     // Request interceptor
     this.instance.interceptors.request.use(
@@ -79,7 +89,7 @@ class HttpClient {
       (response) => {
         NProgress.done();
         const { data } = response;
-        if (this.isFileAttachment(response)) {
+        if (this.isFileAttachment(response) || this.isStreamingResponse(response)) {
           return response;
         } else if (this.isOriginalResponse(data)) {
           return data;
@@ -129,7 +139,7 @@ class HttpClient {
     );
   }
 
-  private getToken(): UserCredential | null {
+  public getToken(): UserCredential | null {
     // Get token from localStorage
     try {
       const authStorage = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.AUTH);

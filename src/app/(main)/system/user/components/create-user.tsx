@@ -10,10 +10,17 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License.import { Input } from 'antd';
-import { CreateUser, User } from '@/types/user';
-import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Input, Modal, Radio } from 'antd';
+// limitations under the License.
+
+import { useDictDataOptions } from '@/service/dict-datum';
+import { CheckboxOptionType } from 'antd';
+import { Form, Modal, Button } from 'antd';
+import { Input } from 'antd';
+import { Select, Radio } from 'antd';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import { CreateUser } from '@/types/user';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 
@@ -28,7 +35,6 @@ interface CreateUserProps {
   onCreateUserFinish: (createUser: CreateUser) => void;
   isCreateUserLoading: boolean;
   createUserForm: FormInstance;
-  treeSelectDataSource?: User[];
 }
 
 const CreateUserComponent: React.FC<CreateUserProps> = ({
@@ -37,32 +43,20 @@ const CreateUserComponent: React.FC<CreateUserProps> = ({
   onCreateUserFinish,
   isCreateUserLoading,
   createUserForm,
-  treeSelectDataSource,
 }) => {
-  const treeSelectDataTransform = [
-    { name: '根目录', id: 0, children: treeSelectDataSource },
-  ];
-  const treeSelectData = TreeSelectUtil.convert(treeSelectDataTransform as any);
+  
+  const { dictData } = useDictDataOptions("user_status".split(","))
   const footerButtons = useMemo(
     () => [
       <Button key="back" onClick={onCreateUserCancel}>
         取消
       </Button>,
-      <Button
-        key="submit"
-        type="primary"
-        loading={isCreateUserLoading}
-        onClick={() => createUserForm.submit()}
-      >
+      <Button key="submit" type="primary" loading={isCreateUserLoading} onClick={() => createUserForm.submit()}>
         确定
       </Button>,
     ],
     [isCreateUserLoading, createUserForm, onCreateUserCancel],
   );
-  const dictData = {
-    key1: 'value1',
-    key2: 'value2',
-  };
 
   return (
     <div>
@@ -75,51 +69,28 @@ const CreateUserComponent: React.FC<CreateUserProps> = ({
       >
         <Form
           {...createUserFormItemLayout}
-          form={createUserForm}
+          initialValues={{status: "1"}}
+          form={ createUserForm}
           name="createUser"
           onFinish={onCreateUserFinish}
           className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
         >
-          <Form.Item
-            name="username"
-            label="用户名"
-            rules={[{ required: false, message: '请输入用户名' }]}
-          >
+          <Form.Item name="username" label="用户名" rules={[{ required: false, message: '请输入用户名' }]}>
             <Input placeholder="请输入用户名" />
           </Form.Item>
-          <Form.Item
-            name="password"
-            label="密码"
-            rules={[{ required: false, message: '请输入密码' }]}
-          >
+          <Form.Item name="password" label="密码" rules={[{ required: false, message: '请输入密码' }]}>
             <Input placeholder="请输入密码" />
           </Form.Item>
-          <Form.Item
-            name="nickname"
-            label="昵称"
-            rules={[{ required: false, message: '请输入昵称' }]}
-          >
+          <Form.Item name="nickname" label="昵称" rules={[{ required: false, message: '请输入昵称' }]}>
             <Input placeholder="请输入昵称" />
           </Form.Item>
-          <Form.Item
-            name="avatar_url"
-            label="头像地址"
-            rules={[{ required: false, message: '请输入头像地址' }]}
-          >
+          <Form.Item name="avatar_url" label="头像地址" rules={[{ required: false, message: '请输入头像地址' }]}>
             <Input placeholder="请输入头像地址" />
           </Form.Item>
-          <Form.Item
-            name="status"
-            label="状态"
-            rules={[{ required: false, message: '请输入状态' }]}
-          >
-            <Radio.Group options={['请选择字典生成']} />
+          <Form.Item name="status" label="状态" rules={[{ required: false, message: '请输入状态' }]}>
+            <Radio.Group options={ dictData["user_status"] as CheckboxOptionType[] } />
           </Form.Item>
-          <Form.Item
-            name="remark"
-            label="备注"
-            rules={[{ required: false, message: '请输入备注' }]}
-          >
+          <Form.Item name="remark" label="备注" rules={[{ required: false, message: '请输入备注' }]}>
             <Input.TextArea />
           </Form.Item>
         </Form>

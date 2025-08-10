@@ -10,10 +10,17 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License.import { Input } from 'antd';
-import { Button, DatePicker, Form, Input, Select } from 'antd';
-import { FormInstance } from 'antd/es/form';
+// limitations under the License.
+
+import { useDictDataOptions } from '@/service/dict-datum';
+import { CheckboxOptionType } from 'antd';
+import { Form, Button } from 'antd';
+import { Input } from 'antd';
+import { Select, Radio } from 'antd';
+import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import { FormInstance } from 'antd/es/form';
 import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
@@ -24,7 +31,7 @@ interface QueryUserProps {
 }
 
 const queryUserFormItemLayout = {
-  labelCol: { span: 6 },
+  labelCol: { span: 7 },
   wrapperCol: { span: 18 },
 };
 
@@ -41,41 +48,33 @@ const QueryUserComponent: React.FC<QueryUserProps> = ({
     const values = await onQueryUserForm.validateFields();
     onQueryUserFinish(values);
   };
-  const dictData = {
-    key1: 'value1',
-    key2: 'value2',
-  };
+
+  
+  const { dictData } = useDictDataOptions("user_status".split(","))
 
   return (
     <Form
       {...queryUserFormItemLayout}
-      form={onQueryUserForm}
+      form={ onQueryUserForm}
       name="queryUser"
       onFinish={onQueryUserFinish}
     >
-      <div className="flex flex-wrap items-center gap-4 pt-6 justify-between">
-        <Form.Item name="id" label="主键">
-          <Input placeholder="请输入主键" allowClear />
-        </Form.Item>
-        <Form.Item name="username" label="用户名">
+      <div className='flex flex-wrap items-center gap-4 pt-6 justify-between'>
+        <Form.Item name="username" label="用户名" >
           <Input placeholder="请输入用户名" allowClear />
         </Form.Item>
-        <Form.Item name="password" label="密码">
-          <Input placeholder="请输入密码" allowClear />
-        </Form.Item>
-        <Form.Item name="nickname" label="昵称">
+        <Form.Item name="nickname" label="昵称" >
           <Input placeholder="请输入昵称" allowClear />
         </Form.Item>
-        <Form.Item name="avatar_url" label="头像地址">
-          <Input placeholder="请输入头像地址" allowClear />
+        <Form.Item name="status" label="状态" >
+          <Select
+              allowClear
+              placeholder="请选择状态"
+              options={ dictData["user_status"] }
+              className='min-w-30'
+          />
         </Form.Item>
-        <Form.Item name="status" label="状态">
-          <Select placeholder="请选择状态" allowClear />
-        </Form.Item>
-        <Form.Item name="remark" label="备注">
-          <Input placeholder="请输入备注" allowClear />
-        </Form.Item>
-        <Form.Item name="create_time" label="创建时间">
+        <Form.Item name="create_time" label="创建时间" >
           <DatePicker
             allowClear
             format="YYYY-MM-DD"
@@ -88,7 +87,7 @@ const QueryUserComponent: React.FC<QueryUserProps> = ({
           />
         </Form.Item>
         <Form.Item>
-          <div className="flex items-center gap-2 justify-start pr-4">
+          <div className='flex items-center gap-2 justify-start pr-4'>
             <Button
               onClick={handleQueryUserReset}
               className="bg-gray-50"

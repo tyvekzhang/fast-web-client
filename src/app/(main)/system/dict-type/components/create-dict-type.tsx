@@ -71,7 +71,7 @@ const CreateDictTypeComponent: React.FC<CreateDictTypeProps> = ({
         open={isCreateDictTypeModalVisible}
         onCancel={onCreateDictTypeCancel}
         footer={footerButtons}
-        width={'60%'}
+        width={'50%'}
       >
         <Form
           {...createDictTypeFormItemLayout}
@@ -82,23 +82,16 @@ const CreateDictTypeComponent: React.FC<CreateDictTypeProps> = ({
           <Form.Item
             name="name"
             label="字典名称"
-            rules={[{ required: false, message: '请输入字典名称' }]}
+            rules={[{ required: true, message: '请输入字典名称' }]}
           >
             <Input placeholder="请输入字典名称" />
           </Form.Item>
           <Form.Item
             name="type"
             label="字典类型"
-            rules={[{ required: false, message: '请输入字典类型' }]}
+            rules={[{ required: true, message: '请输入字典类型' }]}
           >
             <Input placeholder="请输入字典类型" />
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="状态"
-            rules={[{ required: false, message: '请输入状态' }]}
-          >
-            <Radio.Group options={['请选择字典生成']} />
           </Form.Item>
           <Form.Item
             name="comment"

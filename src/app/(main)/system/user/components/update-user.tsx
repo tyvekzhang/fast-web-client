@@ -10,10 +10,18 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License.import { Input } from 'antd';
-import { UpdateUser, User } from '@/types/user';
+// limitations under the License.
+
+import { useDictDataOptions } from '@/service/dict-datum';
+import { CheckboxOptionType } from 'antd';
+import { Form, Modal, Button, Input } from 'antd';
+import { DatePicker } from 'antd';
+import { Radio } from 'antd';
+import { ChevronDown } from 'lucide-react';
+import { TreeSelect } from 'antd';
 import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Input, Modal, Radio } from 'antd';
+import { User } from '@/types/user';
+import { UpdateUser } from '@/types/user';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 
@@ -39,30 +47,21 @@ const UpdateUserComponent: React.FC<UpdateUserProps> = ({
   updateUserForm,
   treeSelectDataSource,
 }) => {
-  const treeSelectDataTransform = [
-    { name: '根目录', id: 0, children: treeSelectDataSource },
-  ];
+  const treeSelectDataTransform = [{ name: '根目录', id: 0, children: treeSelectDataSource }];
   const treeSelectData = TreeSelectUtil.convert(treeSelectDataTransform as any);
+  
+  const { dictData } = useDictDataOptions("user_status".split(","))
   const footerButtons = useMemo(
     () => [
       <Button key="cancel" onClick={onUpdateUserCancel}>
         取消
       </Button>,
-      <Button
-        key="submit"
-        type="primary"
-        loading={isUpdateUserLoading}
-        onClick={onUpdateUserFinish}
-      >
+      <Button key="submit" type="primary" loading={isUpdateUserLoading} onClick={onUpdateUserFinish}>
         确定
       </Button>,
     ],
     [isUpdateUserLoading, onUpdateUserCancel],
   );
-  const dictData = {
-    key1: 'value1',
-    key2: 'value2',
-  };
 
   return (
     <Modal
@@ -71,65 +70,34 @@ const UpdateUserComponent: React.FC<UpdateUserProps> = ({
       onCancel={onUpdateUserCancel}
       footer={footerButtons}
       destroyOnHidden
-      width={'60%'}
+      width={"60%"}
     >
-      <Form
-        {...updateUserFormItemLayout}
-        form={updateUserForm}
-        name="updateUser"
-        onFinish={onUpdateUserFinish}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
-      >
-        <Form.Item
-          name="id"
-          label="主键"
-          rules={[{ required: false, message: '请输入' }]}
+        <Form
+          {...updateUserFormItemLayout}
+          form={ updateUserForm}
+          name="updateUser"
+          onFinish={onUpdateUserFinish}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
         >
-          <Input placeholder="请输入主键" />
-        </Form.Item>
-        <Form.Item
-          name="username"
-          label="用户名"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入用户名" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          label="密码"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入密码" />
-        </Form.Item>
-        <Form.Item
-          name="nickname"
-          label="昵称"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入昵称" />
-        </Form.Item>
-        <Form.Item
-          name="avatar_url"
-          label="头像地址"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入头像地址" />
-        </Form.Item>
-        <Form.Item
-          name="status"
-          label="状态"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Radio.Group options={['请选择字典生成']} />
-        </Form.Item>
-        <Form.Item
-          name="remark"
-          label="备注"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-      </Form>
+          <Form.Item name="username" label="用户名" rules={[{ required: false, message: '请输入' }]}>
+            <Input placeholder="请输入用户名" />
+          </Form.Item>
+          <Form.Item name="password" label="密码" rules={[{ required: false, message: '请输入' }]}>
+            <Input placeholder="请输入密码" />
+          </Form.Item>
+          <Form.Item name="nickname" label="昵称" rules={[{ required: false, message: '请输入' }]}>
+            <Input placeholder="请输入昵称" />
+          </Form.Item>
+          <Form.Item name="avatar_url" label="头像地址" rules={[{ required: false, message: '请输入' }]}>
+            <Input placeholder="请输入头像地址" />
+          </Form.Item>
+          <Form.Item name="status" label="状态" rules={[{ required: false, message: '请输入' }]}>
+            <Radio.Group options={ dictData["user_status"] as CheckboxOptionType[] } />
+          </Form.Item>
+          <Form.Item name="remark" label="备注" rules={[{ required: false, message: '请输入' }]}>
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
     </Modal>
   );
 };

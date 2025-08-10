@@ -19,15 +19,9 @@ export interface ListUsersRequest extends PaginationRequest {
     
     username: string;
     
-    password: string;
-    
     nickname: string;
     
-    avatar_url: string;
-    
     status: number;
-    
-    remark: string;
     
     create_time: string;
     
@@ -38,8 +32,6 @@ export interface User {
     id: string;
     
     username: string;
-    
-    password: string;
     
     nickname: string;
     
@@ -113,17 +105,9 @@ export interface BatchCreateUserResponse {
 
 export interface BatchUpdateUser {
     
-    username: string;
-    
-    password: string;
-    
-    nickname: string;
-    
     avatar_url: string;
     
     status: number;
-    
-    remark: string;
     
 }
 

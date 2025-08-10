@@ -1,25 +1,29 @@
 'use client';
 
 import { useGlobalToast } from '@/components/assist/global-toast';
-import {
-  BellOutlined,
-  CheckCircleOutlined,
-  DeleteOutlined,
-  LineChartOutlined,
-  PlusOutlined,
-  ThunderboltOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
 import { Badge, Button, Card, List, Statistic } from 'antd';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-const { message, notification } = useGlobalToast();
+import { useRouter } from 'next/navigation';
+import {
+  Bell,
+  CheckCircle,
+  Trash2,
+  LineChart,
+  Plus,
+  Zap,
+  Upload,
+  Bot
+} from 'lucide-react';
+
 
 const Home = () => {
+  const { message, notification } = useGlobalToast();
   const { t } = useTranslation('common');
+  const router = useRouter();
 
   const showToast = () => {
-    message.success('操作成功');
+    message.success('缓存已清空');
   };
 
   const showNotifaction = () => {
@@ -27,6 +31,13 @@ const Home = () => {
       message: '出错了',
       description: '网络请求失败，请重试。',
     });
+  };
+
+  const handleCodeGenClick = () => {
+    router.push('/tool/codegen');
+  };
+  const handleBotClick = () => {
+    router.push('/chat');
   };
 
   useEffect(() => {
@@ -41,19 +52,19 @@ const Home = () => {
           <StatisticCard
             title="用户数"
             value={112893}
-            icon={<LineChartOutlined />}
+            icon={<LineChart className="w-4 h-4" />}
           />
           <StatisticCard
             title="活跃度"
             value={93.2}
             suffix="%"
-            icon={<ThunderboltOutlined />}
+            icon={<Zap className="w-4 h-4" />}
           />
-          <StatisticCard title="警报数" value={23} icon={<BellOutlined />} />
+          <StatisticCard title="警报数" value={23} icon={<Bell className="w-4 h-4" />} />
           <StatisticCard
             title="完成任务"
             value={76}
-            icon={<CheckCircleOutlined />}
+            icon={<CheckCircle className="w-4 h-4" />}
           />
         </div>
       </Card>
@@ -61,13 +72,20 @@ const Home = () => {
       {/* 快捷操作 */}
       <Card title="⚡ 快捷操作" className="shadow rounded-2xl">
         <div className="flex flex-wrap gap-3">
-          <Button type="primary" icon={<PlusOutlined />} onClick={showToast}>
-            创建项目
+          <Button
+            type="primary"
+            icon={<Plus className="w-4 h-4" />}
+            onClick={handleCodeGenClick}
+          >
+            代码生成
           </Button>
-          <Button icon={<UploadOutlined />} onClick={showNotifaction}>
-            导入数据
+          <Button
+            icon={<Bot className="w-4 h-4" />}
+            onClick={handleBotClick}
+          >
+            AI助手
           </Button>
-          <Button danger icon={<DeleteOutlined />}>
+          <Button danger onClick={showToast} icon={<Trash2 className="w-4 h-4" />}>
             清空缓存
           </Button>
         </div>
@@ -93,7 +111,6 @@ const Home = () => {
           <List
             size="small"
             dataSource={[
-              '用户A 上传了一个新文件',
               '系统完成了每日备份',
               '管理员更新了权限设置',
             ]}

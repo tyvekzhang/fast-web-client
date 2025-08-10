@@ -11,29 +11,36 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { UserDetail } from '@/types/user';
-import { Descriptions, Drawer } from 'antd';
+
+
+import { useDictDataOptions } from '@/service/dict-datum';
+import { CheckboxOptionType } from 'antd';
 import dayjs from 'dayjs';
-import React from 'react';
+import {
+  Descriptions,
+  Drawer,
+  Button,
+  Space,
+} from 'antd';
+import { UserDetail } from '@/types/user';
+import React, { useMemo } from 'react';
 
 interface UserDetailDrawerProps {
   isUserDetailDrawerVisible: boolean;
   onUserDetailClose: () => void;
   userDetail: UserDetail | undefined;
-  loading: boolean;
+  loading: boolean
 }
 
 const UserDetailComponent: React.FC<UserDetailDrawerProps> = ({
   isUserDetailDrawerVisible,
   onUserDetailClose,
   userDetail,
-  loading,
+  loading
 }) => {
-  const dictData = {
-    key1: 'value1',
-    key2: 'value2',
-  };
 
+  
+  const { dictData } = useDictDataOptions("user_status".split(","))
   return (
     <Drawer
       title="用户信息详情"
@@ -43,29 +50,37 @@ const UserDetailComponent: React.FC<UserDetailDrawerProps> = ({
       loading={loading}
       width={600}
     >
-      {userDetail && (
+      { userDetail && (
         <Descriptions column={1} bordered>
-          <Descriptions.Item label="主键">{userDetail.id}</Descriptions.Item>
           <Descriptions.Item label="用户名">
-            {userDetail.username}
-          </Descriptions.Item>
-          <Descriptions.Item label="密码">
-            {userDetail.password}
+              { userDetail.username}
           </Descriptions.Item>
           <Descriptions.Item label="昵称">
-            {userDetail.nickname}
+              { userDetail.nickname}
           </Descriptions.Item>
           <Descriptions.Item label="头像地址">
-            {userDetail.avatar_url}
+              { userDetail.avatar_url}
           </Descriptions.Item>
           <Descriptions.Item label="状态">
-            {userDetail.status}
+              {(() => {
+                const values = (userDetail.status || '').toString().split(',');
+                return values.map((value, index) => {
+                  const item = dictData["user_status"] && dictData["user_status"].find((d: Record<string, string>) => d.value === value);
+                  const content = item ? <span key={value}>{item.label}</span> : <span key={value}>-</span>;
+                  return index < values.length - 1 ? (
+                    <React.Fragment key={index}>
+                      {content}
+                      ,&nbsp;
+                    </React.Fragment>
+                  ) : content;
+                });
+              })()}
           </Descriptions.Item>
           <Descriptions.Item label="备注">
-            {userDetail.remark}
+              { userDetail.remark}
           </Descriptions.Item>
           <Descriptions.Item label="创建时间">
-            {dayjs(userDetail.create_time).format('YYYY-MM-DD')}
+              {dayjs(userDetail.create_time).format('YYYY-MM-DD')}
           </Descriptions.Item>
         </Descriptions>
       )}

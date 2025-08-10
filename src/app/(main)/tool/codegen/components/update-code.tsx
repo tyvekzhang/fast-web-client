@@ -426,7 +426,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
       open={open}
       onCancel={onClose}
       footer={footerButtons}
-      width={1000}
+      width={1200}
       style={{ top: 20 }}
       destroyOnHidden
     >

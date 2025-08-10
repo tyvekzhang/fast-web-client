@@ -44,8 +44,8 @@ import React, { useState } from 'react';
 import BatchUpdateRoleComponent from './components/batch-update-role';
 import CreateRoleComponent from './components/create-role';
 import ImportRoleComponent from './components/import-role';
-import QueryRoleComponent from './components/query-role';
 import RoleDetailComponent from './components/role-detail';
+import QueryRoleComponent from './components/query-role';
 import UpdateRoleComponent from './components/update-role';
 
 const RolePage: React.FC = () => {
@@ -140,93 +140,74 @@ const RolePage: React.FC = () => {
   // 表格列信息
   const roleColumns: ColumnsType<Role> = [
     {
-      title: 'Id',
-      dataIndex: '',
-      key: '',
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
       hidden: true,
     },
     {
-      title: '序号',
-      dataIndex: 'No',
-      key: 'No',
+      title: "序号",
+      dataIndex: "No",
+      key: "No",
       render: (_: number, _record: Role, rowIndex: number) => rowIndex + 1,
-      width: '8%',
+      width: "8%",
     },
     {
-      title: '角色ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: '6%',
-    },
-    {
-      title: '角色名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "角色名称",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => (text ? text : "-"),
+      width: "12%",
       ellipsis: true,
     },
     {
-      title: '角色权限字符串',
-      dataIndex: 'code',
-      key: 'code',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "权限标识",
+      dataIndex: "code",
+      key: "code",
+      render: (text) => (text ? text : "-"),
+      width: "12%",
       ellipsis: true,
     },
     {
-      title: '显示顺序',
-      dataIndex: 'sort',
-      key: 'sort',
-      width: '6%',
+      title: "显示顺序",
+      dataIndex: "sort",
+      key: "sort",
+      width: "8%",
     },
     {
-      title: '数据范围',
-      dataIndex: 'data_scope',
-      key: 'data_scope',
-      width: '6%',
+      title: "角色状态",
+      dataIndex: "status",
+      key: "status",
+      width: "8%",
     },
     {
-      title: '数据范围',
-      dataIndex: 'data_scope_dept_ids',
-      key: 'data_scope_dept_ids',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "备注",
+      dataIndex: "comment",
+      key: "comment",
+      render: (text) => (text ? text : "-"),
+      width: "12%",
       ellipsis: true,
     },
     {
-      title: '角色状态',
-      dataIndex: 'status',
-      key: 'status',
-      width: '6%',
-    },
-    {
-      title: '备注',
-      dataIndex: 'comment',
-      key: 'comment',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
+      title: "创建时间",
+      dataIndex: "create_time",
+      key: "create_time",
+      render: (text: string) => (
+        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span>: "-"
+      ),
+      width: "14%",
       ellipsis: true,
     },
     {
-      title: '创建时间',
-      dataIndex: 'create_time',
-      key: 'create_time',
-      render: (text: string) =>
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
-      width: '14%',
-      ellipsis: true,
-    },
-    {
-      title: '操作',
-      key: 'action',
-      align: 'center',
+      title: "操作",
+      key: "action",
+      align: "center",
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onRoleDetail(record)}
+            onClick={ () => onRoleDetail(record)}
           >
             <Eye className="w-3 h-3" />
             详情
@@ -234,7 +215,7 @@ const RolePage: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onUpdateRole(record)}
+            onClick={ () => onUpdateRole(record)}
           >
             <PenLine className="w-3 h-3" />
             编辑
@@ -256,10 +237,7 @@ const RolePage: React.FC = () => {
           </Popconfirm>
 
           {showMore && (
-            <button
-              type="button"
-              className="flex items-center gap-0.5 text-xs btn-operation"
-            >
+            <button type="button" className="flex items-center gap-0.5 text-xs btn-operation">
               <span>更多</span>
               <MoreHorizontal className="w-3 h-3" />
             </button>
@@ -267,7 +245,7 @@ const RolePage: React.FC = () => {
         </div>
       ),
     },
-  ];
+  ]
 
   const [visibleColumns, setVisibleColumns] = useState(
     roleColumns.map((col) => col.key),
@@ -505,8 +483,8 @@ const RolePage: React.FC = () => {
       </TransitionWrapper>
       <div>
         <ActionButtonComponent
-          onCreate={onCreateRole}
-          onImport={onImportRole}
+          onCreate={onCreateRole }
+          onImport={onImportRole }
           onExport={onRoleExport}
           onBatchModify={onRoleBatchModify}
           onConfirmBatchRemove={handleRoleBatchRemove}
@@ -518,7 +496,7 @@ const RolePage: React.FC = () => {
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={isBatchRemoveLoading}
           isExportLoading={isExportLoading}
-          rawColumns={roleColumns as any[]}
+          rawColumns={ roleColumns as any[]}
           visibleColumns={visibleColumns as any[]}
           onToggleColumnVisibility={onToggleColumnVisibility}
           actionConfig={actionConfig}
@@ -528,7 +506,7 @@ const RolePage: React.FC = () => {
       <div>
         <PaginatedTable<Role>
           columns={filteredRoleColumns}
-          dataSource={roleListDataSource || []}
+          dataSource={ roleListDataSource || []}
           total={total || 0}
           current={current}
           page_size={pageSize}
@@ -547,14 +525,13 @@ const RolePage: React.FC = () => {
             onCreateRoleFinish={handleCreateRoleFinish}
             isCreateRoleLoading={isCreateRoleLoading}
             createRoleForm={createRoleForm}
-            treeSelectDataSource={roleListDataSource}
           />
         </div>
         <div>
           <RoleDetailComponent
             isRoleDetailDrawerVisible={isRoleDetailDrawerVisible}
             onRoleDetailClose={onRoleDetailClose}
-            roleDetail={roleDetail}
+            roleDetail={ roleDetail}
             loading={isRoleDetailLoading}
           />
         </div>
@@ -565,7 +542,7 @@ const RolePage: React.FC = () => {
             onUpdateRoleFinish={handleUpdateRoleFinish}
             isUpdateRoleLoading={isUpdateRoleLoading}
             updateRoleForm={updateRoleForm}
-            treeSelectDataSource={roleListDataSource}
+            treeSelectDataSource={ roleListDataSource}
           />
         </div>
         <div>
@@ -574,7 +551,7 @@ const RolePage: React.FC = () => {
             onBatchUpdateRolesCancel={handleBatchUpdateRolesCancel}
             onBatchUpdateRolesFinish={handleBatchUpdateRolesFinish}
             isBatchUpdateRolesLoading={isBatchUpdateRolesLoading}
-            batchUpdateRolesForm={batchUpdateRolesForm}
+            batchUpdateRolesForm={ batchUpdateRolesForm}
           />
         </div>
 
@@ -584,7 +561,7 @@ const RolePage: React.FC = () => {
             isImportRoleLoading={isImportRoleLoading}
             onImportRoleFinish={onImportRoleFinish}
             onImportRoleCancel={handleImportRoleCancel}
-            handleImportRole={handleImportRole}
+            handleImportRole={handleImportRole }
           />
         </div>
       </div>

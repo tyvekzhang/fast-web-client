@@ -160,7 +160,7 @@ const DictTypePage: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text) => (text ? text : '-'),
-      width: '12%',
+      width: '16%',
       ellipsis: true,
     },
     {
@@ -180,7 +180,7 @@ const DictTypePage: React.FC = () => {
         }
         return '-';
       },
-      width: '12%',
+      width: '16%',
       ellipsis: true,
     },
     {
@@ -188,7 +188,7 @@ const DictTypePage: React.FC = () => {
       dataIndex: 'comment',
       key: 'comment',
       render: (text) => (text ? text : '-'),
-      width: '12%',
+      width: '16%',
       ellipsis: true,
     },
     {

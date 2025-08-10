@@ -67,8 +67,22 @@ const DictDatumPage: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const [queryDictDatumForm] = Form.useForm();
+  const [createDictDatumForm] = Form.useForm();
+  const searchParams = useSearchParams();
+  const [dictType, setDictType] = useState(searchParams.get('type'));
+  createDictDatumForm.setFieldValue('type', dictType);
+  queryDictDatumForm.setFieldValue('type', dictType);
+  const router = useRouter();
+  if (dictType === null || dictType === undefined) {
+    router.push('/system/dict-type');
+  }
+  const initRequestData: ListDictDataRequest = {
+    current: 1,
+    page_size: 10,
+    type: dictType || '',
+  };
   const [dictDatumQueryParams, setDictDatumQueryParams] =
-    useState<ListDictDataRequest>();
+    useState<ListDictDataRequest>(initRequestData);
 
   // 用 useDictData 获取菜单列表数据
   const {
@@ -194,7 +208,7 @@ const DictDatumPage: React.FC = () => {
       key: 'create_time',
       render: (text: string) =>
         text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
-      width: '14%',
+      width: '15%',
       ellipsis: true,
     },
     {
@@ -271,15 +285,7 @@ const DictDatumPage: React.FC = () => {
   const [isCreateDictDatumLoading, setIsCreateDictDatumLoading] =
     useState(false);
 
-  const [createDictDatumForm] = Form.useForm();
-  const searchParams = useSearchParams();
-  const [dictType, setDictType] = useState(searchParams.get('type'));
-  createDictDatumForm.setFieldValue('type', dictType);
-  queryDictDatumForm.setFieldValue('type', dictType);
-  const router = useRouter();
-  if (dictType === null || dictType === undefined) {
-    router.push('/system/dict-type');
-  }
+
   const onDictTypeChange = (value: string) => {
     setDictType(value);
     createDictDatumForm.setFieldValue('type', value);

@@ -31,6 +31,7 @@ import {
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 
+
 /**
  * Retrieve role details.
  *
@@ -73,6 +74,7 @@ export function useRoles(req: Partial<ListRolesRequest>) {
   };
 }
 
+
 /**
  * Create a new role.
  *
@@ -83,6 +85,7 @@ export function createRole(req: CreateRoleRequest) {
   return httpClient.post<number>('/roles', req);
 }
 
+
 /**
  * Update an existing role.
  *
@@ -92,6 +95,7 @@ export function updateRole(req: UpdateRoleRequest) {
   return httpClient.put<Role>('/roles', req);
 }
 
+
 /**
  * Delete role by ID
  *
@@ -100,6 +104,7 @@ export function updateRole(req: UpdateRoleRequest) {
 export function deleteRole(id: string) {
   return httpClient.delete<void>(`/roles/${id}`);
 }
+
 
 /**
  *  Batch create roles.
@@ -111,6 +116,7 @@ export function batchCreateRoles(req: BatchCreateRolesRequest) {
   return httpClient.post<number[]>('/roles:batchCreate', req);
 }
 
+
 /**
  * Batch updates multiple roles in a single operation.
  *
@@ -120,6 +126,7 @@ export function batchUpdateRoles(req: BatchUpdateRolesRequest) {
   return httpClient.put<BatchUpdateRolesResponse>('/role:batchUpdate', req);
 }
 
+
 /**
  * Batch delete roles.
  *
@@ -128,6 +135,7 @@ export function batchUpdateRoles(req: BatchUpdateRolesRequest) {
 export function batchDeleteRole(req: BatchDeleteRolesRequest) {
   return httpClient.delete<void>('/roles:batchDelete', { data: req });
 }
+
 
 /**
  *  Export the Excel template for role import.
@@ -143,6 +151,7 @@ export async function exportRoleTemplate() {
   );
   downloadBlob(response, 'role_import_tpl.xlsx');
 }
+
 
 /**
  * Export role data based on the provided role IDs.
@@ -162,6 +171,7 @@ export async function exportRole(req: ExportRolesRequest) {
   );
   downloadBlob(response, 'role_data_export.xlsx');
 }
+
 
 /**
  * Import roles from an uploaded Excel file.

@@ -28,7 +28,7 @@ export function BreadcrumbLayout() {
   }, [pathname, menuList]);
 
   return (
-    <div className="flex-center-v px-2">
+    <div className="flex-center-v px-2 font-medium">
       <Breadcrumb items={breadcrumbs} />
     </div>
   );

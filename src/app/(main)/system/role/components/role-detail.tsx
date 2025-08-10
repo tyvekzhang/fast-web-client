@@ -11,28 +11,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { RoleDetail } from '@/types/role';
-import { Descriptions, Drawer } from 'antd';
 import dayjs from 'dayjs';
-import React from 'react';
+import {
+  Descriptions,
+  Drawer,
+  Button,
+  Space,
+} from 'antd';
+import { RoleDetail } from '@/types/role';
+import React, { useMemo } from 'react';
 
 interface RoleDetailDrawerProps {
   isRoleDetailDrawerVisible: boolean;
   onRoleDetailClose: () => void;
   roleDetail: RoleDetail | undefined;
-  loading: boolean;
+  loading: boolean
 }
 
 const RoleDetailComponent: React.FC<RoleDetailDrawerProps> = ({
   isRoleDetailDrawerVisible,
   onRoleDetailClose,
   roleDetail,
-  loading,
+  loading
 }) => {
   const dictData = {
-    key1: 'value1',
-    key2: 'value2',
-  };
+    "key1": "value1",
+    "key2": "value2"
+}
 
   return (
     <Drawer
@@ -43,32 +48,58 @@ const RoleDetailComponent: React.FC<RoleDetailDrawerProps> = ({
       loading={loading}
       width={600}
     >
-      {roleDetail && (
+      { roleDetail && (
         <Descriptions column={1} bordered>
-          <Descriptions.Item label="角色ID">{roleDetail.id}</Descriptions.Item>
           <Descriptions.Item label="角色名称">
-            {roleDetail.name}
+              { roleDetail.name}
           </Descriptions.Item>
           <Descriptions.Item label="角色权限字符串">
-            {roleDetail.code}
+              { roleDetail.code}
           </Descriptions.Item>
           <Descriptions.Item label="显示顺序">
-            {roleDetail.sort}
+              { roleDetail.sort}
+          </Descriptions.Item>
+          <Descriptions.Item label="操作类型">
+              {(() => {
+                const values = (roleDetail.operation_type || '').toString().split(',');
+                return values.map((value, index) => {
+                  const item = dictData["operation_type"] && dictData["operation_type"].find((d: Record<string, string>) => d.value === value);
+                  const content = item ? <span key={value}>{item.label}</span> : <span key={value}>-</span>;
+                  return index < values.length - 1 ? (
+                    <React.Fragment key={index}>
+                      {content}
+                      ,&nbsp;
+                    </React.Fragment>
+                  ) : content;
+                });
+              })()}
           </Descriptions.Item>
           <Descriptions.Item label="数据范围">
-            {roleDetail.data_scope}
+              { roleDetail.data_scope}
           </Descriptions.Item>
           <Descriptions.Item label="数据范围">
-            {roleDetail.data_scope_dept_ids}
+              { roleDetail.data_scope_dept_ids}
           </Descriptions.Item>
           <Descriptions.Item label="角色状态">
-            {roleDetail.status}
+              {(() => {
+                const values = (roleDetail.status || '').toString().split(',');
+                return values.map((value, index) => {
+                  const item = dictData["role_status"] && dictData["role_status"].find((d: Record<string, string>) => d.value === value);
+                  const content = item ? <span key={value}>{item.label}</span> : <span key={value}>-</span>;
+                  return index < values.length - 1 ? (
+                    <React.Fragment key={index}>
+                      {content}
+                      ,&nbsp;
+                    </React.Fragment>
+                  ) : content;
+                });
+              })()}
           </Descriptions.Item>
           <Descriptions.Item label="备注">
-            {roleDetail.comment}
+              { roleDetail.comment}
           </Descriptions.Item>
           <Descriptions.Item label="创建时间">
-            {dayjs(roleDetail.create_time).format('YYYY-MM-DD')}
+              {dayjs(roleDetail.create_time).format('YYYY-MM-DD')}
           </Descriptions.Item>
         </Descriptions>
       )}

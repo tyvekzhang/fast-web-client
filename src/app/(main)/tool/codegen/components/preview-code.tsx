@@ -1,8 +1,8 @@
 'use client';
 import { codePreview } from '@/service/code-gen';
 import { CodePreviewResponse } from '@/types/code-gen';
-import { message, Modal, Tabs } from 'antd';
-import { Copy, X } from 'lucide-react';
+import { message, Modal, Skeleton, Tabs } from 'antd';
+import { Copy, X, Check } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -28,13 +28,14 @@ const CodePreview: React.FC<CodePreviewProps> = ({
   const [codePreviewData, setCodePreviewData] =
     useState<CodePreviewResponse | null>(null);
   const [activeTab, setActiveTab] = useState<string>('');
-  const [copying, setCopying] = useState(false);
+  const [copiedTab, setCopiedTab] = useState<string | null>(null);
 
   // 关闭时清理数据
   useEffect(() => {
     if (!open) {
       setCodePreviewData(null);
       setActiveTab('');
+      setCopiedTab(null);
     }
   }, [open]);
 
@@ -170,17 +171,15 @@ const CodePreview: React.FC<CodePreviewProps> = ({
 
   const items = buildItems(codePreviewData);
 
-  // 复制按钮防抖
-  const copyToClipboard = async (text: string) => {
-    if (copying) return;
-    setCopying(true);
+  // 复制按钮
+  const copyToClipboard = async (text: string, tabKey: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      setCopiedTab(tabKey);
       message.success('已复制');
+      setTimeout(() => setCopiedTab(null), 5000);
     } catch {
       message.error('复制失败，请手动复制');
-    } finally {
-      setTimeout(() => setCopying(false), 800);
     }
   };
 
@@ -195,19 +194,24 @@ const CodePreview: React.FC<CodePreviewProps> = ({
   const renderTabContent = ({
     children,
     language,
+    key,
   }: {
     children: string;
     language: string;
+    key: string;
   }) => (
     <div className="relative">
       <button
-        onClick={() => copyToClipboard(children)}
+        onClick={() => copyToClipboard(children, key)}
         className="absolute right-2 top-2 p-2 hover:bg-gray-700 rounded"
         title="复制代码"
         aria-label="复制代码"
-        disabled={copying}
       >
-        <Copy className="text-gray-100 w-4 h-4" />
+        {copiedTab === key ? (
+          <Check className="text-gray-100 w-4 h-4" />
+        ) : (
+          <Copy className="text-gray-100 w-4 h-4" />
+        )}
       </button>
       <SyntaxHighlighter
         language={getLanguage(language)}
@@ -236,15 +240,8 @@ const CodePreview: React.FC<CodePreviewProps> = ({
       bodyStyle={{ minHeight: 400 }}
     >
       {!codePreviewData || items.length === 0 ? (
-        <div
-          style={{
-            minHeight: 300,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          加载中...
+        <div style={{ minHeight: 300, padding: 16 }}>
+          <Skeleton active paragraph={{ rows: 6 }} />
         </div>
       ) : (
         <Tabs
@@ -256,6 +253,7 @@ const CodePreview: React.FC<CodePreviewProps> = ({
             children: renderTabContent({
               children: item.children,
               language: item.language,
+              key: item.key,
             }),
           }))}
         />

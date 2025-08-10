@@ -48,9 +48,6 @@ const MenuDetailComponent: React.FC<MenuDetailDrawerProps> = ({
     color?: string,
   ) => <Tag color={color}>{map[value] ?? '未知'}</Tag>;
 
-  function getLabelByValue(dictData: Record<string, DictDataOptionItem[]>, arg1: string, arg2: string): React.ReactNode {
-    throw new Error('Function not implemented.');
-  }
 
   return (
     <Drawer

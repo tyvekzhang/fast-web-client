@@ -10,12 +10,20 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License.import { Input } from 'antd';
-import { BatchUpdateUser, User } from '@/types/user';
-import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Input, Modal, Radio } from 'antd';
+// limitations under the License.
+
+import { useDictDataOptions } from '@/service/dict-datum';
+import { CheckboxOptionType } from 'antd';
+import { Form, Modal, Button } from 'antd';
+import { Input } from 'antd';
+import { Select, Radio } from 'antd';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import { BatchUpdateUser } from '@/types/user';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
+
 
 interface BatchUpdateUsersProps {
   isBatchUpdateUsersModalVisible: boolean;
@@ -23,7 +31,6 @@ interface BatchUpdateUsersProps {
   onBatchUpdateUsersFinish: () => void;
   isBatchUpdateUsersLoading: boolean;
   batchUpdateUsersForm: FormInstance<BatchUpdateUser>;
-  treeSelectDataSource?: User[];
 }
 
 const batchUpdateUsersFormItemLayout = {
@@ -37,32 +44,20 @@ const BatchUpdateUsersComponent: React.FC<BatchUpdateUsersProps> = ({
   onBatchUpdateUsersFinish,
   isBatchUpdateUsersLoading,
   batchUpdateUsersForm,
-  treeSelectDataSource,
 }) => {
-  const treeSelectDataTransform = [
-    { name: '根目录', id: 0, children: treeSelectDataSource },
-  ];
-  const treeSelectData = TreeSelectUtil.convert(treeSelectDataTransform as any);
+  
+  const { dictData } = useDictDataOptions("user_status".split(","))
   const footerButtons = useMemo(
     () => [
       <Button key="cancel" onClick={onBatchUpdateUsersCancel}>
         取消
       </Button>,
-      <Button
-        key="submit"
-        type="primary"
-        loading={isBatchUpdateUsersLoading}
-        onClick={onBatchUpdateUsersFinish}
-      >
+      <Button key="submit" type="primary" loading={isBatchUpdateUsersLoading} onClick={onBatchUpdateUsersFinish}>
         确定
       </Button>,
     ],
     [isBatchUpdateUsersLoading, onBatchUpdateUsersCancel],
   );
-  const dictData = {
-    key1: 'value1',
-    key2: 'value2',
-  };
 
   return (
     <Modal
@@ -71,58 +66,22 @@ const BatchUpdateUsersComponent: React.FC<BatchUpdateUsersProps> = ({
       onCancel={onBatchUpdateUsersCancel}
       footer={footerButtons}
       destroyOnHidden
-      width={'60%'}
+      width={"60%"}
     >
-      <Form
-        {...batchUpdateUsersFormItemLayout}
-        form={batchUpdateUsersForm}
-        name="batchUpdateUsers"
-        onFinish={onBatchUpdateUsersFinish}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
-      >
-        <Form.Item
-          name="username"
-          label="用户名"
-          rules={[{ required: false, message: '请输入' }]}
+        <Form
+          {...batchUpdateUsersFormItemLayout}
+          form={ batchUpdateUsersForm}
+          name="batchUpdateUsers"
+          onFinish={onBatchUpdateUsersFinish}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
         >
-          <Input placeholder="请输入用户名" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          label="密码"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入密码" />
-        </Form.Item>
-        <Form.Item
-          name="nickname"
-          label="昵称"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入昵称" />
-        </Form.Item>
-        <Form.Item
-          name="avatar_url"
-          label="头像地址"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入头像地址" />
-        </Form.Item>
-        <Form.Item
-          name="status"
-          label="状态"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Radio.Group options={['请选择字典生成']} />
-        </Form.Item>
-        <Form.Item
-          name="remark"
-          label="备注"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-      </Form>
+          <Form.Item name="avatar_url" label="头像地址" rules={[{ required: false, message: '请输入' }]}>
+            <Input placeholder="请输入头像地址" />
+          </Form.Item>
+          <Form.Item name="status" label="状态" rules={[{ required: false, message: '请输入' }]}>
+            <Radio.Group options={ dictData["user_status"] as CheckboxOptionType[] } />
+          </Form.Item>
+        </Form>
     </Modal>
   );
 };

@@ -10,10 +10,15 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License.import { Input } from 'antd';
-import { Button, DatePicker, Form, Input, Select } from 'antd';
-import { FormInstance } from 'antd/es/form';
+// limitations under the License.
+
+import { Form, Button } from 'antd';
+import { Input } from 'antd';
+import { Select, Radio } from 'antd';
+import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import { FormInstance } from 'antd/es/form';
 import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
@@ -42,37 +47,25 @@ const QueryRoleComponent: React.FC<QueryRoleProps> = ({
     onQueryRoleFinish(values);
   };
   const dictData = {
-    key1: 'value1',
-    key2: 'value2',
-  };
+    "key1": "value1",
+    "key2": "value2"
+}
 
   return (
     <Form
       {...queryRoleFormItemLayout}
-      form={onQueryRoleForm}
+      form={ onQueryRoleForm}
       name="queryRole"
       onFinish={onQueryRoleFinish}
     >
-      <div className="flex flex-wrap items-center gap-4 pt-6 justify-between">
-        <Form.Item name="id" label="角色ID">
-          <Input placeholder="请输入角色ID" allowClear />
-        </Form.Item>
-        <Form.Item name="name" label="角色名称">
+      <div className='flex flex-wrap items-center gap-4 pt-6 justify-between'>
+        <Form.Item name="name" label="角色名称" >
           <Input placeholder="请输入角色名称" allowClear />
         </Form.Item>
-        <Form.Item name="code" label="角色权限字符串">
+        <Form.Item name="code" label="角色权限字符串" >
           <Input placeholder="请输入角色权限字符串" allowClear />
         </Form.Item>
-        <Form.Item name="sort" label="显示顺序">
-          <Input placeholder="请输入显示顺序" allowClear />
-        </Form.Item>
-        <Form.Item name="data_scope" label="数据范围">
-          <Input placeholder="请输入数据范围" allowClear />
-        </Form.Item>
-        <Form.Item name="status" label="角色状态">
-          <Select placeholder="请选择角色状态" allowClear />
-        </Form.Item>
-        <Form.Item name="create_time" label="创建时间">
+        <Form.Item name="create_time" label="创建时间" >
           <DatePicker
             allowClear
             format="YYYY-MM-DD"
@@ -85,7 +78,7 @@ const QueryRoleComponent: React.FC<QueryRoleProps> = ({
           />
         </Form.Item>
         <Form.Item>
-          <div className="flex items-center gap-2 justify-start pr-4">
+          <div className='flex items-center gap-2 justify-start pr-4'>
             <Button
               onClick={handleQueryRoleReset}
               className="bg-gray-50"

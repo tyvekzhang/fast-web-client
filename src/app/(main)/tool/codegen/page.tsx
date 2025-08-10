@@ -114,28 +114,29 @@ export default function CodeGen() {
       {
         title: '数据库',
         dataIndex: 'database_name',
-        width: '15%',
+        width: '10%',
       },
       {
         title: '表名',
         dataIndex: 'table_name',
-        width: '10%',
+        width: '12%',
       },
       {
         title: '表描述',
         dataIndex: 'comment',
         render: (text) => text || '--',
-        width: '15%',
+        width: '12%',
+        ellipsis: true,
       },
       {
         title: '数据模型',
         dataIndex: 'entity',
-        width: '15%',
+        width: '12%',
       },
       {
         title: '创建时间',
         dataIndex: 'create_time',
-        width: '18%',
+        width: '16%',
         render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
       },
       {
