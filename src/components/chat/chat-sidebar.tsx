@@ -3,14 +3,17 @@
 import { useState } from "react"
 import { Button, Input, Dropdown, Modal, message } from "antd"
 import {
-  PlusOutlined,
-  MessageOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  MoreOutlined,
-} from "@ant-design/icons"
+  Plus,
+  MessageSquare,
+  Trash2,
+  Edit,
+  Menu,
+  ChevronLeft,
+  ChevronRight,
+  MoreVertical,
+  Sidebar,
+  PanelRight,
+} from "lucide-react"
 import type { Conversation } from "@/types/chat"
 import { formatDistanceToNow } from "date-fns"
 import { zhCN } from "date-fns/locale"
@@ -76,16 +79,22 @@ export default function ChatSidebar({
   if (collapsed && !isMobile) {
     return (
       <div className="h-full flex flex-col items-center py-4">
-        <Button type="text" icon={<MenuUnfoldOutlined />} onClick={onToggleCollapse} className="mb-4" />
-        <Button type="primary" icon={<PlusOutlined />} onClick={onCreateConversation} className="mb-4" shape="circle" />
-        <div className="flex-1 w-full px-2 space-y-2">
+        <Button
+          type="text"
+          size="small"
+          icon={<Sidebar className={`transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`} />}
+          onClick={onToggleCollapse}
+          className="mb-4"
+        />
+        <Button type="primary" size="small" icon={<Plus />} onClick={onCreateConversation} className="mb-4" shape="circle" />
+        <div className="flex-1 w-full px-2 space-y-6">
           {conversations.slice(0, 10).map((conv) => (
             <Button
               key={conv.id}
-              type={conv.id === currentConversationId ? "primary" : "text"}
-              icon={<MessageOutlined />}
+              type={conv.id === currentConversationId ? "link" : "text"}
+              icon={<MessageSquare />}
               onClick={() => onSelectConversation(conv.id)}
-              className="w-full"
+              className="w-full rounded-full"
               shape="circle"
             />
           ))}
@@ -104,9 +113,14 @@ export default function ChatSidebar({
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-lg font-semibold text-gray-800">AI助手</h1>
-          <Button type="text" icon={<MenuFoldOutlined />} onClick={onToggleCollapse} size="small" />
+          <Button
+            type="text"
+            icon={<PanelRight className={`transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`} />}
+            onClick={onToggleCollapse}
+            size="small"
+          />
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={onCreateConversation} className="w-full" size="large">
+        <Button type="primary" icon={<Plus />} onClick={onCreateConversation} className="w-full" size="large">
           新建对话
         </Button>
       </div>
@@ -115,7 +129,6 @@ export default function ChatSidebar({
       <div className="flex-1 overflow-y-auto p-2">
         {conversations.length === 0 ? (
           <div className="text-center text-gray-500 mt-8">
-            <MessageOutlined className="text-2xl mb-2" />
             <p>暂无对话历史</p>
           </div>
         ) : (
@@ -162,7 +175,7 @@ export default function ChatSidebar({
                         {
                           key: "edit",
                           label: "重命名",
-                          icon: <EditOutlined />,
+                          icon: <Edit size={14} />,
                           onClick: (e) => {
                             e.domEvent.stopPropagation()
                             handleEdit(conversation)
@@ -171,7 +184,7 @@ export default function ChatSidebar({
                         {
                           key: "delete",
                           label: "删除",
-                          icon: <DeleteOutlined />,
+                          icon: <Trash2 size={14} />,
                           danger: true,
                           onClick: (e) => {
                             e.domEvent.stopPropagation()
@@ -185,7 +198,7 @@ export default function ChatSidebar({
                   >
                     <Button
                       type="text"
-                      icon={<MoreOutlined />}
+                      icon={<MoreVertical />}
                       size="small"
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={(e) => e.stopPropagation()}

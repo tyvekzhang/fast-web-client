@@ -1,20 +1,19 @@
 'use client';
 
 import { useGlobalToast } from '@/components/assist/global-toast';
-import { Badge, Button, Card, List, Statistic } from 'antd';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useRouter } from 'next/navigation';
+import { Badge, Button, Card, List, Modal, Statistic } from 'antd';
 import {
   Bell,
+  Bot,
   CheckCircle,
-  Trash2,
   LineChart,
   Plus,
-  Zap,
-  Upload,
-  Bot
+  Trash2,
+  Zap
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 
 const Home = () => {
@@ -37,9 +36,8 @@ const Home = () => {
     router.push('/tool/codegen');
   };
   const handleBotClick = () => {
-    router.push('/chat');
+    window.open('/chat', '_blank')
   };
-
   useEffect(() => {
     // 初始化逻辑
   }, []);

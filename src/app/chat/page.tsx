@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Layout } from "antd"
-import ChatSidebar from "@/components/chat-sidebar"
-import ChatMain from "@/components/chat-main"
+import ChatSidebar from "@/components/chat/chat-sidebar"
+import ChatMain from "@/components/chat/chat-main"
 import type { Conversation, Message } from "@/types/chat"
 import { generateId } from "@/lib/utils"
 
