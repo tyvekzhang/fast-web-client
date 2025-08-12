@@ -33,10 +33,15 @@ export default function HomePage() {
   useEffect(() => {
     const savedConversations = localStorage.getItem("ai-conversations")
     if (savedConversations) {
-      const parsed = JSON.parse(savedConversations)
-      setConversations(parsed)
-      if (parsed.length > 0) {
-        setCurrentConversationId(parsed[0].id)
+      try {
+        const parsed = JSON.parse(savedConversations)
+        setConversations(parsed)
+        if (parsed.length > 0) {
+          setCurrentConversationId(parsed[0].id)
+        }
+      } catch (error) {
+        console.error("Failed to parse saved conversations:", error)
+        localStorage.removeItem("ai-conversations")
       }
     }
   }, [])
@@ -44,11 +49,15 @@ export default function HomePage() {
   // 保存对话到localStorage
   useEffect(() => {
     if (conversations.length > 0) {
-      localStorage.setItem("ai-conversations", JSON.stringify(conversations))
+      try {
+        localStorage.setItem("ai-conversations", JSON.stringify(conversations))
+      } catch (error) {
+        console.error("Failed to save conversations:", error)
+      }
     }
   }, [conversations])
 
-  const createNewConversation = () => {
+  const createNewConversation = (): string => {
     const newConversation: Conversation = {
       id: generateId(),
       title: "新对话",
@@ -64,6 +73,8 @@ export default function HomePage() {
     if (isMobile) {
       setCollapsed(true)
     }
+
+    return newConversation.id
   }
 
   const updateConversation = (conversationId: string, updates: Partial<Conversation>) => {
@@ -152,8 +163,8 @@ export default function HomePage() {
         />
       </Sider>
 
-      <Layout>
-        <Content className="flex flex-col h-full bg-white">
+      <Layout className="w-full">
+        <Content className="w-full">
           <ChatMain
             conversation={currentConversation}
             onAddMessage={addMessage}
