@@ -33,7 +33,7 @@ import {
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 
-function getLabelByValue(dictData: Record<string, DictDataOptionItem[]>, key: string, value: any) {
+export function getLabelByValue(dictData: Record<string, DictDataOptionItem[]>, key: string, value: any) {
   if (dictData === null || dictData === undefined) {
     return "-"
   }

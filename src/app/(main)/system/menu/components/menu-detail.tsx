@@ -1,5 +1,5 @@
 import SvgIcon from '@/components/assist/svg-icon';
-import { useDictDataOptions } from '@/service/dict-datum';
+import { getLabelByValue, useDictDataOptions } from '@/service/dict-datum';
 import { DictDataOptionItem } from '@/types/dict-datum';
 import { MenuDetail } from '@/types/menu';
 import { Descriptions, Drawer, Tag } from 'antd';
