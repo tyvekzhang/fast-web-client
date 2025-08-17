@@ -24,13 +24,12 @@ import {
   ImportUsersRequest,
   ImportUsersResponse,
   ListUsersRequest,
+  UpdateUserRequest,
   User,
   UserDetail,
-  UpdateUserRequest,
 } from '@/types/user';
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
-
 
 /**
  * Retrieve user details.
@@ -74,7 +73,6 @@ export function useUsers(req: Partial<ListUsersRequest>) {
   };
 }
 
-
 /**
  * Create a new user.
  *
@@ -85,7 +83,6 @@ export function createUser(req: CreateUserRequest) {
   return httpClient.post<number>('/users', req);
 }
 
-
 /**
  * Update an existing user.
  *
@@ -95,7 +92,6 @@ export function updateUser(req: UpdateUserRequest) {
   return httpClient.put<User>('/users', req);
 }
 
-
 /**
  * Delete user by ID
  *
@@ -104,7 +100,6 @@ export function updateUser(req: UpdateUserRequest) {
 export function deleteUser(id: string) {
   return httpClient.delete<void>(`/users/${id}`);
 }
-
 
 /**
  *  Batch create users.
@@ -116,7 +111,6 @@ export function batchCreateUsers(req: BatchCreateUsersRequest) {
   return httpClient.post<number[]>('/users:batchCreate', req);
 }
 
-
 /**
  * Batch updates multiple users in a single operation.
  *
@@ -126,7 +120,6 @@ export function batchUpdateUsers(req: BatchUpdateUsersRequest) {
   return httpClient.put<BatchUpdateUsersResponse>('/user:batchUpdate', req);
 }
 
-
 /**
  * Batch delete users.
  *
@@ -135,7 +128,6 @@ export function batchUpdateUsers(req: BatchUpdateUsersRequest) {
 export function batchDeleteUser(req: BatchDeleteUsersRequest) {
   return httpClient.delete<void>('/users:batchDelete', { data: req });
 }
-
 
 /**
  *  Export the Excel template for user import.
@@ -151,7 +143,6 @@ export async function exportUserTemplate() {
   );
   downloadBlob(response, 'user_import_tpl.xlsx');
 }
-
 
 /**
  * Export user data based on the provided user IDs.
@@ -171,7 +162,6 @@ export async function exportUser(req: ExportUsersRequest) {
   );
   downloadBlob(response, 'user_data_export.xlsx');
 }
-
 
 /**
  * Import users from an uploaded Excel file.

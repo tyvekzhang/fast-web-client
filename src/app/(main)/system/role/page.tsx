@@ -16,35 +16,20 @@ import ActionButtonComponent from '@/components/base/action-button';
 import { PaginatedTable } from '@/components/base/paginated-table';
 import TransitionWrapper from '@/components/base/transition-wrapper';
 import {
-  batchCreateRoles,
   batchDeleteRole,
-  batchUpdateRoles,
   createRole,
   deleteRole,
-  exportRole,
-  importRole,
   updateRole,
-  useRole,
   useRoles,
 } from '@/service/role';
 import { createPaginationRequest } from '@/types';
-import {
-  BatchUpdateRole,
-  CreateRole,
-  ListRolesRequest,
-  Role,
-  UpdateRole,
-} from '@/types/role';
-import { Form, message, Popconfirm } from 'antd';
+import { CreateRole, ListRolesRequest, Role, UpdateRole } from '@/types/role';
+import { Form, message, Popconfirm, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import dayjs from 'dayjs';
-import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
-import type { RcFile } from 'rc-upload/lib/interface';
+import { MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import BatchUpdateRoleComponent from './components/batch-update-role';
 import CreateRoleComponent from './components/create-role';
-import ImportRoleComponent from './components/import-role';
-import RoleDetailComponent from './components/role-detail';
 import QueryRoleComponent from './components/query-role';
 import UpdateRoleComponent from './components/update-role';
 
@@ -52,9 +37,9 @@ const RolePage: React.FC = () => {
   // 配置模块
   const actionConfig = {
     showCreate: true,
-    showImport: true,
-    showExport: true,
-    showModify: true,
+    showImport: false,
+    showExport: false,
+    showModify: false,
     showRemove: true,
   };
   const showMore = false;
@@ -95,6 +80,7 @@ const RolePage: React.FC = () => {
   const handleQueryRoleReset = () => {
     resetPagination();
     queryRoleForm.resetFields();
+    setRoleQueryParams(undefined);
     mutateRoles();
   };
 
@@ -118,104 +104,82 @@ const RolePage: React.FC = () => {
     setRoleQueryParams(filteredQueryRole as ListRolesRequest);
   };
 
-  // 详情模块
-  const [isRoleDetailDrawerVisible, setIsRoleDetailDrawerVisible] =
-    useState(false);
-  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
-
-  const { role: roleDetail, isLoading: isRoleDetailLoading } = useRole(
-    selectedRoleId || '',
-  );
-
-  const onRoleDetail = (role: Role) => {
-    setSelectedRoleId(role.id);
-    setIsRoleDetailDrawerVisible(true);
-  };
-
-  const onRoleDetailClose = () => {
-    setSelectedRoleId(null);
-    setIsRoleDetailDrawerVisible(false);
-  };
-
   // 表格列信息
   const roleColumns: ColumnsType<Role> = [
     {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
+      title: 'Id',
+      dataIndex: 'id',
+      key: 'id',
       hidden: true,
     },
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
       render: (_: number, _record: Role, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      width: '8%',
     },
     {
-      title: "角色名称",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      title: '角色名称',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => (text ? text : '-'),
+      width: '12%',
       ellipsis: true,
     },
     {
-      title: "权限标识",
-      dataIndex: "code",
-      key: "code",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      title: '权限标识',
+      dataIndex: 'code',
+      key: 'code',
+      render: (text) => (text ? text : '-'),
+      width: '12%',
       ellipsis: true,
     },
     {
-      title: "显示顺序",
-      dataIndex: "sort",
-      key: "sort",
-      width: "8%",
+      title: '显示顺序',
+      dataIndex: 'sort',
+      key: 'sort',
+      width: '8%',
     },
     {
-      title: "角色状态",
-      dataIndex: "status",
-      key: "status",
-      width: "8%",
+      title: '角色状态',
+      dataIndex: 'status',
+      key: 'status',
+      width: '8%',
+      render: (text) => {
+        if (text === 1) {
+          return <Tag color="success">正常</Tag>;
+        }
+        return <Tag color="error">停用</Tag>;
+      },
     },
     {
-      title: "备注",
-      dataIndex: "comment",
-      key: "comment",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      title: '备注',
+      dataIndex: 'comment',
+      key: 'comment',
+      render: (text) => (text ? text : '-'),
+      width: '12%',
       ellipsis: true,
     },
     {
-      title: "创建时间",
-      dataIndex: "create_time",
-      key: "create_time",
-      render: (text: string) => (
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span>: "-"
-      ),
-      width: "14%",
+      title: '创建时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (text: string) =>
+        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
+      width: '14%',
       ellipsis: true,
     },
     {
-      title: "操作",
-      key: "action",
-      align: "center",
+      title: '操作',
+      key: 'action',
+      align: 'center',
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onRoleDetail(record)}
-          >
-            <Eye className="w-3 h-3" />
-            详情
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onUpdateRole(record)}
+            onClick={() => onUpdateRole(record)}
           >
             <PenLine className="w-3 h-3" />
             编辑
@@ -237,7 +201,10 @@ const RolePage: React.FC = () => {
           </Popconfirm>
 
           {showMore && (
-            <button type="button" className="flex items-center gap-0.5 text-xs btn-operation">
+            <button
+              type="button"
+              className="flex items-center gap-0.5 text-xs btn-operation"
+            >
               <span>更多</span>
               <MoreHorizontal className="w-3 h-3" />
             </button>
@@ -245,7 +212,7 @@ const RolePage: React.FC = () => {
         </div>
       ),
     },
-  ]
+  ];
 
   const [visibleColumns, setVisibleColumns] = useState(
     roleColumns.map((col) => col.key),
@@ -347,7 +314,6 @@ const RolePage: React.FC = () => {
     setIsUpdateRoleModalVisible(true);
     setSelectedRowKeys([role.id]);
     setSelectedRows([role]);
-    updateRoleForm.setFieldsValue({ ...role });
   };
 
   const handleUpdateRoleCancel = () => {
@@ -356,122 +322,23 @@ const RolePage: React.FC = () => {
     setIsUpdateRoleModalVisible(false);
   };
 
-  const handleUpdateRoleFinish = async () => {
-    const updateRoleData =
-      (await updateRoleForm.validateFields()) as UpdateRole;
-    const req = { ...updateRoleData, id: selectedRows[0].id };
+  const handleUpdateRoleFinish = async (data: UpdateRole) => {
     setIsUpdateRoleLoading(true);
     try {
+      const operation_type =
+        typeof data.operation_type === 'string'
+          ? data.operation_type.split(',')
+          : data.operation_type;
+      const req = { ...data, id: selectedRows[0].id, operation_type };
       await updateRole({ role: req });
-      updateRoleForm.resetFields();
       message.success('更新成功');
       mutateRoles();
       resetSelectedRows();
+      setIsUpdateRoleModalVisible(false);
     } finally {
       setIsUpdateRoleLoading(false);
-      setIsUpdateRoleModalVisible(false);
     }
   };
-
-  // 批量更新模块
-  const onRoleBatchModify = () => {
-    if (selectedRowKeys.length === 1) {
-      setIsUpdateRoleModalVisible(true);
-      updateRoleForm.setFieldsValue({ ...selectedRows[0] });
-    } else {
-      setIsBatchUpdateRolesModalVisible(true);
-      batchUpdateRolesForm.resetFields();
-    }
-  };
-  const [isBatchUpdateRolesModalVisible, setIsBatchUpdateRolesModalVisible] =
-    useState<boolean>(false);
-  const [isBatchUpdateRolesLoading, setIsBatchUpdateRolesLoading] =
-    useState<boolean>(false);
-  const [batchUpdateRolesForm] = Form.useForm();
-
-  const handleBatchUpdateRolesCancel = async () => {
-    batchUpdateRolesForm.resetFields();
-    setIsBatchUpdateRolesModalVisible(false);
-    resetSelectedRows();
-    message.info('操作已取消');
-  };
-
-  const handleBatchUpdateRolesFinish = async () => {
-    const roleBatchModify =
-      (await batchUpdateRolesForm.validateFields()) as BatchUpdateRole;
-    setIsBatchUpdateRolesLoading(true);
-    if (selectedRows === null || selectedRows.length === 0) {
-      message.warning('请选择要更新的项目');
-      return;
-    }
-    try {
-      const ids = selectedRows.map((row) => row.id);
-      await batchUpdateRoles({ ids: ids, role: roleBatchModify });
-      batchUpdateRolesForm.resetFields();
-      message.success('更新成功');
-      mutateRoles();
-      resetSelectedRows();
-    } finally {
-      setIsBatchUpdateRolesLoading(false);
-      setIsBatchUpdateRolesModalVisible(false);
-    }
-  };
-
-  // 导入模块
-  const [isImportRoleModalVisible, setIsImportRoleModalVisible] =
-    useState<boolean>(false);
-  const [isImportRoleLoading, setIsImportRoleLoading] =
-    useState<boolean>(false);
-  const [createRoleList, setCreateRoleList] = useState<CreateRole[]>([]);
-
-  const onImportRole = () => {
-    setIsImportRoleModalVisible(true);
-  };
-
-  const handleImportRoleCancel = () => {
-    setIsImportRoleModalVisible(false);
-  };
-
-  const onImportRoleFinish = async (fileList: RcFile[]) => {
-    try {
-      setIsImportRoleLoading(true);
-      const createRoleList = await importRole({ file: fileList[0] });
-      setCreateRoleList(createRoleList.roles);
-      return createRoleList;
-    } finally {
-      setIsImportRoleLoading(false);
-    }
-  };
-
-  const handleImportRole = async () => {
-    setIsImportRoleLoading(true);
-    try {
-      await batchCreateRoles({ roles: createRoleList });
-      message.success('导入成功');
-      setIsImportRoleModalVisible(false);
-      mutateRoles();
-    } finally {
-      setIsImportRoleLoading(false);
-      setCreateRoleList([]);
-    }
-  };
-
-  // 导出模块
-  const [isExportLoading, setIsExportLoading] = useState<boolean>(false);
-  const onRoleExport = async () => {
-    if (selectedRowKeys === null || selectedRowKeys.length === 0) {
-      message.warning('请先选择导出的项目');
-      return;
-    }
-    try {
-      setIsExportLoading(true);
-      await exportRole({ ids: selectedRows.map((row) => row.id) });
-      resetSelectedRows();
-    } finally {
-      setIsExportLoading(false);
-    }
-  };
-
   return (
     <div className="w-full mx-auto px-4 bg-white">
       <TransitionWrapper show={isQueryRoleShow}>
@@ -483,10 +350,10 @@ const RolePage: React.FC = () => {
       </TransitionWrapper>
       <div>
         <ActionButtonComponent
-          onCreate={onCreateRole }
-          onImport={onImportRole }
-          onExport={onRoleExport}
-          onBatchModify={onRoleBatchModify}
+          onCreate={onCreateRole}
+          onImport={() => {}}
+          onExport={() => {}}
+          onBatchModify={() => {}}
           onConfirmBatchRemove={handleRoleBatchRemove}
           onConfirmBatchRemoveCancel={handleRoleBatchRemoveCancel}
           isQueryShow={isQueryRoleShow}
@@ -495,8 +362,8 @@ const RolePage: React.FC = () => {
           isBatchModifyDisabled={selectedRowKeys.length === 0}
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={isBatchRemoveLoading}
-          isExportLoading={isExportLoading}
-          rawColumns={ roleColumns as any[]}
+          isExportLoading={false}
+          rawColumns={roleColumns as any[]}
           visibleColumns={visibleColumns as any[]}
           onToggleColumnVisibility={onToggleColumnVisibility}
           actionConfig={actionConfig}
@@ -506,7 +373,7 @@ const RolePage: React.FC = () => {
       <div>
         <PaginatedTable<Role>
           columns={filteredRoleColumns}
-          dataSource={ roleListDataSource || []}
+          dataSource={roleListDataSource || []}
           total={total || 0}
           current={current}
           page_size={pageSize}
@@ -515,6 +382,7 @@ const RolePage: React.FC = () => {
           selectedRowKeys={selectedRowKeys}
           rowKey="id"
           loading={isRoleListLoading}
+          className="min-h-96"
         />
       </div>
       <div>
@@ -528,40 +396,13 @@ const RolePage: React.FC = () => {
           />
         </div>
         <div>
-          <RoleDetailComponent
-            isRoleDetailDrawerVisible={isRoleDetailDrawerVisible}
-            onRoleDetailClose={onRoleDetailClose}
-            roleDetail={ roleDetail}
-            loading={isRoleDetailLoading}
-          />
-        </div>
-        <div>
           <UpdateRoleComponent
             isUpdateRoleModalVisible={isUpdateRoleModalVisible}
             onUpdateRoleCancel={handleUpdateRoleCancel}
             onUpdateRoleFinish={handleUpdateRoleFinish}
             isUpdateRoleLoading={isUpdateRoleLoading}
             updateRoleForm={updateRoleForm}
-            treeSelectDataSource={ roleListDataSource}
-          />
-        </div>
-        <div>
-          <BatchUpdateRoleComponent
-            isBatchUpdateRolesModalVisible={isBatchUpdateRolesModalVisible}
-            onBatchUpdateRolesCancel={handleBatchUpdateRolesCancel}
-            onBatchUpdateRolesFinish={handleBatchUpdateRolesFinish}
-            isBatchUpdateRolesLoading={isBatchUpdateRolesLoading}
-            batchUpdateRolesForm={ batchUpdateRolesForm}
-          />
-        </div>
-
-        <div>
-          <ImportRoleComponent
-            isImportRoleModalVisible={isImportRoleModalVisible}
-            isImportRoleLoading={isImportRoleLoading}
-            onImportRoleFinish={onImportRoleFinish}
-            onImportRoleCancel={handleImportRoleCancel}
-            handleImportRole={handleImportRole }
+            roleId={selectedRows[0]?.id}
           />
         </div>
       </div>

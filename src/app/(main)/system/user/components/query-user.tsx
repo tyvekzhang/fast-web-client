@@ -13,14 +13,9 @@
 // limitations under the License.
 
 import { useDictDataOptions } from '@/service/dict-datum';
-import { CheckboxOptionType } from 'antd';
-import { Form, Button } from 'antd';
-import { Input } from 'antd';
-import { Select, Radio } from 'antd';
-import { DatePicker } from 'antd';
-import dayjs from 'dayjs';
-import type { Dayjs } from 'dayjs';
+import { Button, DatePicker, Form, Input, Select } from 'antd';
 import { FormInstance } from 'antd/es/form';
+import dayjs from 'dayjs';
 import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
@@ -49,32 +44,31 @@ const QueryUserComponent: React.FC<QueryUserProps> = ({
     onQueryUserFinish(values);
   };
 
-  
-  const { dictData } = useDictDataOptions("user_status".split(","))
+  const { dictData } = useDictDataOptions('user_status'.split(','));
 
   return (
     <Form
       {...queryUserFormItemLayout}
-      form={ onQueryUserForm}
+      form={onQueryUserForm}
       name="queryUser"
       onFinish={onQueryUserFinish}
     >
-      <div className='flex flex-wrap items-center gap-4 pt-6 justify-between'>
-        <Form.Item name="username" label="用户名" >
+      <div className="flex flex-wrap items-center gap-4 pt-6 justify-between">
+        <Form.Item name="username" label="用户名">
           <Input placeholder="请输入用户名" allowClear />
         </Form.Item>
-        <Form.Item name="nickname" label="昵称" >
+        <Form.Item name="nickname" label="昵称">
           <Input placeholder="请输入昵称" allowClear />
         </Form.Item>
-        <Form.Item name="status" label="状态" >
+        <Form.Item name="status" label="状态">
           <Select
-              allowClear
-              placeholder="请选择状态"
-              options={ dictData["user_status"] }
-              className='min-w-30'
+            allowClear
+            placeholder="请选择状态"
+            options={dictData['user_status']}
+            className="min-w-30"
           />
         </Form.Item>
-        <Form.Item name="create_time" label="创建时间" >
+        <Form.Item name="create_time" label="创建时间">
           <DatePicker
             allowClear
             format="YYYY-MM-DD"
@@ -87,7 +81,7 @@ const QueryUserComponent: React.FC<QueryUserProps> = ({
           />
         </Form.Item>
         <Form.Item>
-          <div className='flex items-center gap-2 justify-start pr-4'>
+          <div className="flex items-center gap-2 justify-start pr-4">
             <Button
               onClick={handleQueryUserReset}
               className="bg-gray-50"

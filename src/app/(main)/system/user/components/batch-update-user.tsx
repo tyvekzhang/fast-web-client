@@ -13,17 +13,10 @@
 // limitations under the License.
 
 import { useDictDataOptions } from '@/service/dict-datum';
-import { CheckboxOptionType } from 'antd';
-import { Form, Modal, Button } from 'antd';
-import { Input } from 'antd';
-import { Select, Radio } from 'antd';
-import { DatePicker } from 'antd';
-import dayjs from 'dayjs';
-import type { Dayjs } from 'dayjs';
 import { BatchUpdateUser } from '@/types/user';
+import { Button, CheckboxOptionType, Form, Input, Modal, Radio } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
-
 
 interface BatchUpdateUsersProps {
   isBatchUpdateUsersModalVisible: boolean;
@@ -45,14 +38,18 @@ const BatchUpdateUsersComponent: React.FC<BatchUpdateUsersProps> = ({
   isBatchUpdateUsersLoading,
   batchUpdateUsersForm,
 }) => {
-  
-  const { dictData } = useDictDataOptions("user_status".split(","))
+  const { dictData } = useDictDataOptions('user_status'.split(','));
   const footerButtons = useMemo(
     () => [
       <Button key="cancel" onClick={onBatchUpdateUsersCancel}>
         取消
       </Button>,
-      <Button key="submit" type="primary" loading={isBatchUpdateUsersLoading} onClick={onBatchUpdateUsersFinish}>
+      <Button
+        key="submit"
+        type="primary"
+        loading={isBatchUpdateUsersLoading}
+        onClick={onBatchUpdateUsersFinish}
+      >
         确定
       </Button>,
     ],
@@ -66,22 +63,32 @@ const BatchUpdateUsersComponent: React.FC<BatchUpdateUsersProps> = ({
       onCancel={onBatchUpdateUsersCancel}
       footer={footerButtons}
       destroyOnHidden
-      width={"60%"}
+      width={'60%'}
     >
-        <Form
-          {...batchUpdateUsersFormItemLayout}
-          form={ batchUpdateUsersForm}
-          name="batchUpdateUsers"
-          onFinish={onBatchUpdateUsersFinish}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
+      <Form
+        {...batchUpdateUsersFormItemLayout}
+        form={batchUpdateUsersForm}
+        name="batchUpdateUsers"
+        onFinish={onBatchUpdateUsersFinish}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
+      >
+        <Form.Item
+          name="avatar_url"
+          label="头像地址"
+          rules={[{ required: false, message: '请输入' }]}
         >
-          <Form.Item name="avatar_url" label="头像地址" rules={[{ required: false, message: '请输入' }]}>
-            <Input placeholder="请输入头像地址" />
-          </Form.Item>
-          <Form.Item name="status" label="状态" rules={[{ required: false, message: '请输入' }]}>
-            <Radio.Group options={ dictData["user_status"] as CheckboxOptionType[] } />
-          </Form.Item>
-        </Form>
+          <Input placeholder="请输入头像地址" />
+        </Form.Item>
+        <Form.Item
+          name="status"
+          label="状态"
+          rules={[{ required: false, message: '请输入' }]}
+        >
+          <Radio.Group
+            options={dictData['user_status'] as CheckboxOptionType[]}
+          />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };

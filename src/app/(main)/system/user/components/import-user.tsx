@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { exportUserTemplate } from '@/service/user';
-import { CreateUser, ImportUsersResponse} from '@/types/user';
+import { CreateUser, ImportUsersResponse } from '@/types/user';
 import { InboxOutlined } from '@ant-design/icons';
 import { Button, Modal, Table, Upload, UploadFile, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -43,7 +43,12 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
     <Button key="back" onClick={handleImportUserCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isImportUserLoading} onClick={handleImportUserConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isImportUserLoading}
+      onClick={handleImportUserConfirm}
+    >
       确定
     </Button>,
   ];
@@ -69,17 +74,18 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
   // 表格列信息
   const UserColumns: ColumnsType<CreateUser> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: CreateUser, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: CreateUser, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -87,7 +93,9 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
     await exportUserTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -126,7 +134,7 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={ userImportFileList}
+              fileList={userImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="sc-upload-drag-icon">
@@ -136,15 +144,18 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
               <p className="sc-upload-hint">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleUserExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleUserExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={ UserColumns}
-            dataSource={ CreateUserList}
+            columns={UserColumns}
+            dataSource={CreateUserList}
             pagination={false}
             bordered={false}
             rowKey={'id'}

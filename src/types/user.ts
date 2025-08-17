@@ -11,138 +11,125 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {PaginationRequest} from '.';
+import { PaginationRequest } from '.';
 
 export interface ListUsersRequest extends PaginationRequest {
-    
-    id: string;
-    
-    username: string;
-    
-    nickname: string;
-    
-    status: number;
-    
-    create_time: string;
-    
+  id: string;
+
+  username: string;
+
+  nickname: string;
+
+  status: number;
+
+  create_time: string;
 }
 
 export interface User {
-    
-    id: string;
-    
-    username: string;
-    
-    nickname: string;
-    
-    avatar_url: string;
-    
-    status: number;
-    
-    remark: string;
-    
-    create_time: string;
-    
+  id: string;
+
+  username: string;
+
+  nickname: string;
+
+  avatar_url: string;
+
+  status: number;
+
+  remark: string;
+
+  create_time: string;
 }
 
-export interface UserDetail extends User {
-
-}
+export interface UserDetail extends User {}
 
 export interface CreateUser {
-    
-    username: string;
-    
-    password: string;
-    
-    nickname: string;
-    
-    avatar_url: string;
-    
-    status: number;
-    
-    remark: string;
-    
+  username: string;
+
+  password: string;
+
+  nickname: string;
+
+  avatar_url: string;
+
+  status: number;
+
+  remark: string;
 }
 
 export interface CreateUserRequest {
-user: CreateUser;
+  user: CreateUser;
 }
 
 export interface UpdateUser {
-    
-    id: string;
-    
-    username: string;
-    
-    password: string;
-    
-    nickname: string;
-    
-    avatar_url: string;
-    
-    status: number;
-    
-    remark: string;
-    
+  id: string;
+
+  username: string;
+
+  password: string;
+
+  nickname: string;
+
+  avatar_url: string;
+
+  status: number;
+
+  remark: string;
 }
 
 export interface UpdateUserRequest {
-user: UpdateUser;
+  user: UpdateUser;
 }
 
 export interface BatchGetUsersResponse {
-    users: UserDetail[];
+  users: UserDetail[];
 }
 
 export interface BatchCreateUsersRequest {
-    users: CreateUser[];
+  users: CreateUser[];
 }
 
 export interface BatchCreateUserResponse {
-    users: User[];
+  users: User[];
 }
 
 export interface BatchUpdateUser {
-    
-    avatar_url: string;
-    
-    status: number;
-    
+  avatar_url: string;
+
+  status: number;
 }
 
 export interface BatchUpdateUsersRequest {
-    ids: string[];
-    user: BatchUpdateUser;
+  ids: string[];
+  user: BatchUpdateUser;
 }
 
 export interface BatchPatchUsersRequest {
-    users: UpdateUser[];
+  users: UpdateUser[];
 }
 
 export interface BatchUpdateUsersResponse {
-    users: User[];
+  users: User[];
 }
 
 export interface BatchDeleteUsersRequest {
-    ids: string[];
+  ids: string[];
 }
 
-export interface ExportUser extends User {
-}
+export interface ExportUser extends User {}
 
 export interface ExportUsersRequest {
-    ids: string[];
+  ids: string[];
 }
 
 export interface ImportUsersRequest {
-    file: File;
+  file: File;
 }
 
 export interface ImportUser extends CreateUser {
-    errMsg: string;
+  errMsg: string;
 }
 
 export interface ImportUsersResponse {
-    users: ImportUser[];
+  users: ImportUser[];
 }

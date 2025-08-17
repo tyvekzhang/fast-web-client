@@ -1,32 +1,29 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button, Input, Dropdown, Modal, message } from "antd"
+import type { Conversation } from '@/types/chat';
+import { Button, Dropdown, Input, Modal, message } from 'antd';
+import { formatDistanceToNow } from 'date-fns';
+import { zhCN } from 'date-fns/locale';
 import {
-  Plus,
-  MessageSquare,
-  Trash2,
   Edit,
-  Menu,
-  ChevronLeft,
-  ChevronRight,
+  MessageSquare,
   MoreVertical,
-  Sidebar,
   PanelRight,
-} from "lucide-react"
-import type { Conversation } from "@/types/chat"
-import { formatDistanceToNow } from "date-fns"
-import { zhCN } from "date-fns/locale"
+  Plus,
+  Sidebar,
+  Trash2,
+} from 'lucide-react';
+import { useState } from 'react';
 
 interface ChatSidebarProps {
-  conversations: Conversation[]
-  currentConversationId: string | null
-  onSelectConversation: (id: string) => void
-  onCreateConversation: () => void
-  onDeleteConversation: (id: string) => void
-  collapsed: boolean
-  onToggleCollapse: () => void
-  isMobile: boolean
+  conversations: Conversation[];
+  currentConversationId: string | null;
+  onSelectConversation: (id: string) => void;
+  onCreateConversation: () => void;
+  onDeleteConversation: (id: string) => void;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
+  isMobile: boolean;
 }
 
 export default function ChatSidebar({
@@ -39,42 +36,42 @@ export default function ChatSidebar({
   onToggleCollapse,
   isMobile,
 }: ChatSidebarProps) {
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editTitle, setEditTitle] = useState("")
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState('');
 
   const handleDelete = (conversationId: string, title: string) => {
     Modal.confirm({
-      title: "删除对话",
+      title: '删除对话',
       content: `确定要删除对话"${title}"吗？此操作不可撤销。`,
-      okText: "删除",
-      okType: "danger",
-      cancelText: "取消",
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
       onOk: () => {
-        onDeleteConversation(conversationId)
-        message.success("对话已删除")
+        onDeleteConversation(conversationId);
+        message.success('对话已删除');
       },
-    })
-  }
+    });
+  };
 
   const handleEdit = (conversation: Conversation) => {
-    setEditingId(conversation.id)
-    setEditTitle(conversation.title)
-  }
+    setEditingId(conversation.id);
+    setEditTitle(conversation.title);
+  };
 
   const handleSaveEdit = () => {
     if (editTitle.trim() && editingId) {
       // 这里应该调用更新对话标题的函数
       // 暂时通过重新选择对话来触发更新
-      setEditingId(null)
-      setEditTitle("")
-      message.success("标题已更新")
+      setEditingId(null);
+      setEditTitle('');
+      message.success('标题已更新');
     }
-  }
+  };
 
   const handleCancelEdit = () => {
-    setEditingId(null)
-    setEditTitle("")
-  }
+    setEditingId(null);
+    setEditTitle('');
+  };
 
   if (collapsed && !isMobile) {
     return (
@@ -82,16 +79,27 @@ export default function ChatSidebar({
         <Button
           type="text"
           size="small"
-          icon={<Sidebar className={`transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`} />}
+          icon={
+            <Sidebar
+              className={`transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`}
+            />
+          }
           onClick={onToggleCollapse}
           className="mb-4"
         />
-        <Button type="primary" size="small" icon={<Plus />} onClick={onCreateConversation} className="mb-4" shape="circle" />
+        <Button
+          type="primary"
+          size="small"
+          icon={<Plus />}
+          onClick={onCreateConversation}
+          className="mb-4"
+          shape="circle"
+        />
         <div className="flex-1 w-full px-2 space-y-6">
           {conversations.slice(0, 10).map((conv) => (
             <Button
               key={conv.id}
-              type={conv.id === currentConversationId ? "link" : "text"}
+              type={conv.id === currentConversationId ? 'link' : 'text'}
               icon={<MessageSquare />}
               onClick={() => onSelectConversation(conv.id)}
               className="w-full rounded-full"
@@ -100,11 +108,11 @@ export default function ChatSidebar({
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   if (collapsed && isMobile) {
-    return null
+    return null;
   }
 
   return (
@@ -115,12 +123,22 @@ export default function ChatSidebar({
           <h1 className="text-lg font-semibold text-gray-800">AI助手</h1>
           <Button
             type="text"
-            icon={<PanelRight className={`transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`} />}
+            icon={
+              <PanelRight
+                className={`transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`}
+              />
+            }
             onClick={onToggleCollapse}
             size="small"
           />
         </div>
-        <Button type="primary" icon={<Plus />} onClick={onCreateConversation} className="w-full" size="large">
+        <Button
+          type="primary"
+          icon={<Plus />}
+          onClick={onCreateConversation}
+          className="w-full"
+          size="large"
+        >
           新建对话
         </Button>
       </div>
@@ -138,8 +156,8 @@ export default function ChatSidebar({
                 key={conversation.id}
                 className={`group relative rounded-lg p-3 cursor-pointer transition-all hover:bg-gray-100 ${
                   conversation.id === currentConversationId
-                    ? "bg-blue-50 border border-blue-200"
-                    : "bg-white border border-transparent"
+                    ? 'bg-blue-50 border border-blue-200'
+                    : 'bg-white border border-transparent'
                 }`}
                 onClick={() => onSelectConversation(conversation.id)}
               >
@@ -155,7 +173,9 @@ export default function ChatSidebar({
                         autoFocus
                       />
                     ) : (
-                      <h3 className="font-medium text-gray-900 truncate mb-1">{conversation.title}</h3>
+                      <h3 className="font-medium text-gray-900 truncate mb-1">
+                        {conversation.title}
+                      </h3>
                     )}
                     <div className="flex items-center text-xs text-gray-500">
                       <span>{conversation.messages.length} 条消息</span>
@@ -173,27 +193,27 @@ export default function ChatSidebar({
                     menu={{
                       items: [
                         {
-                          key: "edit",
-                          label: "重命名",
+                          key: 'edit',
+                          label: '重命名',
                           icon: <Edit size={14} />,
                           onClick: (e) => {
-                            e.domEvent.stopPropagation()
-                            handleEdit(conversation)
+                            e.domEvent.stopPropagation();
+                            handleEdit(conversation);
                           },
                         },
                         {
-                          key: "delete",
-                          label: "删除",
+                          key: 'delete',
+                          label: '删除',
                           icon: <Trash2 size={14} />,
                           danger: true,
                           onClick: (e) => {
-                            e.domEvent.stopPropagation()
-                            handleDelete(conversation.id, conversation.title)
+                            e.domEvent.stopPropagation();
+                            handleDelete(conversation.id, conversation.title);
                           },
                         },
                       ],
                     }}
-                    trigger={["click"]}
+                    trigger={['click']}
                     placement="bottomRight"
                   >
                     <Button
@@ -211,5 +231,5 @@ export default function ChatSidebar({
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -51,7 +51,7 @@ export function PaginatedTable<T extends object>({
         className={`${tableProps.className || ''}`}
         loading={loading}
       />
-      <div className="mt-4">
+      <div className="mt-4 py-4">
         <Pagination
           current={current}
           pageSize={page_size}

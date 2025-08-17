@@ -33,12 +33,16 @@ import {
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 
-export function getLabelByValue(dictData: Record<string, DictDataOptionItem[]>, key: string, value: any) {
+export function getLabelByValue(
+  dictData: Record<string, DictDataOptionItem[]>,
+  key: string,
+  value: any,
+) {
   if (dictData === null || dictData === undefined) {
-    return "-"
+    return '-';
   }
-  const item = dictData[key].find(item => item.value === value);
-  return item ? item.label : "-";
+  const item = dictData[key].find((item) => item.value === value);
+  return item ? item.label : '-';
 }
 
 /**
@@ -81,16 +85,13 @@ export function useDictData(req: Partial<ListDictDataRequest>) {
   };
 }
 
-
 /**
  * Fetch all dictionary data grouped by type.
  * @returns Dictionary options for the requested types.
  */
 export function useAllDictData() {
-  const { data, error, isLoading, isValidating, mutate } = useSWR<DictDataOption>(
-    ['/dictData:all'],
-    ([url]) => fetcher(url)
-  );
+  const { data, error, isLoading, isValidating, mutate } =
+    useSWR<DictDataOption>(['/dictData:all'], ([url]) => fetcher(url));
 
   return {
     dictData: data?.options,
@@ -107,10 +108,11 @@ export function useAllDictData() {
  * @returns Dictionary options for the requested types.
  */
 export function useDictDataOptions(req: string[]) {
-  const { data, error, isLoading, isValidating, mutate } = useSWR<DictDataOption>(
-    ['/dictData:options', { req: req }],
-    ([url, params]) => fetcher(url, params)
-  );
+  const { data, error, isLoading, isValidating, mutate } =
+    useSWR<DictDataOption>(
+      ['/dictData:options', { req: req }],
+      ([url, params]) => fetcher(url, params),
+    );
 
   return {
     dictData: data?.options || {},

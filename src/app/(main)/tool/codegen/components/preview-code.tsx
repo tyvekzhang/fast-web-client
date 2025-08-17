@@ -2,7 +2,7 @@
 import { codePreview } from '@/service/code-gen';
 import { CodePreviewResponse } from '@/types/code-gen';
 import { message, Modal, Skeleton, Tabs } from 'antd';
-import { Copy, X, Check } from 'lucide-react';
+import { Check, Copy, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';

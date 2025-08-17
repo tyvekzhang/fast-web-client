@@ -32,7 +32,6 @@ import {
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 
-
 export function assignUserRoles(req: AssignUserRoles) {
   return httpClient.post<void>('/userRoles:assign', req);
 }

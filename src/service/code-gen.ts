@@ -3,11 +3,10 @@ import { downloadBlob } from '@/service/util';
 import { PageResult } from '@/types';
 import {
   CodePreviewResponse,
-  Field,
-  TableResult,
+  FieldResponse,
   GenTableDetail,
   TableResponse,
-  FieldResponse,
+  TableResult,
 } from '@/types/code-gen';
 import { ListTablesRequest } from '@/types/table';
 import { AxiosResponse } from 'axios';
@@ -90,7 +89,6 @@ export const deleteTable = (tableId: string) => {
 
 export const getAllTables = () => {
   return httpClient.get<TableResult[]>('/tables:all');
-
 };
 
 export const getTableFieldsById = (tableId: string) => {

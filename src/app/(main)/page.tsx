@@ -1,7 +1,7 @@
 'use client';
 
 import { useGlobalToast } from '@/components/assist/global-toast';
-import { Badge, Button, Card, List, Modal, Statistic } from 'antd';
+import { Badge, Button, Card, List, Statistic } from 'antd';
 import {
   Bell,
   Bot,
@@ -9,12 +9,11 @@ import {
   LineChart,
   Plus,
   Trash2,
-  Zap
+  Zap,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-
 
 const Home = () => {
   const { message, notification } = useGlobalToast();
@@ -36,7 +35,7 @@ const Home = () => {
     router.push('/tool/codegen');
   };
   const handleBotClick = () => {
-    window.open('/chat', '_blank')
+    window.open('/chat', '_blank');
   };
   useEffect(() => {
     // 初始化逻辑
@@ -58,7 +57,11 @@ const Home = () => {
             suffix="%"
             icon={<Zap className="w-4 h-4" />}
           />
-          <StatisticCard title="警报数" value={23} icon={<Bell className="w-4 h-4" />} />
+          <StatisticCard
+            title="警报数"
+            value={23}
+            icon={<Bell className="w-4 h-4" />}
+          />
           <StatisticCard
             title="完成任务"
             value={76}
@@ -77,13 +80,14 @@ const Home = () => {
           >
             代码生成
           </Button>
-          <Button
-            icon={<Bot className="w-4 h-4" />}
-            onClick={handleBotClick}
-          >
+          <Button icon={<Bot className="w-4 h-4" />} onClick={handleBotClick}>
             AI助手
           </Button>
-          <Button danger onClick={showToast} icon={<Trash2 className="w-4 h-4" />}>
+          <Button
+            danger
+            onClick={showToast}
+            icon={<Trash2 className="w-4 h-4" />}
+          >
             清空缓存
           </Button>
         </div>
@@ -108,10 +112,7 @@ const Home = () => {
         <Card title="📝 最新动态" className="shadow rounded-2xl">
           <List
             size="small"
-            dataSource={[
-              '系统完成了每日备份',
-              '管理员更新了权限设置',
-            ]}
+            dataSource={['系统完成了每日备份', '管理员更新了权限设置']}
             renderItem={(item) => <List.Item>{item}</List.Item>}
           />
         </Card>

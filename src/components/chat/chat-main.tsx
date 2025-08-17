@@ -1,28 +1,42 @@
-"use client"
+'use client';
 
-import { debounce, throttle } from 'lodash';
-import { streamChatCompletion } from "@/lib/api"
-import { generateId } from "@/lib/utils"
-import type { Conversation, Message } from "@/types/chat"
-import { Avatar, Button, Input, message, Spin, Upload } from "antd"
-import { Bot, Copy, FileText, RotateCw, Search, Send, UploadIcon, User, X } from "lucide-react"
-import { useRouter } from "next/navigation"
-import type React from "react"
-import { useCallback, useEffect, useRef, useState } from "react"
-import ReactMarkdown from "react-markdown"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism"
+import { streamChatCompletion } from '@/lib/api';
+import { generateId } from '@/lib/utils';
+import type { Conversation, Message } from '@/types/chat';
+import { Avatar, Button, Input, message, Spin, Upload } from 'antd';
+import { throttle } from 'lodash';
+import {
+  Bot,
+  Copy,
+  FileText,
+  RotateCw,
+  Search,
+  Send,
+  UploadIcon,
+  User,
+  X,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-const { TextArea } = Input
+const { TextArea } = Input;
 
 interface ChatMainProps {
-  conversation: Conversation | undefined
-  onAddMessage: (conversationId: string, message: Message) => void
-  onUpdateMessage: (conversationId: string, messageId: string, content: string) => void
-  onCreateConversation: () => string
-  collapsed: boolean
-  onToggleCollapse: () => void
-  isMobile: boolean
+  conversation: Conversation | undefined;
+  onAddMessage: (conversationId: string, message: Message) => void;
+  onUpdateMessage: (
+    conversationId: string,
+    messageId: string,
+    content: string,
+  ) => void;
+  onCreateConversation: () => string;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
+  isMobile: boolean;
 }
 
 export default function ChatMain({
@@ -34,22 +48,25 @@ export default function ChatMain({
   onToggleCollapse,
   isMobile,
 }: ChatMainProps) {
-  const router = useRouter()
-  const [input, setInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const textAreaRef = useRef<any>(null)
-  const abortControllerRef = useRef<AbortController | null>(null)
-  const streamingContentRef = useRef<string>("")
+  const router = useRouter();
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textAreaRef = useRef<any>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const streamingContentRef = useRef<string>('');
 
-  const throttledScroll = useCallback(throttle(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-  }, 500), []);
+  const throttledScroll = useCallback(
+    throttle(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }
+    }, 500),
+    [],
+  );
 
   useEffect(() => {
     throttledScroll();
@@ -59,181 +76,195 @@ export default function ChatMain({
   useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
-        abortControllerRef.current.abort()
+        abortControllerRef.current.abort();
       }
-    }
-  }, [])
+    };
+  }, []);
 
   const handleStreamChunk = useCallback(
     (conversationId: string, messageId: string, chunk: string) => {
-      streamingContentRef.current += chunk
-      onUpdateMessage(conversationId, messageId, streamingContentRef.current)
+      streamingContentRef.current += chunk;
+      onUpdateMessage(conversationId, messageId, streamingContentRef.current);
     },
     [onUpdateMessage],
-  )
+  );
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return
+    if (!input.trim() || isLoading) return;
 
     // Cancel any ongoing request
     if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
+      abortControllerRef.current.abort();
     }
 
     const userMessage: Message = {
       id: generateId(),
-      role: "user",
+      role: 'user',
       content: input.trim(),
       timestamp: new Date(),
-    }
+    };
 
     const assistantMessage: Message = {
       id: generateId(),
-      role: "assistant",
-      content: "",
+      role: 'assistant',
+      content: '',
       timestamp: new Date(),
-    }
+    };
 
-    let currentConversationId = conversation?.id
+    let currentConversationId = conversation?.id;
 
     // Create new conversation if none exists
     if (!currentConversationId) {
-      currentConversationId = onCreateConversation()
+      currentConversationId = onCreateConversation();
     }
 
     // Add messages to conversation
-    onAddMessage(currentConversationId, userMessage)
-    onAddMessage(currentConversationId, assistantMessage)
+    onAddMessage(currentConversationId, userMessage);
+    onAddMessage(currentConversationId, assistantMessage);
 
-    setInput("")
-    setIsLoading(true)
-    streamingContentRef.current = ""
+    setInput('');
+    setIsLoading(true);
+    streamingContentRef.current = '';
 
     // Create new abort controller for this request
-    abortControllerRef.current = new AbortController()
+    abortControllerRef.current = new AbortController();
 
     try {
-      const messages = conversation?.messages || []
-      const chatHistory = [...messages, userMessage]
+      const messages = conversation?.messages || [];
+      const chatHistory = [...messages, userMessage];
 
       await streamChatCompletion(
         chatHistory,
-        (chunk) => handleStreamChunk(currentConversationId!, assistantMessage.id, chunk),
+        (chunk) =>
+          handleStreamChunk(currentConversationId!, assistantMessage.id, chunk),
         (error) => {
-          console.error("流式请求错误:", error)
+          console.error('流式请求错误:', error);
           if (!abortControllerRef.current?.signal.aborted) {
-            message.error("发送消息失败，请重试")
-            onUpdateMessage(currentConversationId!, assistantMessage.id, "抱歉，我遇到了一些问题，请稍后重试。")
+            message.error('发送消息失败，请重试');
+            onUpdateMessage(
+              currentConversationId!,
+              assistantMessage.id,
+              '抱歉，我遇到了一些问题，请稍后重试。',
+            );
           }
         },
         abortControllerRef.current.signal,
-      )
+      );
     } catch (error) {
-      if (error instanceof Error && error.name !== "AbortError") {
-        console.error("发送消息失败:", error)
-        message.error("发送消息失败，请重试")
-        onUpdateMessage(currentConversationId!, assistantMessage.id, "抱歉，我遇到了一些问题，请稍后重试。")
+      if (error instanceof Error && error.name !== 'AbortError') {
+        console.error('发送消息失败:', error);
+        message.error('发送消息失败，请重试');
+        onUpdateMessage(
+          currentConversationId!,
+          assistantMessage.id,
+          '抱歉，我遇到了一些问题，请稍后重试。',
+        );
       }
     } finally {
-      setIsLoading(false)
-      abortControllerRef.current = null
-      streamingContentRef.current = ""
+      setIsLoading(false);
+      abortControllerRef.current = null;
+      streamingContentRef.current = '';
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
-  }
+  };
 
   const handleStop = () => {
     if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
-      setIsLoading(false)
-      message.info("已停止生成")
+      abortControllerRef.current.abort();
+      setIsLoading(false);
+      message.info('已停止生成');
     }
-  }
+  };
 
   const copyToClipboard = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text)
-      message.success("已复制到剪贴板")
+      await navigator.clipboard.writeText(text);
+      message.success('已复制到剪贴板');
     } catch (error) {
-      message.error("复制失败")
+      message.error('复制失败');
     }
-  }
+  };
 
   const regenerateResponse = async (messageIndex: number) => {
-    if (!conversation || messageIndex < 1 || isLoading) return
+    if (!conversation || messageIndex < 1 || isLoading) return;
 
-    const userMessage = conversation.messages[messageIndex - 1]
-    if (userMessage.role !== "user") return
+    const userMessage = conversation.messages[messageIndex - 1];
+    if (userMessage.role !== 'user') return;
 
-    const assistantMessage = conversation.messages[messageIndex]
-    if (assistantMessage.role !== "assistant") return
+    const assistantMessage = conversation.messages[messageIndex];
+    if (assistantMessage.role !== 'assistant') return;
 
     // Cancel any ongoing request
     if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
+      abortControllerRef.current.abort();
     }
 
-    setIsLoading(true)
-    streamingContentRef.current = ""
+    setIsLoading(true);
+    streamingContentRef.current = '';
 
     // Create new abort controller
-    abortControllerRef.current = new AbortController()
+    abortControllerRef.current = new AbortController();
 
     try {
-      const chatHistory = conversation.messages.slice(0, messageIndex)
-      onUpdateMessage(conversation.id, assistantMessage.id, "")
+      const chatHistory = conversation.messages.slice(0, messageIndex);
+      onUpdateMessage(conversation.id, assistantMessage.id, '');
 
       await streamChatCompletion(
         chatHistory,
-        (chunk) => handleStreamChunk(conversation.id, assistantMessage.id, chunk),
+        (chunk) =>
+          handleStreamChunk(conversation.id, assistantMessage.id, chunk),
         (error) => {
-          console.error("重新生成错误:", error)
+          console.error('重新生成错误:', error);
           if (!abortControllerRef.current?.signal.aborted) {
-            message.error("重新生成失败，请重试")
+            message.error('重新生成失败，请重试');
           }
         },
         abortControllerRef.current.signal,
-      )
+      );
     } catch (error) {
-      if (error instanceof Error && error.name !== "AbortError") {
-        console.error("重新生成失败:", error)
-        message.error("重新生成失败，请重试")
+      if (error instanceof Error && error.name !== 'AbortError') {
+        console.error('重新生成失败:', error);
+        message.error('重新生成失败，请重试');
       }
     } finally {
-      setIsLoading(false)
-      abortControllerRef.current = null
-      streamingContentRef.current = ""
+      setIsLoading(false);
+      abortControllerRef.current = null;
+      streamingContentRef.current = '';
     }
-  }
+  };
 
   const handleDeepThink = async () => {
-    message.info("正在进行深度思考...")
-  }
+    message.info('正在进行深度思考...');
+  };
 
   const handleWebSearch = async () => {
-    message.info("正在联网搜索...")
-  }
+    message.info('正在联网搜索...');
+  };
 
   const handleFileUpload = (file: any) => {
-    message.info("正在上传文件: " + file.name)
-    return false
-  }
+    message.info('正在上传文件: ' + file.name);
+    return false;
+  };
 
   function onClickBack(): void {
-    router.push("/")
+    router.push('/');
   }
 
   return (
     <div className="h-screen flex flex-col px-2">
       <div className="flex items-center justify-between p-2 border-b border-gray-200  w-full">
         <div className="flex items-center justify-end w-full">
-          <Button type="link" onClick={onClickBack} icon={<X className="-mr-0.5" size={16} />}>
+          <Button
+            type="link"
+            onClick={onClickBack}
+            icon={<X className="-mr-0.5" size={16} />}
+          >
             返回
           </Button>
         </div>
@@ -243,32 +274,56 @@ export default function ChatMain({
         {conversation && (
           <>
             {conversation.messages.map((msg, index) => (
-              <div key={msg.id} className={`flex gap-4 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                {msg.role === "assistant" && <Avatar icon={<Bot size={16} />} className="bg-blue-500 flex-shrink-0" />}
+              <div
+                key={msg.id}
+                className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                {msg.role === 'assistant' && (
+                  <Avatar
+                    icon={<Bot size={16} />}
+                    className="bg-blue-500 flex-shrink-0"
+                  />
+                )}
 
                 <div
-                  className={`max-w-[80%] ${msg.role === "user"
-                    ? "bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3"
-                    : "bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3"
-                    }`}
+                  className={`max-w-[80%] ${
+                    msg.role === 'user'
+                      ? 'bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3'
+                      : 'bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3'
+                  }`}
                 >
-                  {msg.role === "user" ? (
-                    <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+                  {msg.role === 'user' ? (
+                    <div className="whitespace-pre-wrap break-words">
+                      {msg.content}
+                    </div>
                   ) : (
                     <div className="prose prose-sm max-w-none">
                       <ReactMarkdown
                         components={{
-                          code({ node, inline, className, children, ...props }) {
-                            const match = /language-(\w+)/.exec(className || "")
+                          code({
+                            node,
+                            inline,
+                            className,
+                            children,
+                            ...props
+                          }) {
+                            const match = /language-(\w+)/.exec(
+                              className || '',
+                            );
                             return !inline && match ? (
-                              <SyntaxHighlighter style={tomorrow} language={match[1]} PreTag="div" {...props}>
-                                {String(children).replace(/\n$/, "")}
+                              <SyntaxHighlighter
+                                style={tomorrow}
+                                language={match[1]}
+                                PreTag="div"
+                                {...props}
+                              >
+                                {String(children).replace(/\n$/, '')}
                               </SyntaxHighlighter>
                             ) : (
                               <code className={className} {...props}>
                                 {children}
                               </code>
-                            )
+                            );
                           },
                         }}
                       >
@@ -277,7 +332,7 @@ export default function ChatMain({
                     </div>
                   )}
 
-                  {msg.role === "assistant" && msg.content && (
+                  {msg.role === 'assistant' && msg.content && (
                     <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200">
                       <Button
                         type="text"
@@ -301,7 +356,12 @@ export default function ChatMain({
                   )}
                 </div>
 
-                {msg.role === "user" && <Avatar icon={<User size={16} />} className="bg-gray-500 flex-shrink-0" />}
+                {msg.role === 'user' && (
+                  <Avatar
+                    icon={<User size={16} />}
+                    className="bg-gray-500 flex-shrink-0"
+                  />
+                )}
               </div>
             ))}
 
@@ -319,7 +379,7 @@ export default function ChatMain({
         <div ref={messagesEndRef} />
       </div>
 
-      {conversation && conversation.title !== "新对话" ? (
+      {conversation && conversation.title !== '新对话' ? (
         <div className="p-4 border-t border-gray-200  min-w-4xl mx-auto">
           <div className="mx-auto">
             <div className="relative">
@@ -350,7 +410,12 @@ export default function ChatMain({
               </div>
               <div className="absolute right-2 bottom-2 flex gap-2">
                 <Upload beforeUpload={handleFileUpload} showUploadList={false}>
-                  <Button type="text" icon={<UploadIcon size={16} />} disabled={isLoading} size="small" />
+                  <Button
+                    type="text"
+                    icon={<UploadIcon size={16} />}
+                    disabled={isLoading}
+                    size="small"
+                  />
                 </Upload>
                 {isLoading ? (
                   <Button type="default" onClick={handleStop} size="small">
@@ -367,15 +432,21 @@ export default function ChatMain({
                 )}
               </div>
             </div>
-            <div className="text-xs text-gray-500 mt-2 text-center">AI助手可能会产生不准确的信息，请谨慎使用。</div>
+            <div className="text-xs text-gray-500 mt-2 text-center">
+              AI助手可能会产生不准确的信息，请谨慎使用。
+            </div>
           </div>
         </div>
       ) : (
         <div className="flex w-full h-screen items-center justify-center mx-auto">
           <div className="text-center space-y-6">
             <div>
-              <h2 className="text-xl font-semibold text-gray-600 mb-2">欢迎使用AI助手</h2>
-              <p className="text-gray-500 mb-6">我是AI助手，擅长数据库相关任务。有什么我可以帮助您的吗？</p>
+              <h2 className="text-xl font-semibold text-gray-600 mb-2">
+                欢迎使用AI助手
+              </h2>
+              <p className="text-gray-500 mb-6">
+                我是AI助手，擅长数据库相关任务。有什么我可以帮助您的吗？
+              </p>
             </div>
             <div className="relative min-w-2xl mx-auto">
               <TextArea
@@ -405,7 +476,12 @@ export default function ChatMain({
               </div>
               <div className="absolute right-2 bottom-2 flex gap-2">
                 <Upload beforeUpload={handleFileUpload} showUploadList={false}>
-                  <Button type="text" icon={<UploadIcon size={16} />} disabled={isLoading} size="small" />
+                  <Button
+                    type="text"
+                    icon={<UploadIcon size={16} />}
+                    disabled={isLoading}
+                    size="small"
+                  />
                 </Upload>
                 <Button
                   type="primary"
@@ -417,10 +493,12 @@ export default function ChatMain({
                 />
               </div>
             </div>
-            <div className="text-xs text-gray-500 mt-2">AI助手可能会产生不准确的信息，请谨慎使用。</div>
+            <div className="text-xs text-gray-500 mt-2">
+              AI助手可能会产生不准确的信息，请谨慎使用。
+            </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -27,7 +27,7 @@ import {
   exportUser,
   importUser,
   updateUser,
-  useUsers
+  useUsers,
 } from '@/service/user';
 import { assignUserRoles } from '@/service/user-role';
 import { createPaginationRequest } from '@/types';
@@ -67,7 +67,7 @@ const UserPage: React.FC = () => {
   };
   const showMore = false;
 
-  const { dictData } = useDictDataOptions("user_status".split(","))
+  const { dictData } = useDictDataOptions('user_status'.split(','));
 
   // 查询模块
   const [isQueryUserShow, setIsQueryUserShow] = useState<boolean>(true);
@@ -105,7 +105,7 @@ const UserPage: React.FC = () => {
   const handleQueryUserReset = () => {
     resetPagination();
     queryUserForm.resetFields();
-    setUserQueryParams(undefined)
+    setUserQueryParams(undefined);
     mutateUsers();
   };
 
@@ -130,7 +130,8 @@ const UserPage: React.FC = () => {
   };
 
   // 分配角色模块
-  const [isAssignRoleModalVisible, setIsAssignRoleModalVisible] = useState(false);
+  const [isAssignRoleModalVisible, setIsAssignRoleModalVisible] =
+    useState(false);
   const [isAssignRoleLoading, setIsAssignRoleLoading] = useState(false);
   const [assignRoleForm] = Form.useForm();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -156,8 +157,10 @@ const UserPage: React.FC = () => {
 
     setIsAssignRoleLoading(true);
     try {
-
-      await assignUserRoles({ user_id: currentUser.id, role_ids: values.roles });
+      await assignUserRoles({
+        user_id: currentUser.id,
+        role_ids: values.roles,
+      });
       message.success('角色分配成功');
       mutateUsers();
       handleAssignRoleCancel();
@@ -169,93 +172,94 @@ const UserPage: React.FC = () => {
   // 表格列信息
   const userColumns: ColumnsType<User> = [
     {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
+      title: 'Id',
+      dataIndex: 'id',
+      key: 'id',
       hidden: true,
     },
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
       render: (_: number, _record: User, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      width: '8%',
     },
     {
-      title: "用户名",
-      dataIndex: "username",
-      key: "username",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username',
+      render: (text) => (text ? text : '-'),
+      width: '12%',
       ellipsis: true,
     },
     {
-      title: "昵称",
-      dataIndex: "nickname",
-      key: "nickname",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      title: '昵称',
+      dataIndex: 'nickname',
+      key: 'nickname',
+      render: (text) => (text ? text : '-'),
+      width: '12%',
       ellipsis: true,
     },
     {
-      title: "头像地址",
-      dataIndex: "avatar_url",
-      key: "avatar_url",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      title: '头像地址',
+      dataIndex: 'avatar_url',
+      key: 'avatar_url',
+      render: (text) => (text ? text : '-'),
+      width: '12%',
       ellipsis: true,
     },
     {
-      title: "状态",
-      dataIndex: "status",
-      key: "status",
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
       render: (text) => {
-        const values = (text !== undefined && text !== null) ? String(text).split(',') : [];
+        const values =
+          text !== undefined && text !== null ? String(text).split(',') : [];
         return values.map((value, index) => {
-          const item = dictData["user_status"].find((d) => d.value === value);
+          const item = dictData['user_status'].find((d) => d.value === value);
           if (item) {
             const content = <span key={item.value}>{item.label}</span>;
             return index < values.length - 1 ? (
               <React.Fragment key={`${item.value}-with-comma`}>
                 {content},&nbsp;
               </React.Fragment>
-            ) : content;
+            ) : (
+              content
+            );
           }
           return null;
         });
       },
-      width: "6%",
+      width: '6%',
     },
     {
-      title: "备注",
-      dataIndex: "remark",
-      key: "remark",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+      render: (text) => (text ? text : '-'),
+      width: '12%',
       ellipsis: true,
     },
     {
-      title: "创建时间",
-      dataIndex: "create_time",
-      key: "create_time",
-      render: (text: string) => (
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : "-"
-      ),
-      width: "14%",
+      title: '创建时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (text: string) =>
+        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
+      width: '14%',
       ellipsis: true,
     },
     {
-      title: "操作",
-      key: "action",
-      align: "center",
+      title: '操作',
+      key: 'action',
+      align: 'center',
       render: (_, record) => {
-        if (record.id.toString() === "9") {
+        if (record.id.toString() === '9') {
           return null;
         }
 
         return (
           <div className="flex gap-2 items-center justify-center">
-
             <button
               type="button"
               className="flex items-center gap-0.5 text-xs btn-operation"
@@ -278,7 +282,6 @@ const UserPage: React.FC = () => {
                 <Trash2 className="w-3 h-3" />
                 删除
               </button>
-
             </Popconfirm>
             <button
               type="button"
@@ -290,7 +293,10 @@ const UserPage: React.FC = () => {
             </button>
 
             {showMore && (
-              <button type="button" className="flex items-center gap-0.5 text-xs btn-operation">
+              <button
+                type="button"
+                className="flex items-center gap-0.5 text-xs btn-operation"
+              >
                 <span>更多</span>
                 <MoreHorizontal className="w-3 h-3" />
               </button>
@@ -298,8 +304,8 @@ const UserPage: React.FC = () => {
           </div>
         );
       },
-    }
-  ]
+    },
+  ];
 
   const [visibleColumns, setVisibleColumns] = useState(
     userColumns.map((col) => col.key),
@@ -648,26 +654,37 @@ const UserPage: React.FC = () => {
             <Form.Item
               name="roles"
               label="角色"
-              rules={[{ required: true, message: "请选择至少一个角色" }]}
+              rules={[{ required: true, message: '请选择至少一个角色' }]}
             >
               <Select
                 mode="multiple"
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 placeholder="请选择角色"
                 optionFilterProp="label"
               >
                 {availableRoles?.map((role) => (
-                  <Select.Option key={role.id} value={role.id} label={role.name}>
+                  <Select.Option
+                    key={role.id}
+                    value={role.id}
+                    label={role.name}
+                  >
                     {role.name}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 4, span: 18 }}>
-              <Button type="primary" htmlType="submit" loading={isAssignRoleLoading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isAssignRoleLoading}
+              >
                 确定
               </Button>
-              <Button onClick={handleAssignRoleCancel} style={{ marginLeft: 8 }}>
+              <Button
+                onClick={handleAssignRoleCancel}
+                style={{ marginLeft: 8 }}
+              >
                 取消
               </Button>
             </Form.Item>

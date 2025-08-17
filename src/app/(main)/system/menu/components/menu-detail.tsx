@@ -1,6 +1,5 @@
 import SvgIcon from '@/components/assist/svg-icon';
 import { getLabelByValue, useDictDataOptions } from '@/service/dict-datum';
-import { DictDataOptionItem } from '@/types/dict-datum';
 import { MenuDetail } from '@/types/menu';
 import { Descriptions, Drawer, Tag } from 'antd';
 import dayjs from 'dayjs';
@@ -32,22 +31,19 @@ const BOOLEAN_MAP: Record<number, string> = {
   1: '是',
 };
 
-
-
 const MenuDetailComponent: React.FC<MenuDetailDrawerProps> = ({
   isMenuDetailDrawerVisible,
   onMenuDetailClose,
   menuDetail,
   loading,
 }) => {
-  const { dictData } = useDictDataOptions("yes_no".split(","))
+  const { dictData } = useDictDataOptions('yes_no'.split(','));
   // 渲染标签样式的内容
   const renderTag = (
     value: number,
     map: Record<number, string>,
     color?: string,
   ) => <Tag color={color}>{map[value] ?? '未知'}</Tag>;
-
 
   return (
     <Drawer
@@ -89,7 +85,7 @@ const MenuDetailComponent: React.FC<MenuDetailDrawerProps> = ({
             {renderTag(menuDetail.cacheable, BOOLEAN_MAP, 'green')}
           </Descriptions.Item>
           <Descriptions.Item label="是否显示">
-            {getLabelByValue(dictData, "yes_no", "1")}
+            {getLabelByValue(dictData, 'yes_no', '1')}
           </Descriptions.Item>
           <Descriptions.Item label="父目录">
             {menuDetail.parent_id || '根目录'}

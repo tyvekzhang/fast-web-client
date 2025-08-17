@@ -18,7 +18,6 @@ export interface UserInfo {
   permissions: string[];
 }
 
-
 export interface AssignUserRoles {
   user_id: string;
   role_ids: string[];

@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Form, Button } from 'antd';
-import { Input } from 'antd';
-import { Select, Radio } from 'antd';
-import { DatePicker } from 'antd';
-import dayjs from 'dayjs';
-import type { Dayjs } from 'dayjs';
+import { Button, DatePicker, Form, Input } from 'antd';
 import { FormInstance } from 'antd/es/form';
+import dayjs from 'dayjs';
 import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
@@ -46,39 +42,36 @@ const QueryRoleComponent: React.FC<QueryRoleProps> = ({
     const values = await onQueryRoleForm.validateFields();
     onQueryRoleFinish(values);
   };
-  const dictData = {
-    "key1": "value1",
-    "key2": "value2"
-}
 
   return (
     <Form
       {...queryRoleFormItemLayout}
-      form={ onQueryRoleForm}
+      form={onQueryRoleForm}
       name="queryRole"
       onFinish={onQueryRoleFinish}
     >
-      <div className='flex flex-wrap items-center gap-4 pt-6 justify-between'>
-        <Form.Item name="name" label="角色名称" >
+      <div className="flex flex-wrap items-center gap-4 pt-6 justify-between">
+        <Form.Item name="name" label="角色名称">
           <Input placeholder="请输入角色名称" allowClear />
         </Form.Item>
-        <Form.Item name="code" label="角色权限字符串" >
-          <Input placeholder="请输入角色权限字符串" allowClear />
+        <Form.Item name="code" label="权限标识">
+          <Input placeholder="请输入权限标识" allowClear />
         </Form.Item>
-        <Form.Item name="create_time" label="创建时间" >
-          <DatePicker
+        <Form.Item name="create_time" label="创建时间">
+          <DatePicker.RangePicker
             allowClear
             format="YYYY-MM-DD"
-            placeholder="请选择创建时间"
+            placeholder={['请选择开始时间', '请选择结束时间']}
             presets={[
-              { label: '昨天', value: dayjs().add(-1, 'd') },
-              { label: '上周', value: dayjs().add(-7, 'd') },
-              { label: '上月', value: dayjs().add(-1, 'month') },
+              { label: '最近7天', value: [dayjs().add(-7, 'd'), dayjs()] },
+              { label: '最近14天', value: [dayjs().add(-14, 'd'), dayjs()] },
+              { label: '最近30天', value: [dayjs().add(-30, 'd'), dayjs()] },
+              { label: '最近90天', value: [dayjs().add(-90, 'd'), dayjs()] },
             ]}
           />
         </Form.Item>
         <Form.Item>
-          <div className='flex items-center gap-2 justify-start pr-4'>
+          <div className="flex items-center gap-2 justify-start pr-4">
             <Button
               onClick={handleQueryRoleReset}
               className="bg-gray-50"

@@ -4,7 +4,7 @@ import { useDictStore } from '@/stores/dict-store';
 import { useMenuStore } from '@/stores/menu-store';
 import { getExpandedMenuPaths } from '@/utils/navigation-util';
 import type { MenuProps } from 'antd';
-import { Menu, Modal } from 'antd';
+import { Menu } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
 

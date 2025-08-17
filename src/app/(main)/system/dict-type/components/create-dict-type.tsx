@@ -13,7 +13,7 @@
 // limitations under the License.import { Input } from 'antd';
 import { CreateDictType, DictType } from '@/types/dict-type';
 import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Input, Modal, Radio } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 

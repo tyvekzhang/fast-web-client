@@ -52,12 +52,12 @@ class HttpClient {
   private isStreamingResponse(response: AxiosResponse): boolean {
     const contentType = response.headers?.['content-type'];
     const transferEncoding = response.headers?.['transfer-encoding'];
-    
+
     return (
-        contentType?.includes('application/octet-stream') ||
-        (response.data instanceof ReadableStream)
+      contentType?.includes('application/octet-stream') ||
+      response.data instanceof ReadableStream
     );
-}
+  }
 
   private setupInterceptors() {
     // Request interceptor
@@ -89,7 +89,10 @@ class HttpClient {
       (response) => {
         NProgress.done();
         const { data } = response;
-        if (this.isFileAttachment(response) || this.isStreamingResponse(response)) {
+        if (
+          this.isFileAttachment(response) ||
+          this.isStreamingResponse(response)
+        ) {
           return response;
         } else if (this.isOriginalResponse(data)) {
           return data;

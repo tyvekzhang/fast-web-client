@@ -1,6 +1,6 @@
-import { Sidebar } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { useLayoutStore } from '@/stores/layout-store';
+import { Sidebar } from 'lucide-react';
 
 export default function FoldTrigger() {
   const { collapsed, toggleCollapsed } = useLayoutStore();

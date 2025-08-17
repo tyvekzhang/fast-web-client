@@ -285,7 +285,6 @@ const DictDatumPage: React.FC = () => {
   const [isCreateDictDatumLoading, setIsCreateDictDatumLoading] =
     useState(false);
 
-
   const onDictTypeChange = (value: string) => {
     setDictType(value);
     createDictDatumForm.setFieldValue('type', value);
