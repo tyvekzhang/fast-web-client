@@ -32,6 +32,7 @@ import React, { useState } from 'react';
 import CreateRoleComponent from './components/create-role';
 import QueryRoleComponent from './components/query-role';
 import UpdateRoleComponent from './components/update-role';
+import { format } from 'date-fns';
 
 const RolePage: React.FC = () => {
   // 配置模块
@@ -166,7 +167,7 @@ const RolePage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text: string) =>
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
+        text ? <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span> : '-',
       width: '14%',
       ellipsis: true,
     },

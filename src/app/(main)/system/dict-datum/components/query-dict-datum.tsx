@@ -50,7 +50,7 @@ const QueryDictDatumComponent: React.FC<QueryDictDatumProps> = ({
     >
       <div className="flex flex-wrap items-center gap-2 pt-6 justify-between">
         <Form.Item name="type" label="字典名">
-          <Select placeholder="请选择字典名" allowClear className="min-w-50" />
+           <Input placeholder="请输入字典名" />
         </Form.Item>
         <Form.Item name="label" label="字典标签">
           <Input placeholder="请输入字典标签" allowClear />

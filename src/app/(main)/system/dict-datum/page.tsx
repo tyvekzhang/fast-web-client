@@ -18,22 +18,20 @@ import TransitionWrapper from '@/components/base/transition-wrapper';
 import {
   batchCreateDictData,
   batchDeleteDictDatum,
-  batchUpdateDictData,
   createDictDatum,
   deleteDictDatum,
   exportDictDatum,
   importDictDatum,
   updateDictDatum,
   useDictData,
-  useDictDatum,
+  useDictDatum
 } from '@/service/dict-datum';
 import { createPaginationRequest } from '@/types';
 import {
-  BatchUpdateDictDatum,
   CreateDictDatum,
   DictDatum,
   ListDictDataRequest,
-  UpdateDictDatum,
+  UpdateDictDatum
 } from '@/types/dict-datum';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -42,7 +40,6 @@ import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
-import BatchUpdateDictDatumComponent from './components/batch-update-dict-datum';
 import CreateDictDatumComponent from './components/create-dict-datum';
 import DictDatumDetailComponent from './components/dict-datum-detail';
 import ImportDictDatumComponent from './components/import-dict-datum';
@@ -55,7 +52,7 @@ const DictDatumPage: React.FC = () => {
     showCreate: true,
     showImport: true,
     showExport: true,
-    showModify: true,
+    showModify: false,
     showRemove: true,
   };
   const showMore = false;
@@ -217,14 +214,6 @@ const DictDatumPage: React.FC = () => {
       align: 'center',
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
-          <button
-            type="button"
-            className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onDictDatumDetail(record)}
-          >
-            <Eye className="w-3 h-3" />
-            详情
-          </button>
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
@@ -394,52 +383,6 @@ const DictDatumPage: React.FC = () => {
     }
   };
 
-  // 批量更新模块
-  const onDictDatumBatchModify = () => {
-    if (selectedRowKeys.length === 1) {
-      setIsUpdateDictDatumModalVisible(true);
-      updateDictDatumForm.setFieldsValue({ ...selectedRows[0] });
-    } else {
-      setIsBatchUpdateDictDataModalVisible(true);
-      batchUpdateDictDataForm.resetFields();
-    }
-  };
-  const [
-    isBatchUpdateDictDataModalVisible,
-    setIsBatchUpdateDictDataModalVisible,
-  ] = useState<boolean>(false);
-  const [isBatchUpdateDictDataLoading, setIsBatchUpdateDictDataLoading] =
-    useState<boolean>(false);
-  const [batchUpdateDictDataForm] = Form.useForm();
-
-  const handleBatchUpdateDictDataCancel = async () => {
-    batchUpdateDictDataForm.resetFields();
-    setIsBatchUpdateDictDataModalVisible(false);
-    resetSelectedRows();
-    message.info('操作已取消');
-  };
-
-  const handleBatchUpdateDictDataFinish = async () => {
-    const dictDatumBatchModify =
-      (await batchUpdateDictDataForm.validateFields()) as BatchUpdateDictDatum;
-    setIsBatchUpdateDictDataLoading(true);
-    if (selectedRows === null || selectedRows.length === 0) {
-      message.warning('请选择要更新的项目');
-      return;
-    }
-    try {
-      const ids = selectedRows.map((row) => row.id);
-      await batchUpdateDictData({ ids: ids, dictDatum: dictDatumBatchModify });
-      batchUpdateDictDataForm.resetFields();
-      message.success('更新成功');
-      mutateDictData();
-      resetSelectedRows();
-    } finally {
-      setIsBatchUpdateDictDataLoading(false);
-      setIsBatchUpdateDictDataModalVisible(false);
-    }
-  };
-
   // 导入模块
   const [isImportDictDatumModalVisible, setIsImportDictDatumModalVisible] =
     useState<boolean>(false);
@@ -511,7 +454,7 @@ const DictDatumPage: React.FC = () => {
           onCreate={onCreateDictDatum}
           onImport={onImportDictDatum}
           onExport={onDictDatumExport}
-          onBatchModify={onDictDatumBatchModify}
+          onBatchModify={() => {}}
           onConfirmBatchRemove={handleDictDatumBatchRemove}
           onConfirmBatchRemoveCancel={handleDictDatumBatchRemoveCancel}
           isQueryShow={isQueryDictDatumShow}
@@ -571,18 +514,6 @@ const DictDatumPage: React.FC = () => {
             treeSelectDataSource={dictDatumListDataSource}
           />
         </div>
-        <div>
-          <BatchUpdateDictDatumComponent
-            isBatchUpdateDictDataModalVisible={
-              isBatchUpdateDictDataModalVisible
-            }
-            onBatchUpdateDictDataCancel={handleBatchUpdateDictDataCancel}
-            onBatchUpdateDictDataFinish={handleBatchUpdateDictDataFinish}
-            isBatchUpdateDictDataLoading={isBatchUpdateDictDataLoading}
-            batchUpdateDictDataForm={batchUpdateDictDataForm}
-          />
-        </div>
-
         <div>
           <ImportDictDatumComponent
             isImportDictDatumModalVisible={isImportDictDatumModalVisible}

@@ -13,9 +13,8 @@
 // limitations under the License.
 
 import { useDictDataOptions } from '@/service/dict-datum';
-import { Button, DatePicker, Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 import { FormInstance } from 'antd/es/form';
-import dayjs from 'dayjs';
 import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
 
@@ -66,18 +65,6 @@ const QueryUserComponent: React.FC<QueryUserProps> = ({
             placeholder="请选择状态"
             options={dictData['user_status']}
             className="min-w-30"
-          />
-        </Form.Item>
-        <Form.Item name="create_time" label="创建时间">
-          <DatePicker
-            allowClear
-            format="YYYY-MM-DD"
-            placeholder="请选择创建时间"
-            presets={[
-              { label: '昨天', value: dayjs().add(-1, 'd') },
-              { label: '上周', value: dayjs().add(-7, 'd') },
-              { label: '上月', value: dayjs().add(-1, 'month') },
-            ]}
           />
         </Form.Item>
         <Form.Item>

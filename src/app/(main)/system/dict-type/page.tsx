@@ -37,7 +37,6 @@ import {
 } from '@/types/dict-type';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import dayjs from 'dayjs';
 import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -47,6 +46,7 @@ import DictTypeDetailComponent from './components/dict-type-detail';
 import ImportDictTypeComponent from './components/import-dict-type';
 import QueryDictTypeComponent from './components/query-dict-type';
 import UpdateDictTypeComponent from './components/update-dict-type';
+import { format } from 'date-fns';
 
 const DictTypePage: React.FC = () => {
   // 配置模块
@@ -54,7 +54,7 @@ const DictTypePage: React.FC = () => {
     showCreate: true,
     showImport: true,
     showExport: true,
-    showModify: true,
+    showModify: false,
     showRemove: true,
   };
   const showMore = false;
@@ -196,7 +196,7 @@ const DictTypePage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text: string) =>
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
+        text ? <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span> : '-',
       width: '14%',
       ellipsis: true,
     },
@@ -378,51 +378,6 @@ const DictTypePage: React.FC = () => {
     }
   };
 
-  // 批量更新模块
-  const onDictTypeBatchModify = () => {
-    if (selectedRowKeys.length === 1) {
-      setIsUpdateDictTypeModalVisible(true);
-      updateDictTypeForm.setFieldsValue({ ...selectedRows[0] });
-    } else {
-      setIsBatchUpdateDictTypesModalVisible(true);
-      batchUpdateDictTypesForm.resetFields();
-    }
-  };
-  const [
-    isBatchUpdateDictTypesModalVisible,
-    setIsBatchUpdateDictTypesModalVisible,
-  ] = useState<boolean>(false);
-  const [isBatchUpdateDictTypesLoading, setIsBatchUpdateDictTypesLoading] =
-    useState<boolean>(false);
-  const [batchUpdateDictTypesForm] = Form.useForm();
-
-  const handleBatchUpdateDictTypesCancel = async () => {
-    batchUpdateDictTypesForm.resetFields();
-    setIsBatchUpdateDictTypesModalVisible(false);
-    resetSelectedRows();
-    message.info('操作已取消');
-  };
-
-  const handleBatchUpdateDictTypesFinish = async () => {
-    const dictTypeBatchModify =
-      (await batchUpdateDictTypesForm.validateFields()) as BatchUpdateDictType;
-    setIsBatchUpdateDictTypesLoading(true);
-    if (selectedRows === null || selectedRows.length === 0) {
-      message.warning('请选择要更新的项目');
-      return;
-    }
-    try {
-      const ids = selectedRows.map((row) => row.id);
-      await batchUpdateDictTypes({ ids: ids, dictType: dictTypeBatchModify });
-      batchUpdateDictTypesForm.resetFields();
-      message.success('更新成功');
-      mutateDictTypes();
-      resetSelectedRows();
-    } finally {
-      setIsBatchUpdateDictTypesLoading(false);
-      setIsBatchUpdateDictTypesModalVisible(false);
-    }
-  };
 
   // 导入模块
   const [isImportDictTypeModalVisible, setIsImportDictTypeModalVisible] =
@@ -495,7 +450,7 @@ const DictTypePage: React.FC = () => {
           onCreate={onCreateDictType}
           onImport={onImportDictType}
           onExport={onDictTypeExport}
-          onBatchModify={onDictTypeBatchModify}
+          onBatchModify={() => {}}
           onConfirmBatchRemove={handleDictTypeBatchRemove}
           onConfirmBatchRemoveCancel={handleDictTypeBatchRemoveCancel}
           isQueryShow={isQueryDictTypeShow}
@@ -555,18 +510,6 @@ const DictTypePage: React.FC = () => {
             treeSelectDataSource={dictTypeListDataSource}
           />
         </div>
-        <div>
-          <BatchUpdateDictTypeComponent
-            isBatchUpdateDictTypesModalVisible={
-              isBatchUpdateDictTypesModalVisible
-            }
-            onBatchUpdateDictTypesCancel={handleBatchUpdateDictTypesCancel}
-            onBatchUpdateDictTypesFinish={handleBatchUpdateDictTypesFinish}
-            isBatchUpdateDictTypesLoading={isBatchUpdateDictTypesLoading}
-            batchUpdateDictTypesForm={batchUpdateDictTypesForm}
-          />
-        </div>
-
         <div>
           <ImportDictTypeComponent
             isImportDictTypeModalVisible={isImportDictTypeModalVisible}

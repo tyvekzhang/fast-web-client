@@ -1,6 +1,6 @@
 'use client';
 
-import { TranslationOutlined } from '@ant-design/icons';
+import { Languages } from 'lucide-react';
 import { Button, Space, Typography, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 
@@ -40,7 +40,7 @@ export function LanguageToggle() {
     >
       <Space align="center">
         <span className="language-flag">{languages[currentLang].flag}</span>
-        <TranslationOutlined style={{ fontSize: '16px', color: '#1677ff' }} />
+        <Languages size={16} style={{ color: '#1677ff' }} />
         <Text strong style={{ color: '#1677ff' }}>
           {languages[currentLang].name}
         </Text>

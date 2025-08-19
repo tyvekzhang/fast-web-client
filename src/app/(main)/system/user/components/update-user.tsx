@@ -39,12 +39,7 @@ const UpdateUserComponent: React.FC<UpdateUserProps> = ({
   onUpdateUserFinish,
   isUpdateUserLoading,
   updateUserForm,
-  treeSelectDataSource,
 }) => {
-  const treeSelectDataTransform = [
-    { name: '根目录', id: 0, children: treeSelectDataSource },
-  ];
-  const treeSelectData = TreeSelectUtil.convert(treeSelectDataTransform as any);
 
   const { dictData } = useDictDataOptions('user_status'.split(','));
   const footerButtons = useMemo(
@@ -100,13 +95,6 @@ const UpdateUserComponent: React.FC<UpdateUserProps> = ({
           rules={[{ required: false, message: '请输入' }]}
         >
           <Input placeholder="请输入昵称" />
-        </Form.Item>
-        <Form.Item
-          name="avatar_url"
-          label="头像地址"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入头像地址" />
         </Form.Item>
         <Form.Item
           name="status"

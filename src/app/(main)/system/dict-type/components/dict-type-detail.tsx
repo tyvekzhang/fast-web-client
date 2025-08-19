@@ -54,9 +54,6 @@ const DictTypeDetailComponent: React.FC<DictTypeDetailDrawerProps> = ({
           <Descriptions.Item label="字典类型">
             {dictTypeDetail.type}
           </Descriptions.Item>
-          <Descriptions.Item label="状态">
-            {dictTypeDetail.status}
-          </Descriptions.Item>
           <Descriptions.Item label="备注">
             {dictTypeDetail.comment}
           </Descriptions.Item>

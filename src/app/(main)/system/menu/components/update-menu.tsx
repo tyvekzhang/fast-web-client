@@ -3,6 +3,7 @@ import { UpdateMenu } from '@/types/menu';
 import { TreeSelectUtil } from '@/utils/select-util';
 import { Button, Form, Input, Modal, Radio, Select, TreeSelect } from 'antd';
 import { FormInstance } from 'antd/es/form';
+import TextArea from 'antd/es/input/TextArea';
 import React, { useMemo } from 'react';
 
 interface UpdateMenuProps {
@@ -110,26 +111,11 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
 
-        <Form.Item label="是否外链" name="is_external">
-          <Radio.Group>
-            <Radio value={1}>是</Radio>
-            <Radio value={0}>否</Radio>
-          </Radio.Group>
-        </Form.Item>
-
         <Form.Item
           name="path"
           label="路由地址"
           required
           rules={[{ required: true, message: '请输入路由地址' }]}
-        >
-          <Input placeholder="请输入" />
-        </Form.Item>
-
-        <Form.Item
-          name="component"
-          label="组件路径"
-          rules={[{ required: false, message: '请输入' }]}
         >
           <Input placeholder="请输入" />
         </Form.Item>
@@ -149,34 +135,11 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           <Input placeholder="请输入" />
         </Form.Item>
 
-        <Form.Item label="是否缓存" name="cacheable">
+        <Form.Item label="状态" name="status">
           <Radio.Group>
-            <Radio value={1}>是</Radio>
-            <Radio value={0}>否</Radio>
+            <Radio value={1}>正常</Radio>
+            <Radio value={0}>停用</Radio>
           </Radio.Group>
-        </Form.Item>
-
-        <Form.Item
-          name="status"
-          label="状态"
-          rules={[{ required: true, message: '请选择状态' }]} // 增加必填验证
-        >
-          <Select
-            allowClear
-            placeholder="请选择"
-            optionFilterProp="label"
-            defaultValue={'1'}
-            options={[
-              {
-                value: '1',
-                label: '正常',
-              },
-              {
-                value: '0',
-                label: '停用',
-              },
-            ]}
-          />
         </Form.Item>
 
         <Form.Item
@@ -184,7 +147,7 @@ const UpdateMenuComponent: React.FC<UpdateMenuProps> = ({
           label="备注信息"
           rules={[{ required: false, message: '请输入' }]}
         >
-          <Input placeholder="请输入" />
+          <Input.TextArea placeholder="请输入" />
         </Form.Item>
       </Form>
     </Modal>

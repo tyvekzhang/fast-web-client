@@ -13,7 +13,7 @@ export function HeaderLayout(): JSX.Element {
   return (
     <div className="bg-gray-50 border-b border-gray-200 mb-1 shadow-2xs">
       <Header className="px-6 h-14 bg-gray-50 flex items-center justify-between border-gray-200 border-b-1">
-        <div className="flex items-center justify-start gap-1">
+        <div className="flex items-center justify-start">
           <FoldTrigger />
           <BreadcrumbLayout />
         </div>

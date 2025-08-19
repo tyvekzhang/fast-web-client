@@ -1,5 +1,6 @@
 'use client';
 
+import { DeepThinkIcon } from '@/assets/icons/deep-think';
 import { streamChatCompletion } from '@/lib/api';
 import { generateId } from '@/lib/utils';
 import type { Conversation, Message } from '@/types/chat';
@@ -7,21 +8,21 @@ import { Avatar, Button, Input, message, Spin, Upload } from 'antd';
 import { throttle } from 'lodash';
 import {
   Bot,
+  Brain,
   Copy,
-  FileText,
+  Globe,
   RotateCw,
-  Search,
   Send,
   UploadIcon,
   User,
-  X,
+  X
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const { TextArea } = Input;
 
@@ -50,7 +51,7 @@ export default function ChatMain({
 }: ChatMainProps) {
   const router = useRouter();
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<any>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -90,7 +91,7 @@ export default function ChatMain({
   );
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isGenerating) return;
 
     // Cancel any ongoing request
     if (abortControllerRef.current) {
@@ -123,7 +124,7 @@ export default function ChatMain({
     onAddMessage(currentConversationId, assistantMessage);
 
     setInput('');
-    setIsLoading(true);
+    setIsGenerating(true);
     streamingContentRef.current = '';
 
     // Create new abort controller for this request
@@ -161,7 +162,7 @@ export default function ChatMain({
         );
       }
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
       abortControllerRef.current = null;
       streamingContentRef.current = '';
     }
@@ -177,7 +178,7 @@ export default function ChatMain({
   const handleStop = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
-      setIsLoading(false);
+      setIsGenerating(false);
       message.info('已停止生成');
     }
   };
@@ -192,7 +193,7 @@ export default function ChatMain({
   };
 
   const regenerateResponse = async (messageIndex: number) => {
-    if (!conversation || messageIndex < 1 || isLoading) return;
+    if (!conversation || messageIndex < 1 || isGenerating) return;
 
     const userMessage = conversation.messages[messageIndex - 1];
     if (userMessage.role !== 'user') return;
@@ -205,7 +206,7 @@ export default function ChatMain({
       abortControllerRef.current.abort();
     }
 
-    setIsLoading(true);
+    setIsGenerating(true);
     streamingContentRef.current = '';
 
     // Create new abort controller
@@ -233,7 +234,7 @@ export default function ChatMain({
         message.error('重新生成失败，请重试');
       }
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
       abortControllerRef.current = null;
       streamingContentRef.current = '';
     }
@@ -265,7 +266,7 @@ export default function ChatMain({
             onClick={onClickBack}
             icon={<X className="-mr-0.5" size={16} />}
           >
-            返回
+            关闭
           </Button>
         </div>
       </div>
@@ -286,11 +287,10 @@ export default function ChatMain({
                 )}
 
                 <div
-                  className={`max-w-[80%] ${
-                    msg.role === 'user'
-                      ? 'bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3'
-                      : 'bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3'
-                  }`}
+                  className={`max-w-[80%] ${msg.role === 'user'
+                    ? 'bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3'
+                    : 'bg-gray-100 rounded-2xl rounded-bl-md px-4 py-1'
+                    }`}
                 >
                   {msg.role === 'user' ? (
                     <div className="whitespace-pre-wrap break-words">
@@ -302,7 +302,6 @@ export default function ChatMain({
                         components={{
                           code({
                             node,
-                            inline,
                             className,
                             children,
                             ...props
@@ -310,12 +309,17 @@ export default function ChatMain({
                             const match = /language-(\w+)/.exec(
                               className || '',
                             );
-                            return !inline && match ? (
+                            return match ? (
                               <SyntaxHighlighter
-                                style={tomorrow}
                                 language={match[1]}
-                                PreTag="div"
-                                {...props}
+                                style={vscDarkPlus}
+                                customStyle={{
+                                  margin: 0,
+                                  borderRadius: '4px',
+                                  fontSize: '14px',
+                                }}
+                                showLineNumbers={true}
+                                wrapLines={true}
                               >
                                 {String(children).replace(/\n$/, '')}
                               </SyntaxHighlighter>
@@ -347,8 +351,7 @@ export default function ChatMain({
                         size="small"
                         icon={<RotateCw size={14} />}
                         onClick={() => regenerateResponse(index)}
-                        loading={isLoading}
-                        disabled={isLoading}
+                        disabled={isGenerating}
                       >
                         重新生成
                       </Button>
@@ -365,11 +368,11 @@ export default function ChatMain({
               </div>
             ))}
 
-            {isLoading && (
+            {isGenerating && (
               <div className="flex gap-4 justify-start">
                 <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-2 mt-4">
                   <Spin size="small" />
-                  <span className="text-gray-500">思考中...</span>
+                  <span className="text-gray-500">生成中...</span>
                 </div>
               </div>
             )}
@@ -395,29 +398,32 @@ export default function ChatMain({
               <div className="absolute left-2 bottom-2 flex gap-2">
                 <Button
                   type="text"
-                  icon={<FileText size={16} />}
+                  icon={<DeepThinkIcon size={16} />}
                   onClick={handleDeepThink}
-                  disabled={isLoading}
-                  size="small"
-                />
+                  disabled={isGenerating}
+                  size="small">
+                  深度思考
+                </Button>
                 <Button
                   type="text"
-                  icon={<Search size={16} />}
+                  icon={<Globe size={16}  />}
                   onClick={handleWebSearch}
-                  disabled={isLoading}
+                  disabled={isGenerating}
                   size="small"
-                />
+                >
+                  联网查询
+                </Button>
               </div>
               <div className="absolute right-2 bottom-2 flex gap-2">
                 <Upload beforeUpload={handleFileUpload} showUploadList={false}>
                   <Button
                     type="text"
                     icon={<UploadIcon size={16} />}
-                    disabled={isLoading}
+                    disabled={isGenerating}
                     size="small"
                   />
                 </Upload>
-                {isLoading ? (
+                {isGenerating ? (
                   <Button type="default" onClick={handleStop} size="small">
                     停止
                   </Button>
@@ -438,10 +444,10 @@ export default function ChatMain({
           </div>
         </div>
       ) : (
-        <div className="flex w-full h-screen items-center justify-center mx-auto">
-          <div className="text-center space-y-6">
+        <div className="flex w-full h-screen items-center justify-center mx-auto my-auto">
+          <div className="text-center">
             <div>
-              <h2 className="text-xl font-semibold text-gray-600 mb-2">
+              <h2 className="text-xl font-semibold text-gray-600">
                 欢迎使用AI助手
               </h2>
               <p className="text-gray-500 mb-6">
@@ -461,25 +467,28 @@ export default function ChatMain({
               <div className="absolute left-2 bottom-2 flex gap-2">
                 <Button
                   type="text"
-                  icon={<FileText size={16} />}
+                  icon={<DeepThinkIcon size={16} />}
                   onClick={handleDeepThink}
-                  disabled={isLoading}
-                  size="small"
-                />
+                  disabled={isGenerating}
+                  size="small">
+                  深度思考
+                </Button>
                 <Button
                   type="text"
-                  icon={<Search size={16} />}
+                  icon={<Globe size={16}  />}
                   onClick={handleWebSearch}
-                  disabled={isLoading}
+                  disabled={isGenerating}
                   size="small"
-                />
+                >
+                  联网查询
+                </Button>
               </div>
               <div className="absolute right-2 bottom-2 flex gap-2">
                 <Upload beforeUpload={handleFileUpload} showUploadList={false}>
                   <Button
                     type="text"
                     icon={<UploadIcon size={16} />}
-                    disabled={isLoading}
+                    disabled={isGenerating}
                     size="small"
                   />
                 </Upload>
@@ -487,8 +496,7 @@ export default function ChatMain({
                   type="primary"
                   icon={<Send size={16} />}
                   onClick={handleSend}
-                  loading={isLoading}
-                  disabled={!input.trim() || isLoading}
+                  disabled={!input.trim() || isGenerating}
                   size="small"
                 />
               </div>

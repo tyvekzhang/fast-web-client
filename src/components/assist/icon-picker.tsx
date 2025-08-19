@@ -1210,6 +1210,13 @@ const iconMap = {
     keywords: ['智能手机', 'smartphone', '手机', '移动', '电话'],
     icon: LucideIcons.Smartphone,
   },
+  Bot: {
+  name: '机器人',
+  englishName: 'Bot',
+  category: '科技',
+  keywords: ['机器人', 'Bot', ],
+  icon: LucideIcons.Bot,
+},
   Tablet: {
     name: '平板',
     englishName: 'Tablet',

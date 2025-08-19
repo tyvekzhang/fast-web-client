@@ -176,7 +176,7 @@ const ImportMenuComponent: React.FC<ImportMenuProps> = ({
               <p className="flex justify-center items-center text-primary">
                 <Inbox />
               </p>
-              <p className="text-base">{'点击或拖拽到此上传'}</p>
+              <p>{'点击或拖拽到此上传'}</p>
               <p className="text-gray-500">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>

@@ -6,30 +6,27 @@ import TransitionWrapper from '@/components/base/transition-wrapper';
 import {
   batchCreateMenus,
   batchDeleteMenu,
-  batchUpdateMenus,
   createMenu,
   deleteMenu,
   exportMenu,
   importMenu,
   updateMenu,
   useMenu,
-  useMenus,
+  useMenus
 } from '@/service/menu';
 import { createPaginationRequest } from '@/types';
 import {
-  BatchUpdateMenu,
   CreateMenu,
   ListMenusRequest,
   Menu,
-  UpdateMenu,
+  UpdateMenu
 } from '@/types/menu';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import dayjs from 'dayjs';
-import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
-import BatchUpdateMenuComponent from './components/batch-update-menu';
 import CreateMenuComponent from './components/create-menu';
 import ImportMenuComponent from './components/import-menu';
 import MenuDetailComponent from './components/menu-detail';
@@ -40,9 +37,9 @@ const MenuPage: React.FC = () => {
   // 配置模块
   const actionConfig = {
     showCreate: true,
-    showImport: true,
-    showExport: true,
-    showModify: true,
+    showImport: false,
+    showExport: false,
+    showModify: false,
     showRemove: true,
   };
   const showMore = false;
@@ -138,7 +135,7 @@ const MenuPage: React.FC = () => {
       dataIndex: 'No',
       key: 'No',
       render: (_: number, _record: Menu, rowIndex: number) => rowIndex + 1,
-      width: '6%',
+      width: '8%',
     },
     {
       title: '名称',
@@ -146,7 +143,7 @@ const MenuPage: React.FC = () => {
       key: 'name',
       render: (text) => (text ? text : '-'),
       ellipsis: true,
-      width: '8%',
+      width: '12%',
     },
     {
       title: '图标',
@@ -155,7 +152,7 @@ const MenuPage: React.FC = () => {
       render: (text) =>
         text ? <SvgIcon name={text} strokeWidth={1.3} /> : '-',
       ellipsis: true,
-      width: '6%',
+      width: '8%',
     },
     {
       title: '权限标识',
@@ -170,7 +167,7 @@ const MenuPage: React.FC = () => {
       dataIndex: 'sort',
       key: 'sort',
       render: (text) => (text ? text : '-'),
-      width: '6%',
+      width: '8%',
     },
     {
       title: '路由地址',
@@ -184,10 +181,9 @@ const MenuPage: React.FC = () => {
       title: '创建时间',
       dataIndex: 'create_time',
       key: 'create_time',
-      render: (text) =>
-        text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-',
+      render: (text: string) =>
+        text ? <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span> : '-',
       ellipsis: true,
-      width: '14%',
     },
     {
       title: '操作',
@@ -195,14 +191,6 @@ const MenuPage: React.FC = () => {
       align: 'center',
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
-          <button
-            type="button"
-            className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onMenuDetail(record)}
-          >
-            <Eye size={12} />
-            详情
-          </button>
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
@@ -367,50 +355,6 @@ const MenuPage: React.FC = () => {
     }
   };
 
-  // 批量更新模块
-  const onMenuBatchModify = () => {
-    if (selectedRowKeys.length === 1) {
-      setIsUpdateMenuModalVisible(true);
-      updateMenuForm.setFieldsValue({ ...selectedRows[0] });
-    } else {
-      setIsMenuBatchModifyModalVisible(true);
-      menuBatchModifyForm.resetFields();
-    }
-  };
-  const [isMenuBatchModifyModalVisible, setIsMenuBatchModifyModalVisible] =
-    useState<boolean>(false);
-  const [isMenuBatchModifyLoading, setIsMenuBatchModifyLoading] =
-    useState<boolean>(false);
-  const [menuBatchModifyForm] = Form.useForm();
-
-  const handleMenuBatchModifyCancel = async () => {
-    menuBatchModifyForm.resetFields();
-    setIsMenuBatchModifyModalVisible(false);
-    resetSelectedRows();
-    message.info('操作已取消');
-  };
-
-  const handleMenuBatchModifyFinish = async () => {
-    const menuBatchModify =
-      (await menuBatchModifyForm.validateFields()) as BatchUpdateMenu;
-    setIsMenuBatchModifyLoading(true);
-    if (selectedRows === null || selectedRows.length === 0) {
-      message.warning('请选择要更新的项目');
-      return;
-    }
-    try {
-      const ids = selectedRows.map((row) => row.id);
-      await batchUpdateMenus({ ids: ids, menu: menuBatchModify });
-      menuBatchModifyForm.resetFields();
-      message.success('更新成功');
-      mutateMenus();
-      resetSelectedRows();
-    } finally {
-      setIsMenuBatchModifyLoading(false);
-      setIsMenuBatchModifyModalVisible(false);
-    }
-  };
-
   // 导入模块
   const [isImportMenuModalVisible, setIsImportMenuModalVisible] =
     useState<boolean>(false);
@@ -480,7 +424,7 @@ const MenuPage: React.FC = () => {
           onCreate={onCreateMenu}
           onImport={onImportMenu}
           onExport={onMenuExport}
-          onBatchModify={onMenuBatchModify}
+          onBatchModify={() => {}}
           onConfirmBatchRemove={handleMenuBatchRemove}
           onConfirmBatchRemoveCancel={handleMenuBatchRemoveCancel}
           isQueryShow={isQueryMenuShow}
@@ -540,16 +484,6 @@ const MenuPage: React.FC = () => {
             optionDataSource={menuListDataSource || []}
           />
         </div>
-        <div>
-          <BatchUpdateMenuComponent
-            isBatchUpdateMenuModalVisible={isMenuBatchModifyModalVisible}
-            onBatchUpdateMenuCancel={handleMenuBatchModifyCancel}
-            onBatchUpdateMenuFinish={handleMenuBatchModifyFinish}
-            isBatchUpdateMenuLoading={isMenuBatchModifyLoading}
-            batchUpdateMenuForm={menuBatchModifyForm}
-          />
-        </div>
-
         <div>
           <ImportMenuComponent
             isImportMenuModalVisible={isImportMenuModalVisible}

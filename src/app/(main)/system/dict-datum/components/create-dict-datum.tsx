@@ -88,13 +88,6 @@ const CreateDictDatumComponent: React.FC<CreateDictDatumProps> = ({
             <Select placeholder="请选择字典类型" disabled />
           </Form.Item>
           <Form.Item
-            name="sort"
-            label="字典排序"
-            rules={[{ required: false, message: '请输入字典排序' }]}
-          >
-            <Input placeholder="请输入字典排序" />
-          </Form.Item>
-          <Form.Item
             name="value"
             label="字典键"
             rules={[{ required: true, message: '请输入字典键' }]}
@@ -109,32 +102,11 @@ const CreateDictDatumComponent: React.FC<CreateDictDatumProps> = ({
             <Input placeholder="请输入字典标签" />
           </Form.Item>
           <Form.Item
-            name="echo_style"
-            label="回显样式"
-            rules={[{ required: false, message: '请输入回显样式' }]}
+            name="sort"
+            label="字典排序"
+            rules={[{ required: false, message: '请输入字典排序' }]}
           >
-            <Input placeholder="请输入回显样式" />
-          </Form.Item>
-          <Form.Item
-            name="ext_class"
-            label="扩展样式"
-            rules={[{ required: false, message: '请输入扩展样式' }]}
-          >
-            <Input placeholder="请输入扩展样式" />
-          </Form.Item>
-          <Form.Item
-            name="is_default"
-            label="是否默认"
-            rules={[{ required: false, message: '请输入是否默认' }]}
-          >
-            <Input placeholder="请输入是否默认" />
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="状态"
-            rules={[{ required: false, message: '请输入状态' }]}
-          >
-            <Radio.Group options={['请选择字典生成']} />
+            <Input placeholder="请输入字典排序" />
           </Form.Item>
           <Form.Item
             name="comment"

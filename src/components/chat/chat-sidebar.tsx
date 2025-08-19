@@ -136,7 +136,7 @@ export default function ChatSidebar({
           type="primary"
           icon={<Plus />}
           onClick={onCreateConversation}
-          className="w-full"
+          className="w-full my-2"
           size="large"
         >
           新建对话

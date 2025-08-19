@@ -21,31 +21,29 @@ import { useRoles } from '@/service/role';
 import {
   batchCreateUsers,
   batchDeleteUser,
-  batchUpdateUsers,
   createUser,
   deleteUser,
   exportUser,
   importUser,
   updateUser,
   useUsers,
+  useUser
 } from '@/service/user';
 import { assignUserRoles } from '@/service/user-role';
 import { createPaginationRequest } from '@/types';
 import {
-  BatchUpdateUser,
   CreateUser,
   ListUsersRequest,
   UpdateUser,
-  User,
+  User
 } from '@/types/user';
 import { ListUserRolesRequest } from '@/types/user-role';
-import { Button, Form, Input, message, Modal, Popconfirm, Select } from 'antd'; // 添加 Modal, Select, Button
+import { Button, Form, Input, message, Modal, Popconfirm, Select, Tag } from 'antd'; // 添加 Modal, Select, Button
 import { ColumnsType } from 'antd/lib/table';
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
 import { CheckCircle2, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
-import BatchUpdateUserComponent from './components/batch-update-user';
 import CreateUserComponent from './components/create-user';
 import ImportUserComponent from './components/import-user';
 import QueryUserComponent from './components/query-user';
@@ -62,7 +60,7 @@ const UserPage: React.FC = () => {
     showCreate: true,
     showImport: true,
     showExport: true,
-    showModify: true,
+    showModify: false,
     showRemove: true,
   };
   const showMore = false;
@@ -221,10 +219,10 @@ const UserPage: React.FC = () => {
             const content = <span key={item.value}>{item.label}</span>;
             return index < values.length - 1 ? (
               <React.Fragment key={`${item.value}-with-comma`}>
-                {content},&nbsp;
+                <Tag color="blue" bordered={false}>{content}</Tag>,&nbsp;
               </React.Fragment>
             ) : (
-              content
+              <Tag color="blue" bordered={false}>{content}</Tag>
             );
           }
           return null;
@@ -245,7 +243,7 @@ const UserPage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text: string) =>
-        text ? <span>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</span> : '-',
+        text ? <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span> : '-',
       width: '14%',
       ellipsis: true,
     },
@@ -407,7 +405,7 @@ const UserPage: React.FC = () => {
     setIsUpdateUserModalVisible(true);
     setSelectedRowKeys([user.id]);
     setSelectedRows([user]);
-    updateUserForm.setFieldsValue({ ...user });
+    updateUserForm.setFieldsValue({ ...user, status: user.status?.toString() });
   };
 
   const handleUpdateUserCancel = () => {
@@ -430,50 +428,6 @@ const UserPage: React.FC = () => {
     } finally {
       setIsUpdateUserLoading(false);
       setIsUpdateUserModalVisible(false);
-    }
-  };
-
-  // 批量更新模块
-  const onUserBatchModify = () => {
-    if (selectedRowKeys.length === 1) {
-      setIsUpdateUserModalVisible(true);
-      updateUserForm.setFieldsValue({ ...selectedRows[0] });
-    } else {
-      setIsBatchUpdateUsersModalVisible(true);
-      batchUpdateUsersForm.resetFields();
-    }
-  };
-  const [isBatchUpdateUsersModalVisible, setIsBatchUpdateUsersModalVisible] =
-    useState<boolean>(false);
-  const [isBatchUpdateUsersLoading, setIsBatchUpdateUsersLoading] =
-    useState<boolean>(false);
-  const [batchUpdateUsersForm] = Form.useForm();
-
-  const handleBatchUpdateUsersCancel = async () => {
-    batchUpdateUsersForm.resetFields();
-    setIsBatchUpdateUsersModalVisible(false);
-    resetSelectedRows();
-    message.info('操作已取消');
-  };
-
-  const handleBatchUpdateUsersFinish = async () => {
-    const userBatchModify =
-      (await batchUpdateUsersForm.validateFields()) as BatchUpdateUser;
-    setIsBatchUpdateUsersLoading(true);
-    if (selectedRows === null || selectedRows.length === 0) {
-      message.warning('请选择要更新的项目');
-      return;
-    }
-    try {
-      const ids = selectedRows.map((row) => row.id);
-      await batchUpdateUsers({ ids: ids, user: userBatchModify });
-      batchUpdateUsersForm.resetFields();
-      message.success('更新成功');
-      mutateUsers();
-      resetSelectedRows();
-    } finally {
-      setIsBatchUpdateUsersLoading(false);
-      setIsBatchUpdateUsersModalVisible(false);
     }
   };
 
@@ -546,7 +500,7 @@ const UserPage: React.FC = () => {
           onCreate={onCreateUser}
           onImport={onImportUser}
           onExport={onUserExport}
-          onBatchModify={onUserBatchModify}
+          onBatchModify={() => { }}
           onConfirmBatchRemove={handleUserBatchRemove}
           onConfirmBatchRemoveCancel={handleUserBatchRemoveCancel}
           isQueryShow={isQueryUserShow}
@@ -596,16 +550,6 @@ const UserPage: React.FC = () => {
             updateUserForm={updateUserForm}
           />
         </div>
-        <div>
-          <BatchUpdateUserComponent
-            isBatchUpdateUsersModalVisible={isBatchUpdateUsersModalVisible}
-            onBatchUpdateUsersCancel={handleBatchUpdateUsersCancel}
-            onBatchUpdateUsersFinish={handleBatchUpdateUsersFinish}
-            isBatchUpdateUsersLoading={isBatchUpdateUsersLoading}
-            batchUpdateUsersForm={batchUpdateUsersForm}
-          />
-        </div>
-
         <div>
           <ImportUserComponent
             isImportUserModalVisible={isImportUserModalVisible}

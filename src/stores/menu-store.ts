@@ -1,7 +1,6 @@
 import { getMenus } from '@/service/menu-service';
 import type { MenuItem, MenuRecord } from '@/types/menu';
-import { RouteObject } from '@/types/route';
-import { convertToMenuItems } from '@/utils/navigation-util';
+import { convertToMenuItems, RouteObject } from '@/utils/navigation-util';
 import { create } from 'zustand';
 
 interface MenuState {
@@ -37,7 +36,7 @@ export const useMenuStore = create<MenuState>((set, get) => ({
         path: menu.path,
         meta: {
           title: menu.name,
-          affix: menu.path === '/' && true,
+          affix: menu.path === '/home' && true,
           icon: menu.icon,
         },
 
