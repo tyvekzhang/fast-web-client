@@ -12,15 +12,10 @@ import {
   importMenu,
   updateMenu,
   useMenu,
-  useMenus
+  useMenus,
 } from '@/service/menu';
 import { createPaginationRequest } from '@/types';
-import {
-  CreateMenu,
-  ListMenusRequest,
-  Menu,
-  UpdateMenu
-} from '@/types/menu';
+import { CreateMenu, ListMenusRequest, Menu, UpdateMenu } from '@/types/menu';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { format } from 'date-fns';
@@ -182,7 +177,11 @@ const MenuPage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text: string) =>
-        text ? <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span> : '-',
+        text ? (
+          <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span>
+        ) : (
+          '-'
+        ),
       ellipsis: true,
     },
     {

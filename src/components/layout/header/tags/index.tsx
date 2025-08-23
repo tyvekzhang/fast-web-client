@@ -114,8 +114,8 @@ const TagsLayout: React.FC = () => {
 
   const handleCloseTag = useCallback(
     async (path: string) => {
-      if (path === "/home") {
-        return
+      if (path === '/home') {
+        return;
       }
       const result = await closeTagByKey(path);
       if (result) {

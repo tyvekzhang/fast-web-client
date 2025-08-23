@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { exportDictTypeTemplate } from '@/service/dict-type';
-import { CreateDictType, ImportDictTypesResponse} from '@/types/dict-type';
-import { Inbox } from 'lucide-react';
+import { CreateDictType, ImportDictTypesResponse } from '@/types/dict-type';
 import { Button, Modal, Table, Upload, UploadFile, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Inbox } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -24,7 +24,9 @@ interface ImportDictTypeProps {
   isImportDictTypeModalVisible: boolean;
   isImportDictTypeLoading: boolean;
   onImportDictTypeCancel: () => void;
-  onImportDictTypeFinish: (fileList: RcFile[]) => Promise<ImportDictTypesResponse>;
+  onImportDictTypeFinish: (
+    fileList: RcFile[],
+  ) => Promise<ImportDictTypesResponse>;
   handleImportDictType: () => void;
 }
 
@@ -35,15 +37,24 @@ const ImportDictTypeComponent: React.FC<ImportDictTypeProps> = ({
   isImportDictTypeLoading,
   handleImportDictType,
 }) => {
-  const [dictTypeImportFileList, setImportDictTypeFileList] = useState<RcFile[]>([]);
-  const [CreateDictTypeList, setCreateDictTypeList] = useState<CreateDictType[]>([]);
+  const [dictTypeImportFileList, setImportDictTypeFileList] = useState<
+    RcFile[]
+  >([]);
+  const [CreateDictTypeList, setCreateDictTypeList] = useState<
+    CreateDictType[]
+  >([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
     <Button key="back" onClick={handleImportDictTypeCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isImportDictTypeLoading} onClick={handleImportDictTypeConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isImportDictTypeLoading}
+      onClick={handleImportDictTypeConfirm}
+    >
       确定
     </Button>,
   ];
@@ -55,7 +66,9 @@ const ImportDictTypeComponent: React.FC<ImportDictTypeProps> = ({
         return;
       }
       try {
-        const importDictTypeResponse = await onImportDictTypeFinish(dictTypeImportFileList);
+        const importDictTypeResponse = await onImportDictTypeFinish(
+          dictTypeImportFileList,
+        );
         setIsUploadShow(false);
         setCreateDictTypeList(importDictTypeResponse.dictTypes);
       } finally {
@@ -69,41 +82,42 @@ const ImportDictTypeComponent: React.FC<ImportDictTypeProps> = ({
   // 表格列信息
   const DictTypeColumns: ColumnsType<CreateDictType> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: CreateDictType, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: CreateDictType, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "字典名称",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => (text ? text : "-"),
+      title: '字典名称',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "字典类型",
-      dataIndex: "type",
-      key: "type",
-      render: (text) => (text ? text : "-"),
+      title: '字典类型',
+      dataIndex: 'type',
+      key: 'type',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "状态",
-      dataIndex: "status",
-      key: "status",
-      render: (text) => (text ? text : "-"),
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "备注",
-      dataIndex: "comment",
-      key: "comment",
-      render: (text) => (text ? text : "-"),
+      title: '备注',
+      dataIndex: 'comment',
+      key: 'comment',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -111,7 +125,9 @@ const ImportDictTypeComponent: React.FC<ImportDictTypeProps> = ({
     await exportDictTypeTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -150,7 +166,7 @@ const ImportDictTypeComponent: React.FC<ImportDictTypeProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={ dictTypeImportFileList}
+              fileList={dictTypeImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="flex justify-center items-center text-primary">
@@ -160,15 +176,18 @@ const ImportDictTypeComponent: React.FC<ImportDictTypeProps> = ({
               <p className="text-gray-500">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleDictTypeExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleDictTypeExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={ DictTypeColumns}
-            dataSource={ CreateDictTypeList}
+            columns={DictTypeColumns}
+            dataSource={CreateDictTypeList}
             pagination={false}
             bordered={false}
             rowKey={'id'}

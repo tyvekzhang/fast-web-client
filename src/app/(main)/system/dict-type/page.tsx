@@ -18,7 +18,6 @@ import TransitionWrapper from '@/components/base/transition-wrapper';
 import {
   batchCreateDictTypes,
   batchDeleteDictType,
-  batchUpdateDictTypes,
   createDictType,
   deleteDictType,
   exportDictType,
@@ -29,7 +28,6 @@ import {
 } from '@/service/dict-type';
 import { createPaginationRequest } from '@/types';
 import {
-  BatchUpdateDictType,
   CreateDictType,
   DictType,
   ListDictTypesRequest,
@@ -37,16 +35,15 @@ import {
 } from '@/types/dict-type';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { format } from 'date-fns';
 import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
-import BatchUpdateDictTypeComponent from './components/batch-update-dict-type';
 import CreateDictTypeComponent from './components/create-dict-type';
 import DictTypeDetailComponent from './components/dict-type-detail';
 import ImportDictTypeComponent from './components/import-dict-type';
 import QueryDictTypeComponent from './components/query-dict-type';
 import UpdateDictTypeComponent from './components/update-dict-type';
-import { format } from 'date-fns';
 
 const DictTypePage: React.FC = () => {
   // 配置模块
@@ -196,7 +193,11 @@ const DictTypePage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text: string) =>
-        text ? <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span> : '-',
+        text ? (
+          <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span>
+        ) : (
+          '-'
+        ),
       width: '14%',
       ellipsis: true,
     },
@@ -377,7 +378,6 @@ const DictTypePage: React.FC = () => {
       setIsUpdateDictTypeModalVisible(false);
     }
   };
-
 
   // 导入模块
   const [isImportDictTypeModalVisible, setIsImportDictTypeModalVisible] =

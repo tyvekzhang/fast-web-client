@@ -1,9 +1,8 @@
 import IconPicker from '@/components/assist/icon-picker';
 import { UpdateMenu } from '@/types/menu';
 import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Input, Modal, Radio, Select, TreeSelect } from 'antd';
+import { Button, Form, Input, Modal, Radio, TreeSelect } from 'antd';
 import { FormInstance } from 'antd/es/form';
-import TextArea from 'antd/es/input/TextArea';
 import React, { useMemo } from 'react';
 
 interface UpdateMenuProps {

@@ -24,19 +24,19 @@ import {
   importDictDatum,
   updateDictDatum,
   useDictData,
-  useDictDatum
+  useDictDatum,
 } from '@/service/dict-datum';
 import { createPaginationRequest } from '@/types';
 import {
   CreateDictDatum,
   DictDatum,
   ListDictDataRequest,
-  UpdateDictDatum
+  UpdateDictDatum,
 } from '@/types/dict-datum';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import dayjs from 'dayjs';
-import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
+import { MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';

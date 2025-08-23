@@ -13,7 +13,7 @@
 // limitations under the License.import { Input } from 'antd';
 import { DictDatum, UpdateDictDatum } from '@/types/dict-datum';
 import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Input, Modal, Radio, Select } from 'antd';
+import { Button, Form, Input, Modal, Select } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
 
@@ -92,7 +92,7 @@ const UpdateDictDatumComponent: React.FC<UpdateDictDatumProps> = ({
           label="字典类型"
           rules={[{ required: false, message: '请输入' }]}
         >
-          <Select placeholder="请选择字典类型"  disabled/>
+          <Select placeholder="请选择字典类型" disabled />
         </Form.Item>
         <Form.Item
           name="label"

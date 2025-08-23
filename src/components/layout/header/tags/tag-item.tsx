@@ -28,10 +28,10 @@ interface TagItemProps {
 
 const handleMenuItemClick =
   (callback?: () => void) =>
-    (e: { domEvent: { stopPropagation: () => void } }) => {
-      e.domEvent.stopPropagation();
-      callback?.();
-    };
+  (e: { domEvent: { stopPropagation: () => void } }) => {
+    e.domEvent.stopPropagation();
+    callback?.();
+  };
 
 const TagItem: FC<TagItemProps> = ({
   name,
@@ -125,10 +125,11 @@ const TagItem: FC<TagItemProps> = ({
         }}
         closeIcon
         onClick={onClick}
-        className={`mr-1 h-full flex justify-center items-center cursor-pointer transition-colors duration-200 ${active
+        className={`mr-1 h-full flex justify-center items-center cursor-pointer transition-colors duration-200 ${
+          active
             ? 'bg-primary/90 text-white/90 hover:opacity-90'
             : 'bg-gray-100 text-gray-700 hover:opacity-90'
-          }`}
+        }`}
       >
         <span className="max-w-16 truncate">{name}</span>
       </Tag>

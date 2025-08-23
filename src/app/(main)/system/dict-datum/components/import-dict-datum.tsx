@@ -13,9 +13,9 @@
 // limitations under the License.
 import { exportDictDatumTemplate } from '@/service/dict-datum';
 import { CreateDictDatum, ImportDictDataResponse } from '@/types/dict-datum';
-import { Inbox } from 'lucide-react';
 import { Button, Modal, Table, Upload, UploadFile, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Inbox } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -24,7 +24,9 @@ interface ImportDictDatumProps {
   isImportDictDatumModalVisible: boolean;
   isImportDictDatumLoading: boolean;
   onImportDictDatumCancel: () => void;
-  onImportDictDatumFinish: (fileList: RcFile[]) => Promise<ImportDictDataResponse>;
+  onImportDictDatumFinish: (
+    fileList: RcFile[],
+  ) => Promise<ImportDictDataResponse>;
   handleImportDictDatum: () => void;
 }
 
@@ -35,15 +37,24 @@ const ImportDictDatumComponent: React.FC<ImportDictDatumProps> = ({
   isImportDictDatumLoading,
   handleImportDictDatum,
 }) => {
-  const [dictDatumImportFileList, setImportDictDatumFileList] = useState<RcFile[]>([]);
-  const [CreateDictDatumList, setCreateDictDatumList] = useState<CreateDictDatum[]>([]);
+  const [dictDatumImportFileList, setImportDictDatumFileList] = useState<
+    RcFile[]
+  >([]);
+  const [CreateDictDatumList, setCreateDictDatumList] = useState<
+    CreateDictDatum[]
+  >([]);
   const [isUploadShow, setIsUploadShow] = useState<boolean>(true);
 
   const footerButtons = () => [
     <Button key="back" onClick={handleImportDictDatumCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isImportDictDatumLoading} onClick={handleImportDictDatumConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isImportDictDatumLoading}
+      onClick={handleImportDictDatumConfirm}
+    >
       确定
     </Button>,
   ];
@@ -55,7 +66,9 @@ const ImportDictDatumComponent: React.FC<ImportDictDatumProps> = ({
         return;
       }
       try {
-        const importDictDatumResponse = await onImportDictDatumFinish(dictDatumImportFileList);
+        const importDictDatumResponse = await onImportDictDatumFinish(
+          dictDatumImportFileList,
+        );
         setIsUploadShow(false);
         setCreateDictDatumList(importDictDatumResponse.dictData);
       } finally {
@@ -69,48 +82,49 @@ const ImportDictDatumComponent: React.FC<ImportDictDatumProps> = ({
   // 表格列信息
   const DictDatumColumns: ColumnsType<CreateDictDatum> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: CreateDictDatum, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: CreateDictDatum, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "字典类型",
-      dataIndex: "type",
-      key: "type",
-      render: (text) => (text ? text : "-"),
+      title: '字典类型',
+      dataIndex: 'type',
+      key: 'type',
+      render: (text) => (text ? text : '-'),
     },
 
     {
-      title: "字典标签",
-      dataIndex: "label",
-      key: "label",
-      render: (text) => (text ? text : "-"),
+      title: '字典标签',
+      dataIndex: 'label',
+      key: 'label',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "字典键值",
-      dataIndex: "value",
-      key: "value",
-      render: (text) => (text ? text : "-"),
+      title: '字典键值',
+      dataIndex: 'value',
+      key: 'value',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "字典排序",
-      dataIndex: "sort",
-      key: "sort",
-      render: (text) => (text ? text : "-"),
+      title: '字典排序',
+      dataIndex: 'sort',
+      key: 'sort',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "备注",
-      dataIndex: "comment",
-      key: "comment",
-      render: (text) => (text ? text : "-"),
+      title: '备注',
+      dataIndex: 'comment',
+      key: 'comment',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -118,7 +132,9 @@ const ImportDictDatumComponent: React.FC<ImportDictDatumProps> = ({
     await exportDictDatumTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -133,7 +149,9 @@ const ImportDictDatumComponent: React.FC<ImportDictDatumProps> = ({
   };
 
   const handleRemove = (file: UploadFile) => {
-    setImportDictDatumFileList((prev) => prev.filter((f) => f.uid !== file.uid));
+    setImportDictDatumFileList((prev) =>
+      prev.filter((f) => f.uid !== file.uid),
+    );
   };
 
   const handleImportDictDatumCancel = () => {
@@ -167,7 +185,10 @@ const ImportDictDatumComponent: React.FC<ImportDictDatumProps> = ({
               <p className="text-gray-500">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleDictDatumExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleDictDatumExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>

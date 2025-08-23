@@ -1211,12 +1211,12 @@ const iconMap = {
     icon: LucideIcons.Smartphone,
   },
   Bot: {
-  name: '机器人',
-  englishName: 'Bot',
-  category: '科技',
-  keywords: ['机器人', 'Bot', ],
-  icon: LucideIcons.Bot,
-},
+    name: '机器人',
+    englishName: 'Bot',
+    category: '科技',
+    keywords: ['机器人', 'Bot'],
+    icon: LucideIcons.Bot,
+  },
   Tablet: {
     name: '平板',
     englishName: 'Tablet',

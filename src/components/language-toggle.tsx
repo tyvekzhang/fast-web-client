@@ -1,7 +1,7 @@
 'use client';
 
-import { Languages } from 'lucide-react';
 import { Button, Space, Typography, message } from 'antd';
+import { Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const { Text } = Typography;

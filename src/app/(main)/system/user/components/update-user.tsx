@@ -14,7 +14,6 @@
 
 import { useDictDataOptions } from '@/service/dict-datum';
 import { UpdateUser, User } from '@/types/user';
-import { TreeSelectUtil } from '@/utils/select-util';
 import { Button, CheckboxOptionType, Form, Input, Modal, Radio } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import React, { useMemo } from 'react';
@@ -40,7 +39,6 @@ const UpdateUserComponent: React.FC<UpdateUserProps> = ({
   isUpdateUserLoading,
   updateUserForm,
 }) => {
-
   const { dictData } = useDictDataOptions('user_status'.split(','));
   const footerButtons = useMemo(
     () => [

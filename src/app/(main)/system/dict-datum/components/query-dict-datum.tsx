@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.import { Input } from 'antd';
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { FormInstance } from 'antd/es/form';
 import { RotateCcw, Search } from 'lucide-react';
 import React from 'react';
@@ -50,7 +50,7 @@ const QueryDictDatumComponent: React.FC<QueryDictDatumProps> = ({
     >
       <div className="flex flex-wrap items-center gap-2 pt-6 justify-between">
         <Form.Item name="type" label="字典名">
-           <Input placeholder="请输入字典名" />
+          <Input placeholder="请输入字典名" />
         </Form.Item>
         <Form.Item name="label" label="字典标签">
           <Input placeholder="请输入字典标签" allowClear />

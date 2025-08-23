@@ -27,18 +27,21 @@ import {
   importUser,
   updateUser,
   useUsers,
-  useUser
 } from '@/service/user';
 import { assignUserRoles } from '@/service/user-role';
 import { createPaginationRequest } from '@/types';
-import {
-  CreateUser,
-  ListUsersRequest,
-  UpdateUser,
-  User
-} from '@/types/user';
+import { CreateUser, ListUsersRequest, UpdateUser, User } from '@/types/user';
 import { ListUserRolesRequest } from '@/types/user-role';
-import { Button, Form, Input, message, Modal, Popconfirm, Select, Tag } from 'antd'; // 添加 Modal, Select, Button
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popconfirm,
+  Select,
+  Tag,
+} from 'antd'; // 添加 Modal, Select, Button
 import { ColumnsType } from 'antd/lib/table';
 import { format } from 'date-fns';
 import { CheckCircle2, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
@@ -219,10 +222,15 @@ const UserPage: React.FC = () => {
             const content = <span key={item.value}>{item.label}</span>;
             return index < values.length - 1 ? (
               <React.Fragment key={`${item.value}-with-comma`}>
-                <Tag color="blue" bordered={false}>{content}</Tag>,&nbsp;
+                <Tag color="blue" bordered={false}>
+                  {content}
+                </Tag>
+                ,&nbsp;
               </React.Fragment>
             ) : (
-              <Tag color="blue" bordered={false}>{content}</Tag>
+              <Tag color="blue" bordered={false}>
+                {content}
+              </Tag>
             );
           }
           return null;
@@ -243,7 +251,11 @@ const UserPage: React.FC = () => {
       dataIndex: 'create_time',
       key: 'create_time',
       render: (text: string) =>
-        text ? <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span> : '-',
+        text ? (
+          <span>{format(new Date(text), 'yyyy-MM-dd HH:mm:ss')}</span>
+        ) : (
+          '-'
+        ),
       width: '14%',
       ellipsis: true,
     },
@@ -500,7 +512,7 @@ const UserPage: React.FC = () => {
           onCreate={onCreateUser}
           onImport={onImportUser}
           onExport={onUserExport}
-          onBatchModify={() => { }}
+          onBatchModify={() => {}}
           onConfirmBatchRemove={handleUserBatchRemove}
           onConfirmBatchRemoveCancel={handleUserBatchRemoveCancel}
           isQueryShow={isQueryUserShow}

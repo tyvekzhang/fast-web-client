@@ -8,14 +8,13 @@ import { Avatar, Button, Input, message, Spin, Upload } from 'antd';
 import { throttle } from 'lodash';
 import {
   Bot,
-  Brain,
   Copy,
   Globe,
   RotateCw,
   Send,
   UploadIcon,
   User,
-  X
+  X,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
@@ -287,10 +286,11 @@ export default function ChatMain({
                 )}
 
                 <div
-                  className={`max-w-[80%] ${msg.role === 'user'
-                    ? 'bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3'
-                    : 'bg-gray-100 rounded-2xl rounded-bl-md px-4 py-1'
-                    }`}
+                  className={`max-w-[80%] ${
+                    msg.role === 'user'
+                      ? 'bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3'
+                      : 'bg-gray-100 rounded-2xl rounded-bl-md px-4 py-1'
+                  }`}
                 >
                   {msg.role === 'user' ? (
                     <div className="whitespace-pre-wrap break-words">
@@ -300,12 +300,7 @@ export default function ChatMain({
                     <div className="prose prose-sm max-w-none">
                       <ReactMarkdown
                         components={{
-                          code({
-                            node,
-                            className,
-                            children,
-                            ...props
-                          }) {
+                          code({ node, className, children, ...props }) {
                             const match = /language-(\w+)/.exec(
                               className || '',
                             );
@@ -401,12 +396,13 @@ export default function ChatMain({
                   icon={<DeepThinkIcon size={16} />}
                   onClick={handleDeepThink}
                   disabled={isGenerating}
-                  size="small">
+                  size="small"
+                >
                   深度思考
                 </Button>
                 <Button
                   type="text"
-                  icon={<Globe size={16}  />}
+                  icon={<Globe size={16} />}
                   onClick={handleWebSearch}
                   disabled={isGenerating}
                   size="small"
@@ -470,12 +466,13 @@ export default function ChatMain({
                   icon={<DeepThinkIcon size={16} />}
                   onClick={handleDeepThink}
                   disabled={isGenerating}
-                  size="small">
+                  size="small"
+                >
                   深度思考
                 </Button>
                 <Button
                   type="text"
-                  icon={<Globe size={16}  />}
+                  icon={<Globe size={16} />}
                   onClick={handleWebSearch}
                   disabled={isGenerating}
                   size="small"

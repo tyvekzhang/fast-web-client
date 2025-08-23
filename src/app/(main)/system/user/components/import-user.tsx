@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { exportUserTemplate } from '@/service/user';
-import { CreateUser, ImportUsersResponse} from '@/types/user';
-import { Inbox } from 'lucide-react';
+import { CreateUser, ImportUsersResponse } from '@/types/user';
 import { Button, Modal, Table, Upload, UploadFile, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { Inbox } from 'lucide-react';
 import { UploadRequestOption } from 'rc-upload/es/interface';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -43,7 +43,12 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
     <Button key="back" onClick={handleImportUserCancel}>
       取消
     </Button>,
-    <Button key="submit" type="primary" loading={isImportUserLoading} onClick={handleImportUserConfirm}>
+    <Button
+      key="submit"
+      type="primary"
+      loading={isImportUserLoading}
+      onClick={handleImportUserConfirm}
+    >
       确定
     </Button>,
   ];
@@ -69,53 +74,54 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
   // 表格列信息
   const UserColumns: ColumnsType<CreateUser> = [
     {
-      title: "序号",
-      dataIndex: "No",
-      key: "No",
-      render: (_: number, _record: CreateUser, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      title: '序号',
+      dataIndex: 'No',
+      key: 'No',
+      render: (_: number, _record: CreateUser, rowIndex: number) =>
+        rowIndex + 1,
+      width: '8%',
     },
     {
-      title: "用户名",
-      dataIndex: "username",
-      key: "username",
-      render: (text) => (text ? text : "-"),
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "密码",
-      dataIndex: "password",
-      key: "password",
-      render: (text) => (text ? text : "-"),
+      title: '密码',
+      dataIndex: 'password',
+      key: 'password',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "昵称",
-      dataIndex: "nickname",
-      key: "nickname",
-      render: (text) => (text ? text : "-"),
+      title: '昵称',
+      dataIndex: 'nickname',
+      key: 'nickname',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "头像地址",
-      dataIndex: "avatar_url",
-      key: "avatar_url",
-      render: (text) => (text ? text : "-"),
+      title: '头像地址',
+      dataIndex: 'avatar_url',
+      key: 'avatar_url',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "状态",
-      dataIndex: "status",
-      key: "status",
-      render: (text) => (text ? text : "-"),
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "备注",
-      dataIndex: "remark",
-      key: "remark",
-      render: (text) => (text ? text : "-"),
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+      render: (text) => (text ? text : '-'),
     },
     {
-      title: "错误信息",
-      dataIndex: "errMsg",
-      key: "errMsg",
-      render: (text) => (text ? text : "-"),
+      title: '错误信息',
+      dataIndex: 'errMsg',
+      key: 'errMsg',
+      render: (text) => (text ? text : '-'),
     },
   ];
 
@@ -123,7 +129,9 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
     await exportUserTemplate();
   };
 
-  const customUploadRequest = async (options: UploadRequestOption): Promise<void | undefined> => {
+  const customUploadRequest = async (
+    options: UploadRequestOption,
+  ): Promise<void | undefined> => {
     const { onSuccess, onError, file } = options;
     const rcFile = file as RcFile;
     if (!rcFile.name.endsWith('.xls') && !rcFile.name.endsWith('.xlsx')) {
@@ -162,7 +170,7 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
               multiple
               accept=".xlsx,.xls"
               onRemove={handleRemove}
-              fileList={ userImportFileList}
+              fileList={userImportFileList}
               customRequest={customUploadRequest as any}
             >
               <p className="flex justify-center items-center text-primary">
@@ -172,15 +180,18 @@ const ImportUserComponent: React.FC<ImportUserProps> = ({
               <p className="text-gray-500">仅支持上传xls、xlsx格式的文件</p>
             </Upload.Dragger>
           </div>
-          <div onClick={handleUserExportTemplate} className="cursor-pointer mt-4 text-blue-600">
+          <div
+            onClick={handleUserExportTemplate}
+            className="cursor-pointer mt-4 text-blue-600"
+          >
             下载模板
           </div>
         </div>
       ) : (
         <div>
           <Table
-            columns={ UserColumns}
-            dataSource={ CreateUserList}
+            columns={UserColumns}
+            dataSource={CreateUserList}
             pagination={false}
             bordered={false}
             rowKey={'id'}
