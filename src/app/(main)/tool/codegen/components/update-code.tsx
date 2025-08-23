@@ -345,6 +345,7 @@ const CodeModify: React.FC<CodeEditProps> = ({ open, onClose, tableId }) => {
                 <Option value="1">单表操作</Option>
                 <Option value="2">关联表操作</Option>
                 <Option value="3">树形表操作</Option>
+                <Option value="4">主子表操作</Option>
               </Select>
             </Form.Item>
             <Form.Item label="模块名" name="module_name">
